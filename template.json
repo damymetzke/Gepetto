@@ -2,7 +2,14 @@
 	"tree":{
 		"-car": {
 			"-left-wheel": {
-			
+				"transform": [
+					{
+						"translate": {
+							"x": 10,
+							"y": -5
+						}
+					}
+				]
 			},
 			"-right-wheel": {
 			

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>9</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>216</x>
+      <y>45</y>
+      <w>261</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>Transform
+--
+matrix:Number[6]
+--
+Lerp(target:Transform) -&gt; Transform
+Slerp(target:Transform) -&gt; Transform
+MultiplyMatrix(right:Transform) -&gt; Transform
+MultiplyVector(right:Number[3]) -&gt; Number[3]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>216</x>
+      <y>270</y>
+      <w>198</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>DrawObject
+--
+parent:DrawObject
+name:String
+relativeTransform:Transform
+--
+WorldTransform() -&gt; Transform
+RelativeTransform() -&gt; Transform</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>252</x>
+      <y>144</y>
+      <w>27</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;140.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>612</x>
+      <y>72</y>
+      <w>153</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>Color
+--
+color:Number[4]
+--
+Lerp(target: Color)
+MultiplyColor(right:Color)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>612</x>
+      <y>459</y>
+      <w>342</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Frame
+--
+name:String
+objects:FrameObject[]
+--
+CreateSubFrame(right: Frame, progress:Number) -&gt; Frame</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>612</x>
+      <y>261</y>
+      <w>459</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>FrameObject
+--
+object:DrawObject
+transform:Transform
+color:Color
+--
+WorldTransform() -&gt; Transform
+CreateSubFrameObject(right: FrameObject, progress:Number) -&gt; FrameObject</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>648</x>
+      <y>360</y>
+      <w>27</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>405</x>
+      <y>306</y>
+      <w>225</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>230.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>468</x>
+      <y>144</y>
+      <w>162</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>160.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>648</x>
+      <y>144</y>
+      <w>27</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>171</x>
+      <y>225</y>
+      <w>306</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>OBJECT
+layer=-1
+fg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>576</x>
+      <y>216</y>
+      <w>513</w>
+      <h>414</h>
+    </coordinates>
+    <panel_attributes>KEY FRAME
+layer=-1
+fg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>603</x>
+      <y>963</y>
+      <w>261</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>Animation
+--
+name:String
+repeat:RepeatType
+repeat-num:Number
+frames:AnimationFrame[]
+totalDuration:Number
+--
+SubFrame(delta:Number) -&gt; Frame
+AnimationComplete() -&gt; Bool
+AnimationRemainder() -&gt; Number
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>405</x>
+      <y>1017</y>
+      <w>162</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Enum&gt;&gt;
+RepeatType
+--
+NO_REPEAT
+REPEAT
+REPEAT_SYMMETRICAL
+bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>558</x>
+      <y>1062</y>
+      <w>63</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>612</x>
+      <y>711</y>
+      <w>522</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>AnimationFrame
+--
+from:Frame
+to:Frame
+duration:Number
+functions:FrameFunction[]
+--
+SubFrame(delta:Number) -&gt; Frame</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>405</x>
+      <y>774</y>
+      <w>99</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Enum&gt;&gt;
+FrameFunction
+--
+EASE_IN
+EASE_OUT
+bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>495</x>
+      <y>801</y>
+      <w>135</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>648</x>
+      <y>540</y>
+      <w>27</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;190.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>648</x>
+      <y>846</y>
+      <w>27</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>855</x>
+      <y>495</y>
+      <w>342</w>
+      <h>594</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>110.0;10.0;360.0;10.0;360.0;640.0;10.0;640.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>351</x>
+      <y>675</y>
+      <w>810</w>
+      <h>540</h>
+    </coordinates>
+    <panel_attributes>ANIMATION
+layer=-1
+fg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
