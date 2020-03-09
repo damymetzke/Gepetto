@@ -4,8 +4,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>216</x>
-      <y>45</y>
+      <x>234</x>
+      <y>0</y>
       <w>261</w>
       <h>108</h>
     </coordinates>
@@ -22,16 +22,17 @@ MultiplyVector(right:Number[3]) -&gt; Number[3]</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>216</x>
-      <y>270</y>
-      <w>198</w>
-      <h>99</h>
+      <x>234</x>
+      <y>207</y>
+      <w>207</w>
+      <h>117</h>
     </coordinates>
     <panel_attributes>DrawObject
 --
 parent:DrawObject
 name:String
 relativeTransform:Transform
+commands:TransformCommands[]
 --
 WorldTransform() -&gt; Transform
 RelativeTransform() -&gt; Transform</panel_attributes>
@@ -40,19 +41,19 @@ RelativeTransform() -&gt; Transform</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>252</x>
-      <y>144</y>
+      <x>270</x>
+      <y>99</y>
       <w>27</w>
-      <h>144</h>
+      <h>126</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;140.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>612</x>
-      <y>72</y>
+      <x>630</x>
+      <y>27</y>
       <w>153</w>
       <h>81</h>
     </coordinates>
@@ -67,8 +68,8 @@ MultiplyColor(right:Color)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>612</x>
-      <y>459</y>
+      <x>630</x>
+      <y>414</y>
       <w>342</w>
       <h>90</h>
     </coordinates>
@@ -83,8 +84,8 @@ CreateSubFrame(right: Frame, progress:Number) -&gt; Frame</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>612</x>
-      <y>261</y>
+      <x>630</x>
+      <y>216</y>
       <w>459</w>
       <h>108</h>
     </coordinates>
@@ -101,8 +102,8 @@ CreateSubFrameObject(right: FrameObject, progress:Number) -&gt; FrameObject</pan
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>648</x>
-      <y>360</y>
+      <x>666</x>
+      <y>315</y>
       <w>27</w>
       <h>117</h>
     </coordinates>
@@ -112,19 +113,19 @@ CreateSubFrameObject(right: FrameObject, progress:Number) -&gt; FrameObject</pan
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>405</x>
-      <y>306</y>
-      <w>225</w>
+      <x>432</x>
+      <y>261</y>
+      <w>216</w>
       <h>27</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>230.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>220.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>468</x>
-      <y>144</y>
+      <x>486</x>
+      <y>99</y>
       <w>162</w>
       <h>135</h>
     </coordinates>
@@ -134,8 +135,8 @@ CreateSubFrameObject(right: FrameObject, progress:Number) -&gt; FrameObject</pan
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>648</x>
-      <y>144</y>
+      <x>666</x>
+      <y>99</y>
       <w>27</w>
       <h>135</h>
     </coordinates>
@@ -145,10 +146,10 @@ CreateSubFrameObject(right: FrameObject, progress:Number) -&gt; FrameObject</pan
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>171</x>
-      <y>225</y>
+      <x>189</x>
+      <y>180</y>
       <w>306</w>
-      <h>180</h>
+      <h>459</h>
     </coordinates>
     <panel_attributes>OBJECT
 layer=-1
@@ -158,8 +159,8 @@ fg=red</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>576</x>
-      <y>216</y>
+      <x>594</x>
+      <y>171</y>
       <w>513</w>
       <h>414</h>
     </coordinates>
@@ -171,8 +172,8 @@ fg=red</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>603</x>
-      <y>963</y>
+      <x>621</x>
+      <y>954</y>
       <w>261</w>
       <h>153</h>
     </coordinates>
@@ -193,8 +194,8 @@ AnimationRemainder() -&gt; Number
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>405</x>
-      <y>1017</y>
+      <x>423</x>
+      <y>1008</y>
       <w>162</w>
       <h>99</h>
     </coordinates>
@@ -210,8 +211,8 @@ bg=pink</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>558</x>
-      <y>1062</y>
+      <x>576</x>
+      <y>1053</y>
       <w>63</w>
       <h>27</h>
     </coordinates>
@@ -221,8 +222,8 @@ bg=pink</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>612</x>
-      <y>711</y>
+      <x>630</x>
+      <y>702</y>
       <w>522</w>
       <h>144</h>
     </coordinates>
@@ -239,8 +240,8 @@ SubFrame(delta:Number) -&gt; Frame</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>405</x>
-      <y>774</y>
+      <x>423</x>
+      <y>765</y>
       <w>99</w>
       <h>81</h>
     </coordinates>
@@ -255,8 +256,8 @@ bg=pink</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>495</x>
-      <y>801</y>
+      <x>513</x>
+      <y>792</y>
       <w>135</w>
       <h>27</h>
     </coordinates>
@@ -266,19 +267,19 @@ bg=pink</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>648</x>
-      <y>540</y>
+      <x>666</x>
+      <y>495</y>
       <w>27</w>
-      <h>189</h>
+      <h>225</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;190.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;230.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>648</x>
-      <y>846</y>
+      <x>666</x>
+      <y>837</y>
       <w>27</w>
       <h>135</h>
     </coordinates>
@@ -288,19 +289,19 @@ bg=pink</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>855</x>
-      <y>495</y>
+      <x>873</x>
+      <y>450</y>
       <w>342</w>
-      <h>594</h>
+      <h>630</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>110.0;10.0;360.0;10.0;360.0;640.0;10.0;640.0</additional_attributes>
+    <additional_attributes>110.0;10.0;360.0;10.0;360.0;680.0;10.0;680.0</additional_attributes>
   </element>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>351</x>
-      <y>675</y>
+      <x>369</x>
+      <y>666</y>
       <w>810</w>
       <h>540</h>
     </coordinates>
@@ -308,5 +309,61 @@ bg=pink</panel_attributes>
 layer=-1
 fg=red</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>234</x>
+      <y>405</y>
+      <w>180</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>TransformCommand
+--
+type:TansformCommandType
+x:Number
+y:Number
+--
+GetMatrix() -&gt; TransForm</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>234</x>
+      <y>522</y>
+      <w>162</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Enum&gt;&gt;
+TransformCommandType
+--
+TRANSLATE
+SCALE
+ROTATE
+SHEAR</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>270</x>
+      <y>486</y>
+      <w>27</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>270</x>
+      <y>315</y>
+      <w>27</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
   </element>
 </diagram>
