@@ -1,0 +1,95 @@
+{
+	"tree":{
+		"-car": {
+			"-left-wheel": {
+			
+			},
+			"-right-wheel": {
+			
+			}
+		}
+	},
+	
+	"key-frames": {
+		"drive-0": {
+			"car": [
+				{
+					"rotate": 45
+				},
+				{
+					"translate-x": 10
+				}
+			],
+			
+			"left-wheel" : [
+				{
+					"color": {
+						"r": 2,
+						"g": 0.5,
+						"b": 3.2
+					},
+					"source": "image-alt.svg"
+				}
+			],
+			
+			"right-wheel" : [
+				{
+					"color": {
+						"r": 2,
+						"g": 0.5,
+						"b": 3.2
+					}
+				},
+				{
+					"source": "image-alt.svg"
+				}
+			]
+		},
+		"drive-1": null,
+		"drive-2": null,
+		"drive-3": null
+	},
+	
+	"animations":
+	{
+		"drive": {
+			"repeat": "repeat-symmetrical",
+			"repeat-num": null,
+			"frames": [
+				{
+					"function": [
+						"ease-in",
+						"ease-out"
+					],
+					"time": 1000,
+					"frame": "drive-0"
+				},
+				{
+					"function": [
+						"ease-in",
+						"ease-out"
+					],
+					"time": 1000,
+					"frame": "drive-1"
+				},
+				{
+					"function": [
+						"ease-in",
+						"ease-out"
+					],
+					"time": 1000,
+					"frame": "drive-2"
+				},
+				{
+					"function": [
+						"ease-in",
+						"ease-out"
+					],
+					"time": 1000,
+					"frame": "drive-3"
+				}
+			]
+			
+		}
+	}
+}
