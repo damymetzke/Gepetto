@@ -1,0 +1,19 @@
+{
+  "name": "gepetto",
+  "version": "1.0.0",
+  "description": "gepetto - SVG animation tool",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "../"
+  },
+  "author": "Damy Metzke",
+  "license": "UNLICENCED",
+  "devDependencies": {
+    "electron": "^8.1.1"
+  }
+}
