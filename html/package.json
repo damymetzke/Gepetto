@@ -2,14 +2,13 @@
   "name": "gepetto",
   "version": "1.0.0",
   "description": "gepetto - SVG animation tool",
-  "main": "main.js",
+  "main": "scripts/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
   },
   "repository": {
     "type": "git",
-    "url": "../"
+    "url": "git@github.com:damymetzke/Gepetto.git"
   },
   "author": "Damy Metzke",
   "license": "UNLICENCED",
