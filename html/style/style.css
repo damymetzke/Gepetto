@@ -1,0 +1,100 @@
+*, *::before, *::after {
+  -webkit-box-sizing: inherit;
+          box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #EFEFEE;
+  color: #000028;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  font: sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: serif;
+  color: #402840;
+}
+
+h1 {
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2.5em;
+}
+
+h3 {
+  font-size: 2em;
+}
+
+h4 {
+  font-size: 1.75em;
+}
+
+h5 {
+  font-size: 1.5em;
+}
+
+h6 {
+  font-size: 1.25em;
+}
+
+img {
+  max-width: 100%;
+}
+
+#body {
+  display: -ms-grid;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  -ms-grid-columns: 1fr 8fr;
+      grid-template-columns: 1fr 8fr;
+  -ms-grid-rows: 1fr 1fr 12fr;
+      grid-template-rows: 1fr 1fr 12fr;
+      grid-template-areas: "header     header" "toolbar    tabs" "toolbar    main";
+}
+
+#header {
+  background-color: red;
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 2;
+  grid-area: header;
+}
+
+#toolbar {
+  background-color: blue;
+  -ms-grid-row: 2;
+  -ms-grid-row-span: 2;
+  -ms-grid-column: 1;
+  grid-area: toolbar;
+}
+
+#tabs {
+  background-color: green;
+  -ms-grid-row: 2;
+  -ms-grid-column: 2;
+  grid-area: tabs;
+}
+
+#main {
+  background-color: gold;
+  -ms-grid-row: 3;
+  -ms-grid-column: 2;
+  grid-area: main;
+}
+/*# sourceMappingURL=style.css.map */
