@@ -63,15 +63,28 @@ h1 {
   color: #ffccee;
 }
 
+.button {
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 1.3rem;
+  background-color: white;
+  border: 2px black solid;
+  border-radius: 10px;
+  padding: 2px 5px;
+}
+
+.button:hover {
+  background-color: #bbbbbb;
+}
+
 #body {
   display: -ms-grid;
   display: grid;
   width: 100vw;
   height: 100vh;
-  -ms-grid-columns: 1fr 8fr;
-      grid-template-columns: 1fr 8fr;
-  -ms-grid-rows: 3.5rem 2rem 5fr;
-      grid-template-rows: 3.5rem 2rem 5fr;
+  -ms-grid-columns: 15rem 1fr;
+      grid-template-columns: 15rem 1fr;
+  -ms-grid-rows: 3.5rem 2rem 1fr;
+      grid-template-rows: 3.5rem 2rem 1fr;
       grid-template-areas: "header     header" "toolbar    tabs" "toolbar    main";
 }
 
@@ -91,11 +104,89 @@ h1 {
 }
 
 #toolbar {
-  background-color: blue;
+  background-color: #aa8899;
   -ms-grid-row: 2;
   -ms-grid-row-span: 2;
   -ms-grid-column: 1;
   grid-area: toolbar;
+}
+
+#toolbar h2 {
+  color: white;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  text-align: center;
+  text-decoration: underline;
+}
+
+#toolbar h3 {
+  color: white;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+#toolbar--buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#toolbar--buttons .button {
+  width: 80%;
+  margin: 3px 0;
+}
+
+#toolbar--key-frames, #toolbar--animations {
+  border-top: 5px #554466 solid;
+  border-bottom: 5px #554466 solid;
+  list-style: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#toolbar--key-frames li, #toolbar--animations li {
+  border: 3px darkblue solid;
+  width: 80%;
+  margin: 3px auto;
+  border-radius: 10px;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[3];
+      grid-template-columns: repeat(3, 1fr);
+  -ms-grid-rows: (1fr)[2];
+      grid-template-rows: repeat(2, 1fr);
+}
+
+#toolbar--key-frames li h3, #toolbar--animations li h3 {
+  -ms-grid-column: 1;
+      grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+#toolbar--key-frames li button, #toolbar--animations li button {
+  font-size: 1rem;
+  text-transform: lowercase;
+  border-radius: 0;
+}
+
+#toolbar--key-frames li button:first-of-type, #toolbar--animations li button:first-of-type {
+  border-radius: 5px 0 0 5px;
+}
+
+#toolbar--key-frames li button:last-of-type, #toolbar--animations li button:last-of-type {
+  border-radius: 0 5px 5px 0;
 }
 
 #tabs {
