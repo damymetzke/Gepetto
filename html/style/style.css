@@ -280,4 +280,12 @@ h1 {
   -ms-grid-column: 2;
   grid-area: main;
 }
+
+#main > li {
+  display: none;
+}
+
+#main > li#selected-content {
+  display: inherit;
+}
 /*# sourceMappingURL=style.css.map */

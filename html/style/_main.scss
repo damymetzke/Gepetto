@@ -2,4 +2,14 @@
 {
     background-color: #444444;
     grid-area: main;
+
+    > li
+    {
+        display: none;
+
+        &#selected-content
+        {
+            display: inherit;
+        }
+    }
 }
