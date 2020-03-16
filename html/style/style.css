@@ -278,6 +278,10 @@ h1 {
   color: white;
 }
 
+#tabs li.dragging, #tabs li#selected-tab.dragging {
+  background-color: green;
+}
+
 #main {
   background-color: #444444;
   -ms-grid-row: 3;

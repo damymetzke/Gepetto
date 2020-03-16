@@ -35,6 +35,11 @@
                 color: white;
             }
         }
+
+        &.dragging, &#selected-tab.dragging
+        {
+            background-color: green;
+        }
     }
 
 }

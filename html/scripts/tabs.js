@@ -19,7 +19,8 @@ function DragUpdate()
         if (distanceSquared >= DISTANCE_FOR_DRAG_SQUARED)
         {
             farEnough = true;
-            console.log("👀");
+            console.log(dragging);
+            dragging.classList.add("dragging");
         }
     }
 
@@ -51,6 +52,7 @@ function OnMouseUp()
     if (dragging != null)
     {
         console.log("Dragged!");
+        dragging.classList.remove("dragging");
         dragging = null;
     }
 }
