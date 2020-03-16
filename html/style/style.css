@@ -278,8 +278,13 @@ h1 {
   color: white;
 }
 
-#tabs li.dragging, #tabs li#selected-tab.dragging {
-  background-color: green;
+#tabs li.dragging {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+#tabs li.dragging#selected-tab {
+  background-color: rgba(85, 119, 102, 0.7);
 }
 
 #main {

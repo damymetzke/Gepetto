@@ -19,14 +19,15 @@ function DragUpdate()
         if (distanceSquared >= DISTANCE_FOR_DRAG_SQUARED)
         {
             farEnough = true;
-            console.log(dragging);
             dragging.classList.add("dragging");
         }
     }
 
     if (farEnough)
     {
-
+        dragging.style.left = currentPosition[0] + "px";
+        dragging.style.top = currentPosition[1] + "px";
+        console.log(currentPosition[0] + "", dragging.style.left + "");
     }
 }
 

@@ -36,9 +36,15 @@
             }
         }
 
-        &.dragging, &#selected-tab.dragging
+        &.dragging
         {
-            background-color: green;
+            position: absolute;
+            background-color: rgba($color: white, $alpha: 0.7);
+
+            &#selected-tab
+            {
+                 background-color: rgba($color: #557766, $alpha: 0.7);
+            }
         }
     }
 
