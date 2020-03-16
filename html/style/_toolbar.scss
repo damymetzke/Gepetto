@@ -1,3 +1,9 @@
+$list-dark: #666666;
+$list-light: #888888;
+$dropdown-dark: #555555;
+$dropdown-light: #444444;
+$dropdown-hover: #8422ca;
+
 #toolbar
 {
     background-color: #aa8899;
@@ -18,7 +24,7 @@
         color: white;
         font-size: 1.2rem;
         text-align: center;
-
+        display: inline;
     }
 
     &--buttons
@@ -47,36 +53,62 @@
 
         li
         {
-            border: 3px darkblue solid;
-            width: 80%;
-            margin: 3px auto;
+            //border: 3px darkblue solid;
 
-            border-radius: 10px;
+            display: flex;
+            flex-direction: row;
 
-            display: grid;
-
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-
-            h3
-            {
-                grid-column-start: 1;
-                grid-column-end: 4;
-            }
+            justify-content: center;
+            align-items: center;
 
             button
             {
                 font-size: 1rem;
                 text-transform: lowercase;
                 border-radius: 0;
-                &:first-of-type
+            }
+
+            .dropdown--box
+            {
+                flex-direction: row;
+
+                justify-items: stretch;
+
+                width: 240px;
+                transform: translateY(20px);
+
+                > *
                 {
-                    border-radius: 5px 0 0 5px;
+                    width: 80px;
+                    border: none;
+
+                    color: white;
+
+                    &:nth-child(odd)
+                    {
+                        background-color: $dropdown-dark;
+                    }
+
+                    &:nth-child(even)
+                    {
+                        background-color: $dropdown-light;
+                    }
+
+                    &:hover
+                    {
+                        background-color: $dropdown-hover;
+                    }
                 }
-                &:last-of-type
-                {
-                    border-radius: 0 5px 5px 0;
-                }
+            }
+
+            &:nth-child(odd)
+            {
+                background-color: $list-dark;
+            }
+
+            &:nth-child(even)
+            {
+                background-color: $list-light;
             }
         }
     }

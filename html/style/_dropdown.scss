@@ -1,0 +1,23 @@
+.dropdown
+{
+    &--icon
+    {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+
+        margin: 0 5px;
+    }
+
+    &--box
+    {
+        display: none;
+
+        &--display
+        {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+        }
+    }
+}
