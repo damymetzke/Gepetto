@@ -105,8 +105,8 @@ h1 {
   height: 100vh;
   -ms-grid-columns: 240px 1fr;
       grid-template-columns: 240px 1fr;
-  -ms-grid-rows: 3.5rem 2rem 1fr;
-      grid-template-rows: 3.5rem 2rem 1fr;
+  -ms-grid-rows: 50px 30px 1fr;
+      grid-template-rows: 50px 30px 1fr;
       grid-template-areas: "header     header" "toolbar    tabs" "toolbar    main";
 }
 
@@ -239,14 +239,43 @@ h1 {
 }
 
 #tabs {
-  background-color: green;
+  background-color: #8b5965;
   -ms-grid-row: 2;
   -ms-grid-column: 2;
   grid-area: tabs;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+#tabs h3 {
+  font-size: 20px;
+  color: black;
+}
+
+#tabs li {
+  list-style: none;
+  background-color: white;
+  padding: 2px 3px;
+  margin-right: 5px;
+  margin-left: 2px;
+  border-radius: 10px 10px 0 0;
+}
+
+#tabs li#selected-tab {
+  background-color: #557766;
+}
+
+#tabs li#selected-tab h3 {
+  color: white;
 }
 
 #main {
-  background-color: gold;
+  background-color: #444444;
   -ms-grid-row: 3;
   -ms-grid-column: 2;
   grid-area: main;
