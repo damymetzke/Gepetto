@@ -1,6 +1,10 @@
 const DISTANCE_FOR_DRAG = 18;
 const DISTANCE_FOR_DRAG_SQUARED = DISTANCE_FOR_DRAG * DISTANCE_FOR_DRAG;
 
+const TARGET_DROP_SIZE = 15;
+const DROP_SIZE_RIGHT_OFFSET = (TARGET_DROP_SIZE - 5) / 2;
+const DROP_SIZE_LEFT_OFFSET = DROP_SIZE_RIGHT_OFFSET + 5;
+
 let dragging = null;
 let pointer = null;
 let farEnough = false;
@@ -47,7 +51,9 @@ function DragUpdate()
             }
 
             const position = tabs[i].getBoundingClientRect();
-            if (currentPosition[0] >= position.left && currentPosition[0] <= position.right)
+            const left = position.left - DROP_SIZE_LEFT_OFFSET;
+            const right = position.right + DROP_SIZE_RIGHT_OFFSET;
+            if (currentPosition[0] >= left && currentPosition[0] <= right)
             {
                 tabs[i].insertAdjacentElement("beforebegin", pointer);
 
@@ -119,8 +125,6 @@ function OnSelectTab(content, tab)
 
     for (let i = 0; i < contents.length; ++i)
     {
-        console.log("💻 setting up content:", contents[i].dataset.content);
-
         contentsMap[contents[i].dataset.content] = contents[i];
     }
 
@@ -128,14 +132,13 @@ function OnSelectTab(content, tab)
 
     for (let i = 0; i < tabs.length; ++i)
     {
-        console.log("🚀 setting up tab:", tabs[i].dataset.content);
+        const tab = tabs[i];
 
-        tabs[i].addEventListener("click", function ()
+        tab.addEventListener("click", function ()
         {
-            OnSelectTab(contentsMap[tabs[i].dataset.content], tabs[i]);
+            OnSelectTab(contentsMap[tab.dataset.content], tab);
         });
 
-        const tab = tabs[i];
 
         tab.addEventListener("mousedown", function ()
         {
