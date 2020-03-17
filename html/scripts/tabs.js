@@ -37,9 +37,13 @@ function DragUpdate()
 
         for (let i = 0; i < tabs.length; ++i)
         {
-            if (i == pointerIndex || i == originalIndex)
+            if (i == pointerIndex)
             {
                 ++i;
+                continue;
+            }
+            if (i == originalIndex)
+            {
                 continue;
             }
 
