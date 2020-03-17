@@ -67,7 +67,7 @@ function UpdatePosition(event)
     }
 }
 
-function OnDragTabStart(tab, index)
+function OnDragTabStart(tab)
 {
     farEnough = false;
     dragging = tab;
@@ -78,6 +78,8 @@ function OnMouseUp()
 {
     if (farEnough && dragging != null)
     {
+        pointer.insertAdjacentElement("beforeBegin", dragging);
+
         dragging.classList.remove("dragging");
         let tabs = document.getElementById("tabs").children;
         pointer.remove();
@@ -133,9 +135,11 @@ function OnSelectTab(content, tab)
             OnSelectTab(contentsMap[tabs[i].dataset.content], tabs[i]);
         });
 
-        tabs[i].addEventListener("mousedown", function ()
+        const tab = tabs[i];
+
+        tab.addEventListener("mousedown", function ()
         {
-            OnDragTabStart(tabs[i], i);
+            OnDragTabStart(tab);
         });
     }
 
