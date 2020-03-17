@@ -90,13 +90,13 @@ function OnDragTabStart(tab, index)
 
 function OnMouseUp()
 {
-    if (farEnough)
+    if (farEnough && dragging != null)
     {
         dragging.classList.remove("dragging");
         let tabs = document.getElementById("tabs").children;
         tabs[pointerIndex].remove();
+        dragging = null;
     }
-    dragging = null;
 }
 
 function OnSelectTab(content, tab)
