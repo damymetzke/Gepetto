@@ -2,6 +2,7 @@ const DISTANCE_FOR_DRAG = 18;
 const DISTANCE_FOR_DRAG_SQUARED = DISTANCE_FOR_DRAG * DISTANCE_FOR_DRAG;
 
 let dragging = null;
+let pointerIndex = null;
 let farEnough = false;
 let initalPosition = [0, 0];
 let currentPosition = [0, 0];
@@ -20,14 +21,17 @@ function DragUpdate()
         {
             farEnough = true;
             dragging.classList.add("dragging");
+            let tabs = document.getElementById("tabs").children;
+            let element = document.createElement("li");
+            element.id = "tab-pointer";
+            tabs[pointerIndex].insertAdjacentElement("beforebegin", element);
         }
     }
 
     if (farEnough)
     {
-        dragging.style.left = currentPosition[0] + "px";
-        dragging.style.top = currentPosition[1] + "px";
-        console.log(currentPosition[0] + "", dragging.style.left + "");
+        dragging.style.left = currentPosition[0] - (dragging.offsetWidth / 2) + "px";
+        dragging.style.top = currentPosition[1] - (dragging.offsetHeight / 2) + "px";
     }
 }
 
@@ -40,12 +44,12 @@ function UpdatePosition(event)
     }
 }
 
-function OnDragTabStart(tab)
+function OnDragTabStart(tab, index)
 {
     farEnough = false;
     dragging = tab;
+    pointerIndex = index;
     initalPosition = currentPosition;
-    console.log(initalPosition);
 }
 
 function OnMouseUp()
@@ -55,11 +59,17 @@ function OnMouseUp()
         console.log("Dragged!");
         dragging.classList.remove("dragging");
         dragging = null;
+        let tabs = document.getElementById("tabs").children;
+        tabs[pointerIndex].remove();
     }
 }
 
 function OnSelectTab(content, tab)
 {
+    if (farEnough)
+    {
+        return;
+    }
     currentContent = document.getElementById("selected-content");
 
     if (currentContent != null)
@@ -103,7 +113,7 @@ function OnSelectTab(content, tab)
 
         tabs[i].addEventListener("mousedown", function ()
         {
-            OnDragTabStart(tabs[i]);
+            OnDragTabStart(tabs[i], i);
         });
 
         tabs[i].addEventListener("mouseup", function ()
