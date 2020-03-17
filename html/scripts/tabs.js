@@ -2,8 +2,7 @@ const DISTANCE_FOR_DRAG = 18;
 const DISTANCE_FOR_DRAG_SQUARED = DISTANCE_FOR_DRAG * DISTANCE_FOR_DRAG;
 
 let dragging = null;
-let pointerIndex = null;
-let originalIndex = null;
+let pointer = null;
 let farEnough = false;
 let initalPosition = [0, 0];
 let currentPosition = [0, 0];
@@ -25,8 +24,8 @@ function DragUpdate()
             dragging.classList.add("dragging");
             let element = document.createElement("li");
             element.id = "tab-pointer";
-            tabs[pointerIndex].insertAdjacentElement("beforebegin", element);
-            ++originalIndex;
+            dragging.insertAdjacentElement("beforebegin", element);
+            pointer = element;
         }
     }
 
@@ -37,12 +36,12 @@ function DragUpdate()
 
         for (let i = 0; i < tabs.length; ++i)
         {
-            if (i == pointerIndex)
+            if (tabs[i].id == "tab-pointer")
             {
                 ++i;
                 continue;
             }
-            if (i == originalIndex)
+            if (tabs[i] == dragging)
             {
                 continue;
             }
@@ -50,18 +49,7 @@ function DragUpdate()
             const position = tabs[i].getBoundingClientRect();
             if (currentPosition[0] >= position.left && currentPosition[0] <= position.right)
             {
-                if (pointerIndex < originalIndex && i > originalIndex)
-                {
-                    --originalIndex;
-                }
-                else if (pointerIndex > originalIndex && i < originalIndex)
-                {
-                    ++originalIndex;
-                }
-                tabs[i].insertAdjacentElement("beforebegin", tabs[pointerIndex]);
-                console.log(i, pointerIndex);
-                pointerIndex = pointerIndex <= i ? i - 1 : i;
-                console.log(i, pointerIndex);
+                tabs[i].insertAdjacentElement("beforebegin", pointer);
 
                 break;
             }
@@ -83,8 +71,6 @@ function OnDragTabStart(tab, index)
 {
     farEnough = false;
     dragging = tab;
-    pointerIndex = index;
-    originalIndex = index;
     initalPosition = currentPosition;
 }
 
@@ -94,9 +80,10 @@ function OnMouseUp()
     {
         dragging.classList.remove("dragging");
         let tabs = document.getElementById("tabs").children;
-        tabs[pointerIndex].remove();
-        dragging = null;
+        pointer.remove();
     }
+    dragging = null;
+    pointer = null;
 }
 
 function OnSelectTab(content, tab)
