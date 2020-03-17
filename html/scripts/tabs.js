@@ -38,29 +38,39 @@ function DragUpdate()
         dragging.style.left = currentPosition[0] - (dragging.offsetWidth / 2) + "px";
         dragging.style.top = currentPosition[1] - (dragging.offsetHeight / 2) + "px";
 
-        for (let i = 0; i < tabs.length; ++i)
+        if (currentPosition[1] <= 100)
         {
-            if (tabs[i].id == "tab-pointer")
+            for (let i = 0; i < tabs.length; ++i)
             {
-                ++i;
-                continue;
-            }
-            if (tabs[i] == dragging)
-            {
-                continue;
+                if (tabs[i].id == "tab-pointer")
+                {
+                    ++i;
+                    continue;
+                }
+                if (tabs[i] == dragging)
+                {
+                    continue;
+                }
+
+                const position = tabs[i].getBoundingClientRect();
+                const left = position.left - DROP_SIZE_LEFT_OFFSET;
+                const right = position.right + DROP_SIZE_RIGHT_OFFSET;
+                if (currentPosition[0] >= left && currentPosition[0] <= right)
+                {
+                    tabs[i].insertAdjacentElement("beforebegin", pointer);
+
+                    break;
+                }
+
             }
 
-            const position = tabs[i].getBoundingClientRect();
-            const left = position.left - DROP_SIZE_LEFT_OFFSET;
-            const right = position.right + DROP_SIZE_RIGHT_OFFSET;
-            if (currentPosition[0] >= left && currentPosition[0] <= right)
+            const position = tabs[tabs.length - 1].getBoundingClientRect();
+            if (currentPosition[0] >= position.right - DROP_SIZE_RIGHT_OFFSET)
             {
-                tabs[i].insertAdjacentElement("beforebegin", pointer);
-
-                break;
+                tabs[tabs.length - 1].insertAdjacentElement("afterend", pointer);
             }
-
         }
+
     }
 }
 
