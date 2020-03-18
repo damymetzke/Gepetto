@@ -103,23 +103,29 @@ h1 {
   display: grid;
   width: 100vw;
   height: 100vw;
-  -ms-grid-rows: 100px 1fr;
-      grid-template-rows: 100px 1fr;
+  -ms-grid-rows: 50px 1fr;
+      grid-template-rows: 50px 1fr;
   -ms-grid-columns: 300px 1fr 300px;
       grid-template-columns: 300px 1fr 300px;
       grid-template-areas: "header header  header" "text   main    property";
 }
 
-#object-editor--body > * {
-  border: 2px black solid;
-}
-
 #object-editor--header {
-  background-color: red;
+  background-color: #550655;
   -ms-grid-row: 1;
   -ms-grid-column: 1;
   -ms-grid-column-span: 3;
   grid-area: header;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 #object-editor--text-tree {
