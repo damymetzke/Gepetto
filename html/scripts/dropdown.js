@@ -4,9 +4,10 @@ function OnDropdown(target)
 }
 
 //setup events
+function OnScriptDropdownLoad(root)
 {
     let targets = {};
-    const dropdowns = document.getElementsByClassName("dropdown--box");
+    const dropdowns = root.getElementsByClassName("dropdown--box");
     for (let i = 0; i < dropdowns.length; ++i)
     {
         const identifier = dropdowns[i].dataset.dropdownIdentifier;
@@ -14,11 +15,10 @@ function OnDropdown(target)
         targets[identifier] = dropdowns[i];
     }
 
-    const icons = document.getElementsByClassName("dropdown--icon");
+    const icons = root.getElementsByClassName("dropdown--icon");
     for (let i = 0; i < icons.length; ++i)
     {
         const identifier = icons[i].dataset.dropdownIdentifier;
-        console.log("🔢 connecting dropdown with identifier:", identifier);
 
         icons[i].addEventListener("click", function ()
         {

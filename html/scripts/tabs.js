@@ -97,7 +97,6 @@ function OnMouseUp()
         pointer.insertAdjacentElement("beforeBegin", dragging);
 
         dragging.classList.remove("dragging");
-        let tabs = document.getElementById("tabs").children;
         pointer.remove();
     }
     dragging = null;
