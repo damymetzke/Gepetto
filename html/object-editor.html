@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="./style/object-editor/object-editor.css" />
+    </head>
+
+    <body>
+        <div id="object-editor--body">
+            <section id="object-editor--header">
+                <h1>Object Tree</h1>
+            </section>
+            <section id="object-editor--text-tree">
+                <p>a</p>
+                <p>b</p>
+                <p>c
+                    <p>ca</p>
+                    <p>cb</p>
+                    <p>cc</p>
+                </p>
+                <p>d
+                    <p>da</p>
+                    <p>db</p>
+                    <p>dc
+                        <p>dca</p>
+                        <p>dcb</p>
+                    </p>
+                    <p>dd</p>
+                </p>
+            </section>
+            <section id="object-editor--main">
+                <svg xmlns="http://www.w3.org/2000/svg">
+
+                </svg>
+            </section>
+            <section id="object-editor--property">
+                <h2>OBJECT_NAME</h2>
+                <h3>Properties</h3>
+
+                <h4>name</h4>
+                <input type="text">
+
+                <h4>transforms</h4>
+                <ol>
+                    <li>
+                        <h5>translate</h5>
+                        <p>x</p>
+                        <input type="number">
+                        <p>y</p>
+                        <input type="number">
+                    </li>
+                    <li>
+                        <h5>scale</h5>
+                        <p>x</p>
+                        <input type="number">
+                        <p>y</p>
+                        <input type="number">
+                    </li>
+                    <li>
+                        <h5>shear</h5>
+                        <p>x</p>
+                        <input type="number">
+                        <p>y</p>
+                        <input type="number">
+                    </li>
+                    <li>
+                        <h5>rotate</h5>
+                        <p>angle</p>
+                        <input type="number">
+                    </li>
+                </ol>
+            </section>
+        </div>
+    </body>
+
+</html>
