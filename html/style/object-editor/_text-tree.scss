@@ -1,6 +1,29 @@
 #object-editor--text-tree
 {
-    background-color: green;
+    background-color: #d14a9d;
 
     grid-area: text;
+
+    ol
+    {
+        list-style: none;
+        color: white;
+        > li
+        {
+            margin: 0 0 0 15px;
+
+            &:before
+            {
+                content: "";
+                display: inline-block;
+                width: 2px;
+                height: 12px;
+                background-color: purple;
+                margin-right: 10px;
+                margin: 0 10px 0 0;
+
+                transform: scaleY(1.5);
+            }
+        }
+    }
 }
