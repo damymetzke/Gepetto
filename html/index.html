@@ -11,6 +11,20 @@
 
         <script type="text/javascript" src="./scripts/dropdown.js" defer></script>
         <script type="text/javascript" src="./scripts/tabs.js" defer></script>
+        <script type="text/javascript" src="./scripts/content-loader.js" defer></script>
+
+        <script>
+            //Setup dropdowns
+            window.onload = function ()
+            {
+                const root = document.getElementById("body");
+                OnScriptDropdownLoad(root);
+
+                const target = document.getElementById("main").children[0];
+                console.log(target);
+                LoadContent("./object-editor.html", target);
+            };
+        </script>
     </head>
 
     <body>
