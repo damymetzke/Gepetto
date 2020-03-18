@@ -1,6 +1,81 @@
 #object-editor--property
 {
-    background-color: magenta;
+    background-color: #d14a9d;
 
     grid-area: property;
+
+    h2
+    {
+        font-size: 1.5rem;
+        font-weight: normal;
+        text-decoration: underline solid;
+        color: white;
+    }
+
+    h3
+    {
+        text-transform: lowercase;
+        font-size: 1.25rem;
+        color: white;
+    }
+
+    h4
+    {
+        font-size: 1.25rem;
+        font-weight: normal;
+        display: inline;
+        color: white;
+    }
+
+    h5
+    {
+        font-size: 1rem;
+        text-decoration: underline solid;
+        color: black;
+    }
+
+    input
+    {
+        display: inline;
+    }
+
+    .dropdown--box
+    {
+        flex-direction: row;
+
+        .button
+        {
+            border-radius: 0;
+            width: 70px;
+            font-size: 1rem;
+            font-weight: normal;
+        }
+    }
+
+    #object-editor--property--transform-list
+    {
+        padding: 10px;
+        list-style: none;
+
+        border-top: 3px white solid;
+        border-bottom: 3px white solid;
+
+        li
+        {
+            border: 2px white solid;
+            width: 80%;
+            padding: 10px;
+
+            margin: 5px 0;
+
+            border-radius: 10px;
+
+            background-color: powderblue;
+
+            input::-webkit-inner-spin-button, input::-webkit-outer-spin-button
+            {
+                display: none;
+            }
+        }
+    }
 }

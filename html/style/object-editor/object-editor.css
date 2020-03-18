@@ -157,16 +157,82 @@ h1 {
 }
 
 #object-editor--main {
-  background-color: yellow;
+  background-color: white;
   -ms-grid-row: 2;
   -ms-grid-column: 2;
   grid-area: main;
 }
 
 #object-editor--property {
-  background-color: magenta;
+  background-color: #d14a9d;
   -ms-grid-row: 2;
   -ms-grid-column: 3;
   grid-area: property;
+}
+
+#object-editor--property h2 {
+  font-size: 1.5rem;
+  font-weight: normal;
+  -webkit-text-decoration: underline solid;
+          text-decoration: underline solid;
+  color: white;
+}
+
+#object-editor--property h3 {
+  text-transform: lowercase;
+  font-size: 1.25rem;
+  color: white;
+}
+
+#object-editor--property h4 {
+  font-size: 1.25rem;
+  font-weight: normal;
+  display: inline;
+  color: white;
+}
+
+#object-editor--property h5 {
+  font-size: 1rem;
+  -webkit-text-decoration: underline solid;
+          text-decoration: underline solid;
+  color: black;
+}
+
+#object-editor--property input {
+  display: inline;
+}
+
+#object-editor--property .dropdown--box {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+#object-editor--property .dropdown--box .button {
+  border-radius: 0;
+  width: 70px;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+#object-editor--property #object-editor--property--transform-list {
+  padding: 10px;
+  list-style: none;
+  border-top: 3px white solid;
+  border-bottom: 3px white solid;
+}
+
+#object-editor--property #object-editor--property--transform-list li {
+  border: 2px white solid;
+  width: 80%;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 10px;
+  background-color: powderblue;
+}
+
+#object-editor--property #object-editor--property--transform-list li input::-webkit-inner-spin-button, #object-editor--property #object-editor--property--transform-list li input::-webkit-outer-spin-button {
+  display: none;
 }
 /*# sourceMappingURL=object-editor.css.map */

@@ -5,6 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="./style/object-editor/object-editor.css" />
+        <script type="text/javascript" src="./scripts/dropdown.js" defer></script>
     </head>
 
     <body>
@@ -48,7 +49,7 @@
                 <input type="text">
 
                 <h4>transforms</h4>
-                <ol>
+                <ol id="object-editor--property--transform-list">
                     <li>
                         <h5>translate</h5>
                         <p>x</p>
@@ -76,6 +77,30 @@
                         <input type="number">
                     </li>
                 </ol>
+                <img src="./images/dropdown.svg" class="dropdown--icon"
+                    data-dropdown-identifier="property-transform-add">
+                <ul class="dropdown--box" data-dropdown-identifier="property-transform-add">
+                    <button class="button">translate</button>
+                    <button class="button">scale</button>
+                    <button class="button">shear</button>
+                    <button class="button">rotate</button>
+                </ul>
+
+                <!--
+
+                    <ul class="dropdown--box" data-dropdown-identifier="keyframe-0">
+                            <button class="button">
+                                edit
+                            </button>
+                            <button class="button">
+                                rename
+                            </button>
+                            <button class="button">
+                                delete
+                            </button>
+                        </ul>
+
+                -->
             </section>
         </div>
     </body>
