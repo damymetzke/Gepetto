@@ -60,7 +60,7 @@ h1 {
   font-family: sans-serif;
   font-size: 1.4rem;
   margin: auto auto;
-  color: #ffccee;
+  color: #fffff7;
 }
 
 .dropdown--icon {
@@ -111,7 +111,7 @@ h1 {
 }
 
 #header {
-  background-color: #444444;
+  background-color: #1a1a28;
   -ms-grid-row: 1;
   -ms-grid-column: 1;
   -ms-grid-column-span: 2;
@@ -126,7 +126,7 @@ h1 {
 }
 
 #toolbar {
-  background-color: #aa8899;
+  background-color: #ccccc9;
   -ms-grid-row: 2;
   -ms-grid-row-span: 2;
   -ms-grid-column: 1;
@@ -134,7 +134,7 @@ h1 {
 }
 
 #toolbar h2 {
-  color: white;
+  color: #000111;
   text-transform: uppercase;
   font-size: 1.5rem;
   text-align: center;
@@ -142,7 +142,7 @@ h1 {
 }
 
 #toolbar h3 {
-  color: white;
+  color: #fffff7;
   font-size: 1.2rem;
   text-align: center;
   display: inline;
@@ -167,8 +167,8 @@ h1 {
 }
 
 #toolbar--key-frames, #toolbar--animations {
-  border-top: 5px #554466 solid;
-  border-bottom: 5px #554466 solid;
+  border-top: 5px #7740bf solid;
+  border-bottom: 5px #7740bf solid;
   list-style: none;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -215,31 +215,31 @@ h1 {
 #toolbar--key-frames li .dropdown--box > *, #toolbar--animations li .dropdown--box > * {
   width: 80px;
   border: none;
-  color: white;
+  color: #fffff7;
 }
 
 #toolbar--key-frames li .dropdown--box > *:nth-child(odd), #toolbar--animations li .dropdown--box > *:nth-child(odd) {
-  background-color: #555555;
+  background-color: #450d94;
 }
 
 #toolbar--key-frames li .dropdown--box > *:nth-child(even), #toolbar--animations li .dropdown--box > *:nth-child(even) {
-  background-color: #444444;
+  background-color: #511a9f;
 }
 
 #toolbar--key-frames li .dropdown--box > *:hover, #toolbar--animations li .dropdown--box > *:hover {
-  background-color: #8422ca;
+  background-color: #9e66e4;
 }
 
 #toolbar--key-frames li:nth-child(odd), #toolbar--animations li:nth-child(odd) {
-  background-color: #666666;
+  background-color: #1a1a28;
 }
 
 #toolbar--key-frames li:nth-child(even), #toolbar--animations li:nth-child(even) {
-  background-color: #888888;
+  background-color: #33343f;
 }
 
 #tabs {
-  background-color: #8b5965;
+  background-color: #ccccc9;
   -ms-grid-row: 2;
   -ms-grid-column: 2;
   grid-area: tabs;
@@ -259,7 +259,7 @@ h1 {
 
 #tabs li {
   list-style: none;
-  background-color: white;
+  background-color: #fffff7;
   padding: 2px 3px;
   margin-right: 5px;
   margin-left: 2px;
@@ -271,7 +271,7 @@ h1 {
 }
 
 #tabs li#selected-tab {
-  background-color: #557766;
+  background-color: #450d94;
 }
 
 #tabs li#selected-tab h3 {
@@ -280,16 +280,16 @@ h1 {
 
 #tabs li.dragging {
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 247, 0.7);
 }
 
 #tabs li.dragging#selected-tab {
-  background-color: rgba(85, 119, 102, 0.7);
+  background-color: rgba(69, 13, 148, 0.7);
 }
 
 #tabs #tab-pointer {
   width: 30px;
-  background-color: rgba(255, 255, 255, 0.35);
+  background-color: rgba(255, 255, 247, 0.35);
 }
 
 #main {

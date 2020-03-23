@@ -1,17 +1,22 @@
-$list-dark: #666666;
-$list-light: #888888;
-$dropdown-dark: #555555;
-$dropdown-light: #444444;
-$dropdown-hover: #8422ca;
+$list-dark: $s1;
+$list-light: $s2;
+
+$dropdown-base: $highlight;
+$dropdown-hover: mix($highlight, $s8, 50%);
+
+$dropdown-dark: mix($dropdown-base, $s1, 50%);
+$dropdown-light: mix($dropdown-base, $s2, 50%);
+
+$divider: desaturate($highlight, 50%);
 
 #toolbar
 {
-    background-color: #aa8899;
+    background-color: $s8;
     grid-area: toolbar;
 
     h2
     {
-        color: white;
+        color: $dark;
         text-transform: uppercase;
         font-size: 1.5rem;
 
@@ -21,7 +26,7 @@ $dropdown-hover: #8422ca;
 
     h3
     {
-        color: white;
+        color: $light;
         font-size: 1.2rem;
         text-align: center;
         display: inline;
@@ -44,8 +49,8 @@ $dropdown-hover: #8422ca;
 
     &--key-frames, &--animations
     {
-        border-top: 5px #554466 solid;
-        border-bottom: 5px #554466 solid;
+        border-top: 5px $divider solid;
+        border-bottom: 5px $divider solid;
 
         list-style: none;
         display: flex;
@@ -82,7 +87,7 @@ $dropdown-hover: #8422ca;
                     width: 80px;
                     border: none;
 
-                    color: white;
+                    color: $light;
 
                     &:nth-child(odd)
                     {

@@ -1,0 +1,12 @@
+//light and dark
+$light: #fffff7;
+$dark: #000111;
+
+$s9: mix($light, $dark, 90%);
+$s8: mix($light, $dark, 80%);
+
+$s2: mix($light, $dark, 20%);
+$s1: mix($light, $dark, 10%);
+
+//highlight
+$highlight: #6f00ff;

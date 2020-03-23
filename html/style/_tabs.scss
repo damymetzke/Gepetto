@@ -1,6 +1,9 @@
+$tab: $light;
+$selected-tab: mix($highlight, $s1, 50%);
+
 #tabs
 {
-    background-color: #8b5965;
+    background-color: $s8;
     grid-area: tabs;
     
     display: flex;
@@ -15,7 +18,7 @@
     li
     {
         list-style: none;
-        background-color: white;
+        background-color: $tab;
 
         padding: 2px 3px;
 
@@ -28,7 +31,7 @@
 
         &#selected-tab
         {
-            background-color: #557766;
+            background-color: $selected-tab;
             
             h3
             {
@@ -39,11 +42,11 @@
         &.dragging
         {
             position: absolute;
-            background-color: rgba($color: white, $alpha: 0.7);
+            background-color: rgba($color: $tab, $alpha: 0.7);
 
             &#selected-tab
             {
-                 background-color: rgba($color: #557766, $alpha: 0.7);
+                 background-color: rgba($color: $selected-tab, $alpha: 0.7);
             }
         }
     }
@@ -52,6 +55,6 @@
     {
         width: 30px;
 
-        background-color: rgba($color: white, $alpha: 0.35);
+        background-color: rgba($color: $tab, $alpha: 0.35);
     }
 }
