@@ -1,8 +1,10 @@
 #object-editor--text-tree
 {
-    background-color: #d14a9d;
+    background-color: $light-object-editor;
 
     grid-area: text;
+
+    border-right: 5px $divider-object-editor solid;
 
     ol
     {

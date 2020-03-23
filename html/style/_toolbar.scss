@@ -7,12 +7,12 @@ $dropdown-hover: mix($highlight, $s8, 50%);
 $dropdown-dark: mix($dropdown-base, $s1, 50%);
 $dropdown-light: mix($dropdown-base, $s2, 50%);
 
-$divider: desaturate($highlight, 50%);
-
 #toolbar
 {
     background-color: $s8;
     grid-area: toolbar;
+
+    border-right: 5px $divider solid;
 
     h2
     {

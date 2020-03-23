@@ -1,22 +1,24 @@
 #object-editor--property
 {
-    background-color: #d14a9d;
+    background-color: $light-object-editor;
 
     grid-area: property;
+
+    border-left: 5px $divider-object-editor solid;
 
     h2
     {
         font-size: 1.5rem;
         font-weight: normal;
         text-decoration: underline solid;
-        color: white;
+        color: $dark;
     }
 
     h3
     {
         text-transform: lowercase;
         font-size: 1.25rem;
-        color: white;
+        color: $dark;
     }
 
     h4
@@ -24,14 +26,14 @@
         font-size: 1.25rem;
         font-weight: normal;
         display: inline;
-        color: white;
+        color: $dark;
     }
 
     h5
     {
         font-size: 1rem;
         text-decoration: underline solid;
-        color: black;
+        color: $dark;
     }
 
     input
@@ -57,12 +59,12 @@
         padding: 10px;
         list-style: none;
 
-        border-top: 3px white solid;
-        border-bottom: 3px white solid;
+        border-top: 5px $divider-object-editor solid;
+        border-bottom: 5px $divider-object-editor solid;
 
         li
         {
-            border: 2px white solid;
+            border: 2px $dark solid;
             width: 80%;
             padding: 10px;
 
@@ -70,7 +72,7 @@
 
             border-radius: 10px;
 
-            background-color: powderblue;
+            background-color: $light;
 
             input::-webkit-inner-spin-button, input::-webkit-outer-spin-button
             {

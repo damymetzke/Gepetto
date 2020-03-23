@@ -12,8 +12,8 @@ html {
 }
 
 body {
-  background-color: #EFEFEE;
-  color: #000028;
+  background-color: #fffff7;
+  color: #000111;
   font-family: sans-serif;
   margin: 0;
   padding: 0;
@@ -86,16 +86,15 @@ h1 {
 }
 
 .button {
-  background-color: rgba(0, 0, 0, 0);
   font-size: 1.3rem;
-  background-color: white;
-  border: 2px black solid;
+  background-color: #fffff7;
+  border: 2px #000111 solid;
   border-radius: 10px;
   padding: 2px 5px;
 }
 
 .button:hover {
-  background-color: #bbbbbb;
+  background-color: #ccccc9;
 }
 
 #object-editor--body {
@@ -111,7 +110,7 @@ h1 {
 }
 
 #object-editor--header {
-  background-color: #550655;
+  background-color: #1a1653;
   -ms-grid-row: 1;
   -ms-grid-column: 1;
   -ms-grid-column-span: 3;
@@ -129,10 +128,11 @@ h1 {
 }
 
 #object-editor--text-tree {
-  background-color: #d14a9d;
+  background-color: #d1cef9;
   -ms-grid-row: 2;
   -ms-grid-column: 1;
   grid-area: text;
+  border-right: 5px #4e46c1 solid;
 }
 
 #object-editor--text-tree ol {
@@ -164,10 +164,11 @@ h1 {
 }
 
 #object-editor--property {
-  background-color: #d14a9d;
+  background-color: #d1cef9;
   -ms-grid-row: 2;
   -ms-grid-column: 3;
   grid-area: property;
+  border-left: 5px #4e46c1 solid;
 }
 
 #object-editor--property h2 {
@@ -175,27 +176,27 @@ h1 {
   font-weight: normal;
   -webkit-text-decoration: underline solid;
           text-decoration: underline solid;
-  color: white;
+  color: #000111;
 }
 
 #object-editor--property h3 {
   text-transform: lowercase;
   font-size: 1.25rem;
-  color: white;
+  color: #000111;
 }
 
 #object-editor--property h4 {
   font-size: 1.25rem;
   font-weight: normal;
   display: inline;
-  color: white;
+  color: #000111;
 }
 
 #object-editor--property h5 {
   font-size: 1rem;
   -webkit-text-decoration: underline solid;
           text-decoration: underline solid;
-  color: black;
+  color: #000111;
 }
 
 #object-editor--property input {
@@ -219,17 +220,17 @@ h1 {
 #object-editor--property #object-editor--property--transform-list {
   padding: 10px;
   list-style: none;
-  border-top: 3px white solid;
-  border-bottom: 3px white solid;
+  border-top: 5px #4e46c1 solid;
+  border-bottom: 5px #4e46c1 solid;
 }
 
 #object-editor--property #object-editor--property--transform-list li {
-  border: 2px white solid;
+  border: 2px #000111 solid;
   width: 80%;
   padding: 10px;
   margin: 5px 0;
   border-radius: 10px;
-  background-color: powderblue;
+  background-color: #fffff7;
 }
 
 #object-editor--property #object-editor--property--transform-list li input::-webkit-inner-spin-button, #object-editor--property #object-editor--property--transform-list li input::-webkit-outer-spin-button {

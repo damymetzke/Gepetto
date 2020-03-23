@@ -12,8 +12,8 @@ html {
 }
 
 body {
-  background-color: #EFEFEE;
-  color: #000028;
+  background-color: #fffff7;
+  color: #000111;
   font-family: sans-serif;
   margin: 0;
   padding: 0;
@@ -86,16 +86,15 @@ h1 {
 }
 
 .button {
-  background-color: rgba(0, 0, 0, 0);
   font-size: 1.3rem;
-  background-color: white;
-  border: 2px black solid;
+  background-color: #fffff7;
+  border: 2px #000111 solid;
   border-radius: 10px;
   padding: 2px 5px;
 }
 
 .button:hover {
-  background-color: #bbbbbb;
+  background-color: #ccccc9;
 }
 
 #body {
@@ -105,8 +104,8 @@ h1 {
   height: 100vh;
   -ms-grid-columns: 240px 1fr;
       grid-template-columns: 240px 1fr;
-  -ms-grid-rows: 50px 30px 1fr;
-      grid-template-rows: 50px 30px 1fr;
+  -ms-grid-rows: 50px 35px 1fr;
+      grid-template-rows: 50px 35px 1fr;
       grid-template-areas: "header     header" "toolbar    tabs" "toolbar    main";
 }
 
@@ -131,6 +130,7 @@ h1 {
   -ms-grid-row-span: 2;
   -ms-grid-column: 1;
   grid-area: toolbar;
+  border-right: 5px #7740bf solid;
 }
 
 #toolbar h2 {
@@ -250,6 +250,7 @@ h1 {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+  border-bottom: 5px #7740bf solid;
 }
 
 #tabs h3 {
@@ -293,7 +294,7 @@ h1 {
 }
 
 #main {
-  background-color: #444444;
+  background-color: #33343f;
   -ms-grid-row: 3;
   -ms-grid-column: 2;
   grid-area: main;

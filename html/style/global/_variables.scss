@@ -2,6 +2,7 @@
 $light: #fffff7;
 $dark: #000111;
 
+//shades
 $s9: mix($light, $dark, 90%);
 $s8: mix($light, $dark, 80%);
 
@@ -10,3 +11,12 @@ $s1: mix($light, $dark, 10%);
 
 //highlight
 $highlight: #6f00ff;
+$highlight-object-editor: #1908ff;
+
+//special
+$divider: desaturate($highlight, 50%);
+
+//object editor
+$light-object-editor: mix($light, $highlight-object-editor, 80%);
+$dark-object-editor: mix($s1, $highlight-object-editor, 80%);
+$divider-object-editor: desaturate($highlight-object-editor, 50%);
