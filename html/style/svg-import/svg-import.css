@@ -1,0 +1,131 @@
+*, *::before, *::after {
+  -webkit-box-sizing: inherit;
+          box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #EFEFEE;
+  color: #000028;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  font: sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: serif;
+  color: #402840;
+}
+
+h1 {
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2.5em;
+}
+
+h3 {
+  font-size: 2em;
+}
+
+h4 {
+  font-size: 1.75em;
+}
+
+h5 {
+  font-size: 1.5em;
+}
+
+h6 {
+  font-size: 1.25em;
+}
+
+img {
+  max-width: 100%;
+}
+
+h1 {
+  font-family: sans-serif;
+  font-size: 1.4rem;
+  margin: auto auto;
+  color: #ffccee;
+}
+
+.dropdown--icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 0 5px;
+}
+
+.dropdown--box {
+  display: none;
+}
+
+.dropdown--box--display {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: absolute;
+}
+
+.button {
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 1.3rem;
+  background-color: white;
+  border: 2px black solid;
+  border-radius: 10px;
+  padding: 2px 5px;
+}
+
+.button:hover {
+  background-color: #bbbbbb;
+}
+
+h1 {
+  color: white;
+  text-decoration: underline;
+  font-size: 2rem;
+  background-color: #6b1329;
+  text-align: center;
+  padding: 5px 0;
+}
+
+p {
+  color: white;
+  padding: 5px;
+}
+
+p:nth-child(odd) {
+  background-color: #333333;
+}
+
+p:nth-child(even) {
+  background-color: #444444;
+}
+
+body {
+  background-color: #666666;
+}
+
+#import-button {
+  margin: 10px 0 0 calc(50vw - 40px);
+  width: 80px;
+}
+/*# sourceMappingURL=svg-import.css.map */
