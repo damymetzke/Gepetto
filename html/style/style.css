@@ -301,6 +301,7 @@ h1 {
 
 #main > li {
   display: none;
+  height: 100%;
 }
 
 #main > li#selected-content {

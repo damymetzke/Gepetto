@@ -109,7 +109,7 @@ function OnSelectTab(content, tab)
     {
         return;
     }
-    currentContent = document.getElementById("selected-content");
+    let currentContent = document.getElementById("selected-content");
 
     if (currentContent != null)
     {
@@ -118,7 +118,7 @@ function OnSelectTab(content, tab)
 
     content.id = "selected-content";
 
-    currentTab = document.getElementById("selected-tab");
+    let currentTab = document.getElementById("selected-tab");
     if (currentTab != null)
     {
         currentTab.id = "";
@@ -128,6 +128,7 @@ function OnSelectTab(content, tab)
 }
 
 //setup events
+export function OnScriptLoad(root)
 {
     const contents = document.getElementById("main").children;
     let contentsMap = {};

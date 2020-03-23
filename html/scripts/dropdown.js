@@ -4,7 +4,7 @@ function OnDropdown(target)
 }
 
 //setup events
-function OnScriptDropdownLoad(root)
+export function OnScriptLoad(root)
 {
     let targets = {};
     const dropdowns = root.getElementsByClassName("dropdown--box");
