@@ -1,3 +1,7 @@
+//fore and background
+$foreground: var(--foreground, gold);
+$background: var(--background, orange);
+
 //light and dark
 $light: #fffff7;
 $dark: #000111;
@@ -20,3 +24,8 @@ $divider: desaturate($highlight, 50%);
 $light-object-editor: mix($light, $highlight-object-editor, 80%);
 $dark-object-editor: mix($s1, $highlight-object-editor, 80%);
 $divider-object-editor: desaturate($highlight-object-editor, 50%);
+
+@if(alpha($light) != 1 or alpha($dark) != 1)
+{
+    @error "alpha of light and dark should be 1";
+}

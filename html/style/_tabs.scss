@@ -3,7 +3,7 @@ $selected-tab: mix($highlight, $s1, 50%);
 
 #tabs
 {
-    background-color: $s8;
+    --background: #{$s8};
     grid-area: tabs;
     
     display: flex;
@@ -14,13 +14,13 @@ $selected-tab: mix($highlight, $s1, 50%);
     h3
     {
         font-size: 20px;
-        color: black;
+        --background: transparent;
     }
 
     li
     {
         list-style: none;
-        background-color: $tab;
+        --background: #{$tab};
 
         padding: 2px 3px;
 
@@ -33,22 +33,22 @@ $selected-tab: mix($highlight, $s1, 50%);
 
         &#selected-tab
         {
-            background-color: $selected-tab;
+            --background: #{$selected-tab};
             
             h3
             {
-                color: white;
+                --foreground: #{$light};
             }
         }
 
         &.dragging
         {
+            --background: #{transparentize($tab, 0.3)};
             position: absolute;
-            background-color: rgba($color: $tab, $alpha: 0.7);
-
+            
             &#selected-tab
             {
-                 background-color: rgba($color: $selected-tab, $alpha: 0.7);
+                --background: #{transparentize($selected-tab, 0.3)};
             }
         }
     }
@@ -56,7 +56,8 @@ $selected-tab: mix($highlight, $s1, 50%);
     #tab-pointer
     {
         width: 30px;
-
-        background-color: rgba($color: $tab, $alpha: 0.35);
+        
+        //background-color: rgba($color: $tab, $alpha: 0.35);
+        --background: #{transparentize($tab, 0.3)};
     }
 }

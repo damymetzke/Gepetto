@@ -1,6 +1,6 @@
 #object-editor--header
 {
-    background-color: $dark-object-editor;
+    --background: #{$dark-object-editor};
 
     grid-area: header;
 

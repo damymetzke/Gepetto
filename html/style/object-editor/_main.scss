@@ -1,6 +1,6 @@
 #object-editor--main
 {
-    background-color: white;
+    --background: #{$light};
 
     grid-area: main;
 }

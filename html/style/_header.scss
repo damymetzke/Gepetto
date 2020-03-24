@@ -1,6 +1,6 @@
 #header
 {
-    background-color: $s1;
+    --background: #{$s1};
     grid-area: header;
     display: flex;
     flex-direction: row;

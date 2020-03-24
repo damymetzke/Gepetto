@@ -1,6 +1,6 @@
 #object-editor--text-tree
 {
-    background-color: $light-object-editor;
+    --background: #{$light-object-editor};
 
     grid-area: text;
 
@@ -9,7 +9,7 @@
     ol
     {
         list-style: none;
-        color: white;
+        color: $dark;
         > li
         {
             margin: 0 0 0 15px;
@@ -20,7 +20,7 @@
                 display: inline-block;
                 width: 2px;
                 height: 12px;
-                background-color: purple;
+                background-color: $dark;
                 margin-right: 10px;
                 margin: 0 10px 0 0;
 

@@ -12,8 +12,6 @@ html {
 }
 
 body {
-  background-color: #fffff7;
-  color: #000111;
   font-family: sans-serif;
   margin: 0;
   padding: 0;
@@ -25,7 +23,6 @@ p {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: serif;
-  color: #402840;
 }
 
 h1 {
@@ -54,6 +51,16 @@ h6 {
 
 img {
   max-width: 100%;
+}
+
+:root {
+  --foreground: $light;
+  --background: $dark;
+}
+
+*, *:after, *:before {
+  background-color: var(--background, orange);
+  color: var(--foreground, gold);
 }
 
 h1 {
@@ -110,7 +117,7 @@ h1 {
 }
 
 #object-editor--header {
-  background-color: #1a1653;
+  --background: #1a1653;
   -ms-grid-row: 1;
   -ms-grid-column: 1;
   -ms-grid-column-span: 3;
@@ -128,7 +135,7 @@ h1 {
 }
 
 #object-editor--text-tree {
-  background-color: #d1cef9;
+  --background: #d1cef9;
   -ms-grid-row: 2;
   -ms-grid-column: 1;
   grid-area: text;
@@ -137,7 +144,7 @@ h1 {
 
 #object-editor--text-tree ol {
   list-style: none;
-  color: white;
+  color: #000111;
 }
 
 #object-editor--text-tree ol > li {
@@ -149,7 +156,7 @@ h1 {
   display: inline-block;
   width: 2px;
   height: 12px;
-  background-color: purple;
+  background-color: #000111;
   margin-right: 10px;
   margin: 0 10px 0 0;
   -webkit-transform: scaleY(1.5);
@@ -157,14 +164,14 @@ h1 {
 }
 
 #object-editor--main {
-  background-color: white;
+  --background: #fffff7;
   -ms-grid-row: 2;
   -ms-grid-column: 2;
   grid-area: main;
 }
 
 #object-editor--property {
-  background-color: #d1cef9;
+  --background: #d1cef9;
   -ms-grid-row: 2;
   -ms-grid-column: 3;
   grid-area: property;
@@ -176,27 +183,23 @@ h1 {
   font-weight: normal;
   -webkit-text-decoration: underline solid;
           text-decoration: underline solid;
-  color: #000111;
 }
 
 #object-editor--property h3 {
   text-transform: lowercase;
   font-size: 1.25rem;
-  color: #000111;
 }
 
 #object-editor--property h4 {
   font-size: 1.25rem;
   font-weight: normal;
   display: inline;
-  color: #000111;
 }
 
 #object-editor--property h5 {
   font-size: 1rem;
   -webkit-text-decoration: underline solid;
           text-decoration: underline solid;
-  color: #000111;
 }
 
 #object-editor--property input {
@@ -225,12 +228,13 @@ h1 {
 }
 
 #object-editor--property #object-editor--property--transform-list li {
-  border: 2px #000111 solid;
+  --foreground: #000111;
+  --background: #fffff7;
+  border: 2px var(--foreground, gold) solid;
   width: 80%;
   padding: 10px;
   margin: 5px 0;
   border-radius: 10px;
-  background-color: #fffff7;
 }
 
 #object-editor--property #object-editor--property--transform-list li input::-webkit-inner-spin-button, #object-editor--property #object-editor--property--transform-list li input::-webkit-outer-spin-button {
