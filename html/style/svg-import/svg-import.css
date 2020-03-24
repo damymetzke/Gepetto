@@ -12,6 +12,8 @@ html {
 }
 
 body {
+  background-color: #fffff7;
+  color: #000111;
   font-family: sans-serif;
   margin: 0;
   padding: 0;
@@ -23,6 +25,7 @@ p {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: serif;
+  color: #402840;
 }
 
 h1 {
@@ -51,16 +54,6 @@ h6 {
 
 img {
   max-width: 100%;
-}
-
-:root {
-  --foreground: $light;
-  --background: $dark;
-}
-
-*, *:after, *:before {
-  background-color: var(--background, orange);
-  color: var(--foreground, gold);
 }
 
 h1 {

@@ -12,6 +12,8 @@ html {
 }
 
 body {
+  background-color: #fffff7;
+  color: #000111;
   font-family: sans-serif;
   margin: 0;
   padding: 0;
@@ -23,6 +25,7 @@ p {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: serif;
+  color: #402840;
 }
 
 h1 {
@@ -51,16 +54,6 @@ h6 {
 
 img {
   max-width: 100%;
-}
-
-:root {
-  --foreground: $light;
-  --background: $dark;
-}
-
-*, *:after, *:before {
-  background-color: var(--background, orange);
-  color: var(--foreground, gold);
 }
 
 h1 {
@@ -117,7 +110,7 @@ h1 {
 }
 
 #header {
-  --background: #1a1a28;
+  background-color: #1a1a28;
   -ms-grid-row: 1;
   -ms-grid-column: 1;
   -ms-grid-column-span: 2;
@@ -246,7 +239,7 @@ h1 {
 }
 
 #tabs {
-  --background: #ccccc9;
+  background-color: #ccccc9;
   -ms-grid-row: 2;
   -ms-grid-column: 2;
   grid-area: tabs;
@@ -262,12 +255,12 @@ h1 {
 
 #tabs h3 {
   font-size: 20px;
-  --background: transparent;
+  color: black;
 }
 
 #tabs li {
   list-style: none;
-  --background: #fffff7;
+  background-color: #fffff7;
   padding: 2px 3px;
   margin-right: 5px;
   margin-left: 2px;
@@ -279,29 +272,29 @@ h1 {
 }
 
 #tabs li#selected-tab {
-  --background: #450d94;
+  background-color: #450d94;
 }
 
 #tabs li#selected-tab h3 {
-  --foreground: #fffff7;
+  color: white;
 }
 
 #tabs li.dragging {
-  --background: rgba(255, 255, 247, 0.7);
   position: absolute;
+  background-color: rgba(255, 255, 247, 0.7);
 }
 
 #tabs li.dragging#selected-tab {
-  --background: rgba(69, 13, 148, 0.7);
+  background-color: rgba(69, 13, 148, 0.7);
 }
 
 #tabs #tab-pointer {
   width: 30px;
-  --background: rgba(255, 255, 247, 0.7);
+  background-color: rgba(255, 255, 247, 0.35);
 }
 
 #main {
-  --background: #33343f;
+  background-color: #33343f;
   -ms-grid-row: 3;
   -ms-grid-column: 2;
   grid-area: main;

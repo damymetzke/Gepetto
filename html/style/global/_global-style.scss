@@ -1,17 +1,3 @@
-:root
-{ 
-    --foreground: $light;
-    --background: $dark;
-}
-
-*, *:after, *:before
-{
-    background-color: $background;
-    color: $foreground;
-}
-
-
-
 h1
 {
     font-family: sans-serif;

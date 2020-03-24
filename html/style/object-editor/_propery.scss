@@ -1,6 +1,6 @@
 #object-editor--property
 {
-    --background: #{$light-object-editor};
+    background-color: $light-object-editor;
 
     grid-area: property;
 
@@ -11,12 +11,14 @@
         font-size: 1.5rem;
         font-weight: normal;
         text-decoration: underline solid;
+        color: $dark;
     }
 
     h3
     {
         text-transform: lowercase;
         font-size: 1.25rem;
+        color: $dark;
     }
 
     h4
@@ -24,12 +26,14 @@
         font-size: 1.25rem;
         font-weight: normal;
         display: inline;
+        color: $dark;
     }
 
     h5
     {
         font-size: 1rem;
         text-decoration: underline solid;
+        color: $dark;
     }
 
     input
@@ -60,15 +64,15 @@
 
         li
         {
-            --foreground: #{$dark};
-            --background: #{$light};
-            border: 2px $foreground solid;
+            border: 2px $dark solid;
             width: 80%;
             padding: 10px;
 
             margin: 5px 0;
 
             border-radius: 10px;
+
+            background-color: $light;
 
             input::-webkit-inner-spin-button, input::-webkit-outer-spin-button
             {
