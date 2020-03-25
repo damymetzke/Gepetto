@@ -137,7 +137,7 @@ h1 {
 
 #object-editor--text-tree ol {
   list-style: none;
-  color: white;
+  color: var(--dark, #000111);
 }
 
 #object-editor--text-tree ol > li {
@@ -149,7 +149,7 @@ h1 {
   display: inline-block;
   width: 2px;
   height: 12px;
-  background-color: purple;
+  background-color: var(--dark, #000111);
   margin-right: 10px;
   margin: 0 10px 0 0;
   -webkit-transform: scaleY(1.5);
