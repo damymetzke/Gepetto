@@ -1,11 +1,11 @@
 $list-dark: $s1;
 $list-light: $s2;
 
-$dropdown-base: $highlight;
-$dropdown-hover: mix($highlight, $s8, 50%);
+$dropdown-base: $highlight-color;
+$dropdown-hover: mix($highlight-color, $s8-color, 50%);
 
-$dropdown-dark: mix($dropdown-base, $s1, 50%);
-$dropdown-light: mix($dropdown-base, $s2, 50%);
+$dropdown-dark: mix($dropdown-base, $s1-color, 50%);
+$dropdown-light: mix($dropdown-base, $s2-color, 50%);
 
 #toolbar
 {

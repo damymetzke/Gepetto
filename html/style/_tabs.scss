@@ -1,5 +1,5 @@
 $tab: $light;
-$selected-tab: mix($highlight, $s1, 50%);
+$selected-tab: mix($highlight-color, $s1-color, 50%);
 
 #tabs
 {

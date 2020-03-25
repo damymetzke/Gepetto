@@ -1,22 +1,43 @@
+//colors//
+//////////
+
 //light and dark
-$light: #fffff7;
-$dark: #000111;
+$light-color: #fffff7;
+$dark-color: #000111;
 
 //shades
-$s9: mix($light, $dark, 90%);
-$s8: mix($light, $dark, 80%);
-
-$s2: mix($light, $dark, 20%);
-$s1: mix($light, $dark, 10%);
+$s9-color: mix($light-color, $dark-color, 90%);
+$s8-color: mix($light-color, $dark-color, 80%);
+$s2-color: mix($light-color, $dark-color, 20%);
+$s1-color: mix($light-color, $dark-color, 10%);
 
 //highlight
-$highlight: #6f00ff;
-$highlight-object-editor: #1908ff;
+$highlight-color: #6f00ff;
+$highlight-object-editor-color: #1908ff;
 
 //special
-$divider: desaturate($highlight, 50%);
+$divider-color: desaturate($highlight-color, 50%);
 
 //object editor
-$light-object-editor: mix($light, $highlight-object-editor, 80%);
-$dark-object-editor: mix($s1, $highlight-object-editor, 80%);
-$divider-object-editor: desaturate($highlight-object-editor, 50%);
+$light-object-editor-color: mix($light-color, $highlight-object-editor-color, 80%);
+$dark-object-editor-color: mix($s1-color, $highlight-object-editor-color, 80%);
+$divider-object-editor-color: desaturate($highlight-object-editor-color, 50%);
+
+//css variables
+//using these css variables will open up the possibiliy for themes in the future. Changing these variables in root will change them for the entire application.
+$light: var(--light, $light-color);
+$dark: var(--dark, $dark-color);
+
+$s9: var(--s9, $s9-color);
+$s8: var(--s8, $s8-color);
+$s2: var(--s2, $s2-color);
+$s1: var(--s1, $s1-color);
+
+$highlight: var(--highlight, $highlight-color);
+$highlight-object-editor: var(--highlight, $highlight-object-editor-color);
+
+$divider: var(--divider, $divider-color);
+
+$light-object-editor: var(--light-object-editor, $light-object-editor-color);
+$dark-object-editor: var(--dark-object-editor, $dark-object-editor-color);
+$divider-object-editor: var(--divider-object-editor, $divider-object-editor-color);
