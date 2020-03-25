@@ -1,4 +1,4 @@
-export default class Transform
+class Transform
 {
     classIdentifier = "Transform";
     matrix = [1, 1, 1, 1, 1, 1];
@@ -45,3 +45,5 @@ export default class Transform
         this.matrix = matrix;
     }
 }
+
+module.exports = Transform;
