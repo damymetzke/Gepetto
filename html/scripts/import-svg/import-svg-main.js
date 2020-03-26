@@ -1,4 +1,5 @@
 const { dialog, getCurrentWindow } = require("electron").remote;
+const { ipcRenderer } = require("electron");
 
 const fileNameElement = document.getElementById("svg-file-name");
 
@@ -46,7 +47,17 @@ function OnImport()
         return;
     }
 
-    getCurrentWindow().close();
+    console.log(require("electron"));
+    ipcRenderer.invoke("import-svg", [name, currentFilePath]).then(function (result)
+    {
+        if (result.success)
+        {
+            getCurrentWindow().close();
+            return;
+        }
+
+        errorOutput.innerHTML += result.message;
+    });
 }
 
 {

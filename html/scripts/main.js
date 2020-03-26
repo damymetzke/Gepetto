@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require("electron");
+const { Init } = require("./draw-object-manager");
 
 function createWindow()
 {
@@ -21,3 +22,4 @@ function createWindow()
 }
 
 app.whenReady().then(createWindow);
+Init();
