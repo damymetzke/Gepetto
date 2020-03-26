@@ -1,5 +1,11 @@
 const Transform = require("./transform");
 
+/**
+ * the class used to store objects to be drawn.
+ * 
+ * Each object represents an SVG image.
+ * Each object has a name, parent and a transform relative to the parent.
+ */
 class DrawObject
 {
     name;

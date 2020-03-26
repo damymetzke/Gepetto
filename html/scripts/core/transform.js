@@ -1,3 +1,12 @@
+/**
+ * fundamental class for all transforms
+ * 
+ * transforms are a 3x3 matrix in concept, however not all values are saved. The matrix looks like this:
+ *     ┌.a.c.e.┐
+ *     |.b.d.f.|
+ *     └.0.0.1.┘
+ * this matrix can dircetly be used in SVG Transformations.
+ */
 class Transform
 {
     classIdentifier = "Transform";
