@@ -7,21 +7,29 @@ let currentFilePath = null;
 
 function OpenFile()
 {
-    dialog.showOpenDialog({ properties: ['openFile'] }).then(
-        function (result)
+    dialog.showOpenDialog(
         {
-            if (result.filePaths.length > 0)
+            properties: ['openFile'],
+            filters:
+                [
+                    { name: "Scalable Vector Graphics", extensions: ["svg"] },
+                    { name: "All File Types", extensions: ["*"] }
+                ]
+        }).then(
+            function (result)
             {
-                currentFilePath = result.filePaths[0];
-                const splitFilePath = currentFilePath.split(/\/|\\/);
-                const fileName = splitFilePath[splitFilePath.length - 1];
-                fileNameElement.innerText = fileName;
-            }
-        },
-        function (error)
-        {
-            console.warn("❌ Error during file dialog: ", error);
-        });
+                if (result.filePaths.length > 0)
+                {
+                    currentFilePath = result.filePaths[0];
+                    const splitFilePath = currentFilePath.split(/\/|\\/);
+                    const fileName = splitFilePath[splitFilePath.length - 1];
+                    fileNameElement.innerText = fileName;
+                }
+            },
+            function (error)
+            {
+                console.warn("❌ Error during file dialog: ", error);
+            });
 }
 
 function OnImport()
