@@ -9,7 +9,7 @@ function ImportSvg()
     const BrowserWindow = require("electron").remote.BrowserWindow;
     let win = new BrowserWindow({
         width: 300,
-        height: 200,
+        height: 300,
         webPreferences: {
             nodeIntegration: true
         },

@@ -26,16 +26,18 @@ function OpenFile()
 function OnImport()
 {
     const name = document.getElementById("name-field").value;
+    let errorOutput = document.getElementById("error-output");
+    errorOutput.innerHTML = "";
 
     let invalidInput = false;
     if (currentFilePath === null)
     {
-        console.warn("No file has been selected");
+        errorOutput.innerHTML += "Please select a file.<br>";
         invalidInput = true;
     }
     if (name === "")
     {
-        console.warn("No name has been entered");
+        errorOutput.innerHTML += "Please enter a name.<br>";
         invalidInput = true;
     }
 

@@ -127,4 +127,8 @@ body {
   margin: 10px 0 0 calc(50vw - 40px);
   width: 80px;
 }
+
+#error-output {
+  color: red;
+}
 /*# sourceMappingURL=svg-import.css.map */
