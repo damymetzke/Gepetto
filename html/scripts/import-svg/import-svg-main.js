@@ -12,7 +12,7 @@ function OpenFile()
             properties: ['openFile'],
             filters:
                 [
-                    { name: "Scalable Vector Graphics", extensions: ["svg"] },
+                    { name: "Scalable Vector Graphics", extensions: ["svg", "xml"] },
                     { name: "All File Types", extensions: ["*"] }
                 ]
         }).then(

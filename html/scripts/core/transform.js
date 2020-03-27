@@ -49,7 +49,7 @@ class Transform
         ];
     }
 
-    constructor(matrix)
+    constructor(matrix = [1, 1, 1, 1, 1, 1])
     {
         this.matrix = matrix;
     }

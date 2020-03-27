@@ -2,7 +2,13 @@ const { DrawObject } = require("./draw-object");
 
 class DrawObjectTree
 {
-    root = null;
+    rootObjects = [];
+
+    constructor(rootObjects = [])
+    {
+        this.rootObjects = rootObjects;
+    }
 }
 
 module.exports.DrawObjectTree = DrawObjectTree;
+module.exports.DrawObject = DrawObject;
