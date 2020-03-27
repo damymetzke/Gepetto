@@ -1,3 +1,5 @@
+//todo: refactor the spaghhett
+
 const { ipcMain } = require("electron");
 const fs = require("fs");
 const xml = require("xml2js");
@@ -6,12 +8,14 @@ const { DrawObjectTree, DrawObject } = require("./core/draw-object-tree");
 const Transform = require("./core/transform");
 
 let ResourceDirectory = "./saved";
+let window = null;
 
 let objectTree = new DrawObjectTree();
 
 function AddDrawObject(object)
 {
     objectTree.rootObjects.push(object);
+    window.webContents.send("refresh-text-tree", objectTree);
 }
 
 function OnImportSvg(event, importArguments)
@@ -90,8 +94,9 @@ function OnImportSvg(event, importArguments)
     };
 }
 
-function Init()
+function Init(mainWindow)
 {
+    window = mainWindow;
     ipcMain.handle("import-svg", OnImportSvg);
 }
 

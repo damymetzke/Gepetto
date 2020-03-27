@@ -97,7 +97,7 @@ h1 {
   background-color: var(--s8, #ccccc9);
 }
 
-#object-editor--body {
+.object-editor--body {
   display: -ms-grid;
   display: grid;
   width: 100%;
@@ -109,7 +109,7 @@ h1 {
       grid-template-areas: "header header  header" "text   main    property";
 }
 
-#object-editor--header {
+.object-editor--header {
   background-color: var(--dark-object-editor, #1a1653);
   -ms-grid-row: 1;
   -ms-grid-column: 1;
@@ -127,7 +127,7 @@ h1 {
           align-items: center;
 }
 
-#object-editor--text-tree {
+.object-editor--text-tree {
   background-color: var(--light-object-editor, #d1cef9);
   -ms-grid-row: 2;
   -ms-grid-column: 1;
@@ -135,16 +135,16 @@ h1 {
   border-right: 5px var(--divider-object-editor, #4e46c1) solid;
 }
 
-#object-editor--text-tree ol {
+.object-editor--text-tree ol {
   list-style: none;
   color: var(--dark, #000111);
 }
 
-#object-editor--text-tree ol > li {
+.object-editor--text-tree ol > li {
   margin: 0 0 0 15px;
 }
 
-#object-editor--text-tree ol > li:before {
+.object-editor--text-tree ol > li:before {
   content: "";
   display: inline-block;
   width: 2px;
@@ -156,14 +156,14 @@ h1 {
           transform: scaleY(1.5);
 }
 
-#object-editor--main {
+.object-editor--main {
   background-color: white;
   -ms-grid-row: 2;
   -ms-grid-column: 2;
   grid-area: main;
 }
 
-#object-editor--property {
+.object-editor--property {
   background-color: var(--light-object-editor, #d1cef9);
   -ms-grid-row: 2;
   -ms-grid-column: 3;
@@ -171,7 +171,7 @@ h1 {
   border-left: 5px var(--divider-object-editor, #4e46c1) solid;
 }
 
-#object-editor--property h2 {
+.object-editor--property h2 {
   font-size: 1.5rem;
   font-weight: normal;
   -webkit-text-decoration: underline solid;
@@ -179,52 +179,52 @@ h1 {
   color: var(--dark, #000111);
 }
 
-#object-editor--property h3 {
+.object-editor--property h3 {
   text-transform: lowercase;
   font-size: 1.25rem;
   color: var(--dark, #000111);
 }
 
-#object-editor--property h4 {
+.object-editor--property h4 {
   font-size: 1.25rem;
   font-weight: normal;
   display: inline;
   color: var(--dark, #000111);
 }
 
-#object-editor--property h5 {
+.object-editor--property h5 {
   font-size: 1rem;
   -webkit-text-decoration: underline solid;
           text-decoration: underline solid;
   color: var(--dark, #000111);
 }
 
-#object-editor--property input {
+.object-editor--property input {
   display: inline;
 }
 
-#object-editor--property .dropdown--box {
+.object-editor--property .dropdown--box {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
 }
 
-#object-editor--property .dropdown--box .button {
+.object-editor--property .dropdown--box .button {
   border-radius: 0;
   width: 70px;
   font-size: 1rem;
   font-weight: normal;
 }
 
-#object-editor--property #object-editor--property--transform-list {
+.object-editor--property #object-editor--property--transform-list {
   padding: 10px;
   list-style: none;
   border-top: 5px var(--divider-object-editor, #4e46c1) solid;
   border-bottom: 5px var(--divider-object-editor, #4e46c1) solid;
 }
 
-#object-editor--property #object-editor--property--transform-list li {
+.object-editor--property #object-editor--property--transform-list li {
   border: 2px var(--dark, #000111) solid;
   width: 80%;
   padding: 10px;
@@ -233,7 +233,7 @@ h1 {
   background-color: var(--light, #fffff7);
 }
 
-#object-editor--property #object-editor--property--transform-list li input::-webkit-inner-spin-button, #object-editor--property #object-editor--property--transform-list li input::-webkit-outer-spin-button {
+.object-editor--property #object-editor--property--transform-list li input::-webkit-inner-spin-button, .object-editor--property #object-editor--property--transform-list li input::-webkit-outer-spin-button {
   display: none;
 }
 /*# sourceMappingURL=object-editor.css.map */
