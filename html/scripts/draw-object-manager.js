@@ -9,6 +9,11 @@ let ResourceDirectory = "./saved";
 
 let objectTree = new DrawObjectTree();
 
+function AddDrawObject(object)
+{
+    objectTree.rootObjects.push(object);
+}
+
 function OnImportSvg(event, importArguments)
 {
     let parsingFailed = false;
@@ -59,6 +64,9 @@ function OnImportSvg(event, importArguments)
             fs.mkdirSync(ResourceDirectory);
         }
         fs.writeFileSync(`${ResourceDirectory}/${importArguments.name}.xml`, result);
+
+        AddDrawObject(new DrawObject(importArguments.name));
+        console.log(objectTree);
     });
 
     if (parsingFailed)
