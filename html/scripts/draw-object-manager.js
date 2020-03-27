@@ -13,6 +13,15 @@ function OnImportSvg(event, importArguments)
 {
     let parsingFailed = false;
     let parsingError = "";
+
+    if (!/^\w*$/.test(importArguments.name))
+    {
+        return {
+            success: false,
+            message: "Name can only contain alphanumerical characters and underscore('_')"
+        };
+    }
+
     xml.parseString(fs.readFileSync(importArguments.filePath, "utf-8"), { async: false }, function (error, content)
     {
         if (error)
