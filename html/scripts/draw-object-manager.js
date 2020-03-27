@@ -27,6 +27,14 @@ function OnImportSvg(event, importArguments)
         };
     }
 
+    if (objectTree.HasObject(importArguments.name))
+    {
+        return {
+            success: false,
+            message: "Name is already in use"
+        };
+    }
+
     xml.parseString(fs.readFileSync(importArguments.filePath, "utf-8"), { async: false }, function (error, content)
     {
         if (error)
