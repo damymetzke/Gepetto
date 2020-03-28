@@ -6,6 +6,7 @@ const { DrawObjectTree } = require("electron").remote.require("./core/draw-objec
 const { DrawObject } = require("electron").remote.require("./core/draw-object");
 
 let treeRoot = null;
+let propertyNameNode = null;
 
 function OnSelectObject(objectName)
 {
@@ -15,7 +16,6 @@ function OnSelectObject(objectName)
 function OnRefreshSelectedContent(event, object)
 {
     let elements = treeRoot.querySelectorAll("[data-draw-object-name]");
-    console.log(elements);
     for (let i = 0; i < elements.length; ++i)
     {
         if (elements[i].dataset.drawObjectName === object.name)
@@ -27,6 +27,8 @@ function OnRefreshSelectedContent(event, object)
             elements[i].classList.remove("selected-element");
         }
     }
+
+    propertyNameNode.innerText = object.name;
 }
 
 function OnRefreshTree(event, treeData)
@@ -49,6 +51,8 @@ function OnRefreshTree(event, treeData)
 export function Run(root)
 {
     DropDown.OnScriptLoad(root);
+
+    propertyNameNode = root.getElementsByClassName("object-editor--property--name")[0];
 
     const textTree = root.getElementsByClassName("object-editor--text-tree")[0];
     treeRoot = document.createElement("ol");

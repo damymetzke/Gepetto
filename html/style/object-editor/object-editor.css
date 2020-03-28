@@ -225,14 +225,14 @@ h1 {
   font-weight: normal;
 }
 
-.object-editor--property #object-editor--property--transform-list {
+.object-editor--property .object-editor--property--transform-list {
   padding: 10px;
   list-style: none;
   border-top: 5px var(--divider-object-editor, #4e46c1) solid;
   border-bottom: 5px var(--divider-object-editor, #4e46c1) solid;
 }
 
-.object-editor--property #object-editor--property--transform-list li {
+.object-editor--property .object-editor--property--transform-list li {
   border: 2px var(--dark, #000111) solid;
   width: 80%;
   padding: 10px;
@@ -241,7 +241,7 @@ h1 {
   background-color: var(--light, #fffff7);
 }
 
-.object-editor--property #object-editor--property--transform-list li input::-webkit-inner-spin-button, .object-editor--property #object-editor--property--transform-list li input::-webkit-outer-spin-button {
+.object-editor--property .object-editor--property--transform-list li input::-webkit-inner-spin-button, .object-editor--property .object-editor--property--transform-list li input::-webkit-outer-spin-button {
   display: none;
 }
 /*# sourceMappingURL=object-editor.css.map */
