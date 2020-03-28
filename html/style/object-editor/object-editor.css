@@ -160,6 +160,10 @@ h1 {
           transform: scaleY(1.5);
 }
 
+.object-editor--text-tree ol > li.selected-element {
+  color: red;
+}
+
 .object-editor--main {
   background-color: white;
   -ms-grid-row: 2;

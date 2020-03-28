@@ -11,6 +11,7 @@ let ResourceDirectory = "./saved";
 let window = null;
 
 let objectTree = new DrawObjectTree();
+let activeObject = null;
 
 function AddDrawObject(object)
 {
@@ -20,7 +21,8 @@ function AddDrawObject(object)
 
 function OnSelectObject(event, name)
 {
-    console.log(name);
+    activeObject = (name in objectTree.objects) ? objectTree.objects[name] : null;
+    window.webContents.send("refresh-selected-object", activeObject);
 }
 
 function OnImportSvg(event, importArguments)

@@ -12,6 +12,23 @@ function OnSelectObject(objectName)
     ipcRenderer.invoke("select-object", objectName);
 }
 
+function OnRefreshSelectedContent(event, object)
+{
+    let elements = treeRoot.querySelectorAll("[data-draw-object-name]");
+    console.log(elements);
+    for (let i = 0; i < elements.length; ++i)
+    {
+        if (elements[i].dataset.drawObjectName === object.name)
+        {
+            elements[i].classList.add("selected-element");
+        }
+        else
+        {
+            elements[i].classList.remove("selected-element");
+        }
+    }
+}
+
 function OnRefreshTree(event, treeData)
 {
     treeRoot.innerHTML = "";
@@ -20,6 +37,7 @@ function OnRefreshTree(event, treeData)
         const name = treeData.rootObjects[i].name;
         let newElement = document.createElement("li");
         newElement.innerText = name;
+        newElement.dataset.drawObjectName = name;
         newElement.addEventListener("click", function ()
         {
             OnSelectObject(name);
@@ -37,4 +55,5 @@ export function Run(root)
     textTree.appendChild(treeRoot);
 
     ipcRenderer.on("refresh-text-tree", OnRefreshTree);
+    ipcRenderer.on("refresh-selected-object", OnRefreshSelectedContent);
 }

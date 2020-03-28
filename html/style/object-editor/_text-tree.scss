@@ -27,6 +27,11 @@
 
                 transform: scaleY(1.5);
             }
+
+            &.selected-element
+            {
+                color: red;
+            }
         }
     }
 }
