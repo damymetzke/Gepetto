@@ -3,18 +3,22 @@ const { DrawObject } = require("./draw-object");
 class DrawObjectTree
 {
     rootObjects = [];
+    objects = {};
+
+    AddObject(object)
+    {
+        this.objects[object.name] = object;
+    }
+
+    AddObjectToRoot(object)
+    {
+        this.objects[object.name] = object;
+        this.rootObjects.push(object);
+    }
 
     HasObject(name)
     {
-        for (let i = 0; i < this.rootObjects.length; ++i)
-        {
-            if (this.rootObjects[i].HasObject(name))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return (name in this.objects);
     }
 
     constructor(rootObjects = [])

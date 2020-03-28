@@ -7,14 +7,23 @@ const { DrawObject } = require("electron").remote.require("./core/draw-object");
 
 let treeRoot = null;
 
+function OnSelectObject(objectName)
+{
+    ipcRenderer.invoke("select-object", objectName);
+}
+
 function OnRefreshTree(event, treeData)
 {
     treeRoot.innerHTML = "";
-    console.log(treeData.rootObjects);
     for (let i = 0; i < treeData.rootObjects.length; ++i)
     {
+        const name = treeData.rootObjects[i].name;
         let newElement = document.createElement("li");
-        newElement.innerText = treeData.rootObjects[i].name;
+        newElement.innerText = name;
+        newElement.addEventListener("click", function ()
+        {
+            OnSelectObject(name);
+        });
         treeRoot.appendChild(newElement);
     }
 }

@@ -14,8 +14,13 @@ let objectTree = new DrawObjectTree();
 
 function AddDrawObject(object)
 {
-    objectTree.rootObjects.push(object);
+    objectTree.AddObjectToRoot(object);
     window.webContents.send("refresh-text-tree", objectTree);
+}
+
+function OnSelectObject(event, name)
+{
+    console.log(name);
 }
 
 function OnImportSvg(event, importArguments)
@@ -78,7 +83,6 @@ function OnImportSvg(event, importArguments)
         fs.writeFileSync(`${ResourceDirectory}/${importArguments.name}.xml`, result);
 
         AddDrawObject(new DrawObject(importArguments.name));
-        console.log(objectTree);
     });
 
     if (parsingFailed)
@@ -98,6 +102,7 @@ function Init(mainWindow)
 {
     window = mainWindow;
     ipcMain.handle("import-svg", OnImportSvg);
+    ipcMain.handle("select-object", OnSelectObject);
 }
 
 module.exports.Init = Init;

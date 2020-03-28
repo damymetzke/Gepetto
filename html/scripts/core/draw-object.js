@@ -9,10 +9,8 @@ const Transform = require("./transform");
 class DrawObject
 {
     name;
-    _parent;
+    parent;
     relativeTransform;
-
-    children = [];
 
     WorldTransform()
     {
@@ -21,39 +19,6 @@ class DrawObject
             return this.relativeTransform;
         }
         return this.relativeTransform.MultiplyMatrix(this.parent.relativeTransform);
-    }
-
-    set parent(value)
-    {
-        if (this._parent !== null)
-        {
-            this._parent.children.splice(this._parent.children.find(this), 1);
-        }
-        this._parent = value;
-        value.children.push(this);
-    }
-
-    get parent()
-    {
-        return this._parent;
-    }
-
-    HasObject(name)
-    {
-        if (name === this.name)
-        {
-            return true;
-        }
-
-        for (let i = 0; i < this.children.length; ++i)
-        {
-            if (this.children[i].HasObject(name))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     constructor(name, relativeTransform = new Transform(), parent = null)

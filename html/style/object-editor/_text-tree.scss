@@ -12,6 +12,7 @@
         color: $dark;
         > li
         {
+            user-select: none;
             margin: 0 0 0 15px;
 
             &:before
