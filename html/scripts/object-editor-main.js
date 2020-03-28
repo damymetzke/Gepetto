@@ -7,6 +7,14 @@ const { DrawObject } = require("electron").remote.require("./core/draw-object");
 
 let treeRoot = null;
 let propertyNameNode = null;
+let propertyNameInputElement = null;
+
+function OnChangeName()
+{
+    ipcRenderer.invoke("update-object", {
+        name: propertyNameInputElement.value
+    });
+}
 
 function OnSelectObject(objectName)
 {
@@ -29,6 +37,7 @@ function OnRefreshSelectedContent(event, object)
     }
 
     propertyNameNode.innerText = object.name;
+    propertyNameInputElement.value = object.name;
 }
 
 function OnRefreshTree(event, treeData)
@@ -53,6 +62,15 @@ export function Run(root)
     DropDown.OnScriptLoad(root);
 
     propertyNameNode = root.getElementsByClassName("object-editor--property--name")[0];
+    propertyNameInputElement = root.getElementsByClassName("object-editor--property--name-input")[0];
+    propertyNameInputElement.addEventListener("keypress", function (keyEvent)
+    {
+        if (keyEvent.key !== "Enter")
+        {
+            return;
+        }
+        OnChangeName();
+    });
 
     const textTree = root.getElementsByClassName("object-editor--text-tree")[0];
     treeRoot = document.createElement("ol");

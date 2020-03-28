@@ -19,6 +19,24 @@ function AddDrawObject(object)
     window.webContents.send("refresh-text-tree", objectTree);
 }
 
+function OnUpdateObject(event, updateValues)
+{
+    if (activeObject === null)
+    {
+        return;
+    }
+
+    if ("name" in updateValues)
+    {
+        objectTree.objects[updateValues.name] = activeObject;
+        delete objectTree.objects[activeObject.name];
+    }
+
+    activeObject = Object.assign(activeObject, updateValues);
+    window.webContents.send("refresh-text-tree", objectTree);
+    window.webContents.send("refresh-selected-object", activeObject);
+}
+
 function OnSelectObject(event, name)
 {
     activeObject = (name in objectTree.objects) ? objectTree.objects[name] : null;
@@ -105,6 +123,7 @@ function Init(mainWindow)
     window = mainWindow;
     ipcMain.handle("import-svg", OnImportSvg);
     ipcMain.handle("select-object", OnSelectObject);
+    ipcMain.handle("update-object", OnUpdateObject);
 }
 
 module.exports.Init = Init;
