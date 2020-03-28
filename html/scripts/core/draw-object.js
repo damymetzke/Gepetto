@@ -24,7 +24,7 @@ class DrawObject
     constructor(name, relativeTransform = new Transform(), parent = null)
     {
         this.name = name;
-        this._parent = parent;
+        this.parent = parent;
         this.relativeTransform = relativeTransform;
     }
 }
