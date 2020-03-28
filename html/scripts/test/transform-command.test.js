@@ -1,3 +1,5 @@
+require("./array-is-close-to-matcher");
+
 const { TransformCommand } = require("../core/transform-command");
 const Transform = require("../core/transform");
 
@@ -25,4 +27,13 @@ test("Scale Command", function ()
 
     expect(transform.MultiplyVector([0, 0])).toStrictEqual([0, 0]);
     expect(transform.MultiplyVector([-100, 23])).toStrictEqual([-3000, 920]);
+});
+
+test("Rotate Command", function ()
+{
+    const transform = rotateCommand.CreateMatrix();
+    expect(transform.matrix).arrayIsCloseTo(new Transform([-1, 0, 0, -1, 0, 0]).matrix);
+
+    expect(transform.MultiplyVector([1, 0])).arrayIsCloseTo([-1, 0]);
+    expect(transform.MultiplyVector([0, 23])).arrayIsCloseTo([0, -23]);
 });
