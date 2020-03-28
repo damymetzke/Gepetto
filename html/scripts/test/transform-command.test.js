@@ -37,3 +37,21 @@ test("Rotate Command", function ()
     expect(transform.MultiplyVector([1, 0])).arrayIsCloseTo([-1, 0]);
     expect(transform.MultiplyVector([0, 23])).arrayIsCloseTo([0, -23]);
 });
+
+test("Shear X Command", function ()
+{
+    const transform = shearXCommand.CreateMatrix();
+    expect(transform).toStrictEqual(new Transform([1, 0, 50, 1, 0, 0]));
+
+    expect(transform.MultiplyVector([0, 2])).toStrictEqual([100, 2]);
+    expect(transform.MultiplyVector([10, 5])).toStrictEqual([260, 5]);
+});
+
+test("Shear Y Command", function ()
+{
+    const transform = shearYCommand.CreateMatrix();
+    expect(transform).toStrictEqual(new Transform([1, 60, 0, 1, 0, 0]));
+
+    expect(transform.MultiplyVector([2, 0])).toStrictEqual([2, 120]);
+    expect(transform.MultiplyVector([5, 10])).toStrictEqual([5, 310]);
+});
