@@ -4,6 +4,7 @@ const { ipcRenderer } = require("electron");
 
 const { DrawObjectTree } = require("electron").remote.require("./core/draw-object-tree");
 const { DrawObject } = require("electron").remote.require("./core/draw-object");
+const { TransformCommand } = require("electron").remote.require("./core/transform-command");
 
 let treeRoot = null;
 let propertyNameNode = null;
@@ -57,6 +58,11 @@ function OnRefreshTree(event, treeData)
     }
 }
 
+function OnAddTransformCommand(command)
+{
+    console.log(command);
+}
+
 export function Run(root)
 {
     DropDown.OnScriptLoad(root);
@@ -75,6 +81,16 @@ export function Run(root)
     const textTree = root.getElementsByClassName("object-editor--text-tree")[0];
     treeRoot = document.createElement("ol");
     textTree.appendChild(treeRoot);
+
+    const transformCommandButtons = root.getElementsByClassName("object-editor--property--transform-add-controls")[0].children;
+    for (let i = 0; i < transformCommandButtons.length; ++i)
+    {
+        const type = transformCommandButtons[i].dataset.transformCommandType;
+        transformCommandButtons[i].addEventListener("click", function ()
+        {
+            OnAddTransformCommand(new TransformCommand(type, 0, 0));
+        });
+    }
 
     ipcRenderer.on("refresh-text-tree", OnRefreshTree);
     ipcRenderer.on("refresh-selected-object", OnRefreshSelectedContent);
