@@ -6,9 +6,21 @@ const { DrawObjectTree } = require("electron").remote.require("./core/draw-objec
 const { DrawObject } = require("electron").remote.require("./core/draw-object");
 const { TransformCommand } = require("electron").remote.require("./core/transform-command");
 
+function TransformCommandTemplate(name, x, y)
+{
+    return `
+<h5>${name}</h5>
+<p>x</p>
+<input type="number" value="${x}">
+<p>y</p>
+<input type="number" value="${y}">
+`;
+}
+
 let treeRoot = null;
 let propertyNameNode = null;
 let propertyNameInputElement = null;
+let propertyTransformCommandListElement = null;
 
 function OnChangeName()
 {
@@ -39,6 +51,15 @@ function OnRefreshSelectedContent(event, object)
 
     propertyNameNode.innerText = object.name;
     propertyNameInputElement.value = object.name;
+
+    propertyTransformCommandListElement.innerHTML = "";
+    for (let i = 0; i < object.transformCommands.length; ++i)
+    {
+        let newElement = document.createElement("li");
+        console.log(object.transformCommands[i]);
+        newElement.innerHTML = TransformCommandTemplate(object.transformCommands[i].type, object.transformCommands[i].x, object.transformCommands[i].y);
+        propertyTransformCommandListElement.appendChild(newElement);
+    }
 }
 
 function OnRefreshTree(event, treeData)
@@ -60,7 +81,7 @@ function OnRefreshTree(event, treeData)
 
 function OnAddTransformCommand(command)
 {
-    console.log(command);
+    ipcRenderer.invoke("add-transform-command", command);
 }
 
 export function Run(root)
@@ -69,6 +90,8 @@ export function Run(root)
 
     propertyNameNode = root.getElementsByClassName("object-editor--property--name")[0];
     propertyNameInputElement = root.getElementsByClassName("object-editor--property--name-input")[0];
+    propertyTransformCommandListElement = root.getElementsByClassName("object-editor--property--transform-list")[0];
+
     propertyNameInputElement.addEventListener("keypress", function (keyEvent)
     {
         if (keyEvent.key !== "Enter")

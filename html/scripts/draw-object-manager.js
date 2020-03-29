@@ -18,12 +18,17 @@ function AddDrawObject(object)
 {
     objectTree.AddObjectToRoot(object);
     window.webContents.send("refresh-text-tree", objectTree);
-    for (drawObject in objectTree.objects)
+}
+
+function OnAddTransformCommand(event, command)
+{
+    if (activeObject === null)
     {
-        objectTree.objects[drawObject].AddTransformCommand(new TransformCommand("TRANSLATE", 10, 10));
-        console.log(objectTree.objects[drawObject].relativeTransform);
-        console.log(objectTree.objects[drawObject].relativeTransform);
+        return;
     }
+    activeObject.AddTransformCommand(command);
+
+    window.webContents.send("refresh-selected-object", activeObject);
 }
 
 function OnUpdateObject(event, updateValues)
@@ -131,6 +136,7 @@ function Init(mainWindow)
     ipcMain.handle("import-svg", OnImportSvg);
     ipcMain.handle("select-object", OnSelectObject);
     ipcMain.handle("update-object", OnUpdateObject);
+    ipcMain.handle("add-transform-command", OnAddTransformCommand);
 }
 
 module.exports.Init = Init;
