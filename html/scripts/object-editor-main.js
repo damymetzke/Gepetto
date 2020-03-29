@@ -6,14 +6,16 @@ const { DrawObjectTree } = require("electron").remote.require("./core/draw-objec
 const { DrawObject } = require("electron").remote.require("./core/draw-object");
 const { TransformCommand } = require("electron").remote.require("./core/transform-command");
 
+let currentTransformCommands = [];
+
 function TransformCommandTemplate(name, x, y)
 {
     return `
 <h5>${name}</h5>
 <p>x</p>
-<input type="number" value="${x}">
+<input class="transform-command-number-input" data-transform-command-key="x" type="number" value="${x}">
 <p>y</p>
-<input type="number" value="${y}">
+<input class="transform-command-number-input" data-transform-command-key="y" type="number" value="${y}">
 `;
 }
 
@@ -21,6 +23,15 @@ let treeRoot = null;
 let propertyNameNode = null;
 let propertyNameInputElement = null;
 let propertyTransformCommandListElement = null;
+
+function OnChangeTransformCommand(index, values)
+{
+    console.log(index, values, currentTransformCommands[index]);
+    Object.assign(currentTransformCommands[index], values);
+    ipcRenderer.invoke("update-object", {
+        transformCommands: currentTransformCommands
+    });
+}
 
 function OnChangeName()
 {
@@ -59,7 +70,26 @@ function OnRefreshSelectedContent(event, object)
         console.log(object.transformCommands[i]);
         newElement.innerHTML = TransformCommandTemplate(object.transformCommands[i].type, object.transformCommands[i].x, object.transformCommands[i].y);
         propertyTransformCommandListElement.appendChild(newElement);
+
+        let inputFields = newElement.getElementsByClassName("transform-command-number-input");
+        for (let j = 0; j < inputFields.length; ++j)
+        {
+            const index = i;
+            const key = inputFields[j].dataset.transformCommandKey;
+            inputFields[j].addEventListener("keypress", function (keyEvent)
+            {
+                if (keyEvent.key !== "Enter")
+                {
+                    return;
+                }
+                let newObject = {};
+                newObject[key] = inputFields[j].value;
+                OnChangeTransformCommand(index, newObject);
+            });
+        }
     }
+
+    currentTransformCommands = object.transformCommands;
 }
 
 function OnRefreshTree(event, treeData)

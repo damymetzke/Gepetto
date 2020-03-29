@@ -27,6 +27,7 @@ function OnAddTransformCommand(event, command)
         return;
     }
     activeObject.AddTransformCommand(command);
+    activeObject.OnTransformCommandsUpdate();
 
     window.webContents.send("refresh-selected-object", activeObject);
 }
@@ -42,6 +43,11 @@ function OnUpdateObject(event, updateValues)
     {
         objectTree.objects[updateValues.name] = activeObject;
         delete objectTree.objects[activeObject.name];
+    }
+
+    if ("transformCommands" in updateValues)
+    {
+        activeObject.OnTransformCommandsUpdate();
     }
 
     activeObject = Object.assign(activeObject, updateValues);

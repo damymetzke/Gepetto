@@ -27,6 +27,11 @@ class DrawObject
         this._dirty = true;
     }
 
+    OnTransformCommandsUpdate()
+    {
+        this._dirty = true;
+    }
+
     get relativeTransform()
     {
         if (!this._dirty)
