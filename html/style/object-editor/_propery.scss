@@ -48,8 +48,7 @@
         .button
         {
             border-radius: 0;
-            width: 70px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: normal;
         }
     }
@@ -58,6 +57,9 @@
     {
         padding: 10px;
         list-style: none;
+
+        height: 400px;
+        overflow-y: auto;
 
         border-top: 5px $divider-object-editor solid;
         border-bottom: 5px $divider-object-editor solid;

@@ -6,6 +6,7 @@ const xml = require("xml2js");
 
 const { DrawObjectTree, DrawObject } = require("./core/draw-object-tree");
 const Transform = require("./core/transform");
+const { TransformCommand } = require("./core/transform-command");
 
 let ResourceDirectory = "./saved";
 let window = null;
@@ -17,6 +18,12 @@ function AddDrawObject(object)
 {
     objectTree.AddObjectToRoot(object);
     window.webContents.send("refresh-text-tree", objectTree);
+    for (drawObject in objectTree.objects)
+    {
+        objectTree.objects[drawObject].AddTransformCommand(new TransformCommand("TRANSLATE", 10, 10));
+        console.log(objectTree.objects[drawObject].relativeTransform);
+        console.log(objectTree.objects[drawObject].relativeTransform);
+    }
 }
 
 function OnUpdateObject(event, updateValues)

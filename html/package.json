@@ -19,7 +19,8 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "babel-jest": "^25.1.0",
     "electron": "^8.2.0",
-    "jest": "^25.1.0"
+    "jest": "^25.1.0",
+    "on-change": "^2.0.1"
   },
   "dependencies": {
     "xml2js": "^0.4.23"

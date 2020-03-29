@@ -10,7 +10,45 @@ class DrawObject
 {
     name;
     parent;
-    relativeTransform;
+    _relativeTransform = new Transform([1, 0, 0, 1, 0, 0]);
+    _dirty = false;
+    transformCommands = [];
+    // transformCommands = onChange({ dirty: false, commands: [] }, function (path, value, previousValue)
+    // {
+    //     if (path === "commands")
+    //     {
+    //         this.dirty = true;
+    //     }
+    // });
+
+    AddTransformCommand(command)
+    {
+        this.transformCommands.push(command);
+        this._dirty = true;
+    }
+
+    get relativeTransform()
+    {
+        if (!this._dirty)
+        {
+            console.log("not dirty");
+            return this._relativeTransform;
+        }
+
+        this._relativeTransform = new Transform([1, 0, 0, 1, 0, 0]);
+
+        for (let i = 0; i < this.transformCommands.length; ++i)
+        {
+            let tmp = this.transformCommands[i];
+            console.log(typeof tmp.MultiplyMatrix);
+            this._relativeTransform = this.transformCommands[i].CreateMatrix().MultiplyMatrix(this._relativeTransform);
+        }
+
+        console.log("dirty");
+        this._dirty = false;
+
+        return this._relativeTransform;
+    }
 
     WorldTransform()
     {
@@ -21,11 +59,10 @@ class DrawObject
         return this.relativeTransform.MultiplyMatrix(this.parent.relativeTransform);
     }
 
-    constructor(name, relativeTransform = new Transform(), parent = null)
+    constructor(name, parent = null)
     {
         this.name = name;
         this.parent = parent;
-        this.relativeTransform = relativeTransform;
     }
 }
 

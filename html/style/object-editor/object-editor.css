@@ -220,14 +220,15 @@ h1 {
 
 .object-editor--property .dropdown--box .button {
   border-radius: 0;
-  width: 70px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: normal;
 }
 
 .object-editor--property .object-editor--property--transform-list {
   padding: 10px;
   list-style: none;
+  height: 400px;
+  overflow-y: auto;
   border-top: 5px var(--divider-object-editor, #4e46c1) solid;
   border-bottom: 5px var(--divider-object-editor, #4e46c1) solid;
 }
