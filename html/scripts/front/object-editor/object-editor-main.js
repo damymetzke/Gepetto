@@ -1,10 +1,10 @@
-import * as DropDown from "./dropdown.js";
+import * as DropDown from "../global/dropdown.js";
 
 const { ipcRenderer } = require("electron");
 
-const { DrawObjectTree } = require("electron").remote.require("./core/draw-object-tree");
-const { DrawObject } = require("electron").remote.require("./core/draw-object");
-const { TransformCommand } = require("electron").remote.require("./core/transform-command");
+const { DrawObjectTree } = require("electron").remote.require("../core/draw-object-tree");
+const { DrawObject } = require("electron").remote.require("../core/draw-object");
+const { TransformCommand } = require("electron").remote.require("../core/transform-command");
 
 let currentTransformCommands = [];
 

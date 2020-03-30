@@ -2,7 +2,7 @@
   "name": "gepetto",
   "version": "1.0.0",
   "description": "gepetto - SVG animation tool",
-  "main": "scripts/main.js",
+  "main": "scripts/back/main.js",
   "scripts": {
     "start": "electron .",
     "test": "jest"

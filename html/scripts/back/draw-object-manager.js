@@ -4,9 +4,9 @@ const { ipcMain } = require("electron");
 const fs = require("fs");
 const xml = require("xml2js");
 
-const { DrawObjectTree, DrawObject } = require("./core/draw-object-tree");
-const Transform = require("./core/transform");
-const { TransformCommand } = require("./core/transform-command");
+const { DrawObjectTree, DrawObject } = require("../core/draw-object-tree");
+const Transform = require("../core/transform");
+const { TransformCommand } = require("../core/transform-command");
 
 let ResourceDirectory = "./saved";
 let window = null;

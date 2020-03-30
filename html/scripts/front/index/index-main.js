@@ -1,8 +1,8 @@
-import * as Dropdown from "./dropdown.js";
-import * as Tabs from "./tabs.js";
-import * as ContentLoader from "./content-loader.js";
+import * as Dropdown from "../global/dropdown.js";
+import * as Tabs from "../global/tabs.js";
+import * as ContentLoader from "../global/content-loader.js";
 
-import * as ObjectEditorMain from "./object-editor-main.js";
+import * as ObjectEditorMain from "../object-editor/object-editor-main.js";
 
 function ImportSvg()
 {
