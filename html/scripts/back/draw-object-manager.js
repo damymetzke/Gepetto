@@ -1,16 +1,18 @@
-//todo: refactor the spaghhett
-
+//nodejs imports
 const { ipcMain } = require("electron");
 const fs = require("fs");
 const xml = require("xml2js");
 
 const { DrawObjectTree, DrawObject } = require("../core/draw-object-tree");
-const Transform = require("../core/transform");
-const { TransformCommand } = require("../core/transform-command");
 
+//file variables//
+//////////////////
 let ResourceDirectory = "./saved";
 let window = null;
 
+
+//draw objects//
+////////////////
 let objectTree = new DrawObjectTree();
 let activeObject = null;
 
@@ -20,47 +22,10 @@ function AddDrawObject(object)
     window.webContents.send("refresh-text-tree", objectTree);
 }
 
-function OnAddTransformCommand(event, command)
-{
-    if (activeObject === null)
-    {
-        return;
-    }
-    activeObject.AddTransformCommand(command);
-    activeObject.OnTransformCommandsUpdate();
+//ipc main//
+////////////
 
-    window.webContents.send("refresh-selected-object", activeObject);
-}
-
-function OnUpdateObject(event, updateValues)
-{
-    if (activeObject === null)
-    {
-        return;
-    }
-
-    if ("name" in updateValues)
-    {
-        objectTree.objects[updateValues.name] = activeObject;
-        delete objectTree.objects[activeObject.name];
-    }
-
-    if ("transformCommands" in updateValues)
-    {
-        activeObject.OnTransformCommandsUpdate();
-    }
-
-    activeObject = Object.assign(activeObject, updateValues);
-    window.webContents.send("refresh-text-tree", objectTree);
-    window.webContents.send("refresh-selected-object", activeObject);
-}
-
-function OnSelectObject(event, name)
-{
-    activeObject = (name in objectTree.objects) ? objectTree.objects[name] : null;
-    window.webContents.send("refresh-selected-object", activeObject);
-}
-
+//todo: split up this horrific creature of the dark
 function OnImportSvg(event, importArguments)
 {
     let parsingFailed = false;
@@ -136,13 +101,59 @@ function OnImportSvg(event, importArguments)
     };
 }
 
-function Init(mainWindow)
+function OnSelectObject(event, name)
 {
-    window = mainWindow;
+    activeObject = (name in objectTree.objects) ? objectTree.objects[name] : null;
+    window.webContents.send("refresh-selected-object", activeObject);
+}
+
+function OnUpdateObject(event, updateValues)
+{
+    if (activeObject === null)
+    {
+        return;
+    }
+
+    if ("name" in updateValues)
+    {
+        objectTree.objects[updateValues.name] = activeObject;
+        delete objectTree.objects[activeObject.name];
+    }
+
+    if ("transformCommands" in updateValues)
+    {
+        activeObject.OnTransformCommandsUpdate();
+    }
+
+    activeObject = Object.assign(activeObject, updateValues);
+    window.webContents.send("refresh-text-tree", objectTree);
+    window.webContents.send("refresh-selected-object", activeObject);
+}
+
+function OnAddTransformCommand(event, command)
+{
+    if (activeObject === null)
+    {
+        return;
+    }
+    activeObject.AddTransformCommand(command);
+    activeObject.OnTransformCommandsUpdate();
+
+    window.webContents.send("refresh-selected-object", activeObject);
+}
+
+function SetupIpcMain()
+{
     ipcMain.handle("import-svg", OnImportSvg);
     ipcMain.handle("select-object", OnSelectObject);
     ipcMain.handle("update-object", OnUpdateObject);
     ipcMain.handle("add-transform-command", OnAddTransformCommand);
+}
+
+function Init(mainWindow)
+{
+    window = mainWindow;
+    SetupIpcMain();
 }
 
 module.exports.Init = Init;
