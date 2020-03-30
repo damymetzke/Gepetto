@@ -1,5 +1,13 @@
 const { DrawObject } = require("./draw-object");
 
+/**
+ * contains a tree of DrawObject's
+ * 
+ * rootObjects contains all objects without a parent.
+ * objects contains all objects, and the key is equal to the name of the object.
+ * 
+ * @see DrawObject
+ */
 class DrawObjectTree
 {
     rootObjects = [];
