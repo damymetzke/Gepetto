@@ -1,5 +1,6 @@
 //ES6 imports
 import * as DropDown from "../global/dropdown.js";
+import GetUniqueElements from "../global/get-unique-elements.js";
 
 //nodejs imports
 const { ipcRenderer } = require("electron");
@@ -23,22 +24,20 @@ function TransformCommandTemplate(name, x, y)
 //////////////////
 let currentTransformCommands = [];
 let treeRoot = null;
-let propertyElements = {
-    name: null,
-    nameInput: null,
-    transformCommandList: null
-};
+let elements = null;
 
 function SetupFileVariables(root)
 {
     treeRoot = document.createElement("ol");
-    propertyElements = {
-        name: root.getElementsByClassName("object-editor--property--name")[0],
-        nameInput: root.getElementsByClassName("object-editor--property--name-input")[0],
-        transformCommandList: root.getElementsByClassName("object-editor--property--transform-list")[0]
-    };
+    elements = GetUniqueElements(root, {
+        textTree: "object-editor--text-tree",
+        propertyName: "object-editor--property--name",
+        propertyNameInput: "object-editor--property--name-input",
+        propertyTransformCommandList: "object-editor--property--transform-list",
+        propertyTransformAddControls: "object-editor--property--transform-add-controls"
+    });
 
-    root.getElementsByClassName("object-editor--text-tree")[0].appendChild(treeRoot);
+    elements.textTree.appendChild(treeRoot);
 }
 
 //ipcRenderer//
@@ -62,29 +61,29 @@ function OnRefreshTree(event, treeData)
 
 function OnRefreshSelectedContent(event, object)
 {
-    let elements = treeRoot.querySelectorAll("[data-draw-object-name]");
-    for (let i = 0; i < elements.length; ++i)
+    let treeElements = treeRoot.querySelectorAll("[data-draw-object-name]");
+    for (let i = 0; i < treeElements.length; ++i)
     {
-        if (elements[i].dataset.drawObjectName === object.name)
+        if (treeElements[i].dataset.drawObjectName === object.name)
         {
-            elements[i].classList.add("selected-element");
+            treeElements[i].classList.add("selected-element");
         }
         else
         {
-            elements[i].classList.remove("selected-element");
+            treeElements[i].classList.remove("selected-element");
         }
     }
 
-    propertyElements.name.innerText = object.name;
-    propertyElements.nameInput.value = object.name;
+    elements.propertyName.innerText = object.name;
+    elements.propertyNameInput.value = object.name;
 
-    propertyElements.transformCommandList.innerHTML = "";
+    elements.propertyTransformCommandList.innerHTML = "";
     for (let i = 0; i < object.transformCommands.length; ++i)
     {
         let newElement = document.createElement("li");
         console.log(object.transformCommands[i]);
         newElement.innerHTML = TransformCommandTemplate(object.transformCommands[i].type, object.transformCommands[i].x, object.transformCommands[i].y);
-        propertyElements.transformCommandList.appendChild(newElement);
+        elements.propertyTransformCommandList.appendChild(newElement);
 
         let inputFields = newElement.getElementsByClassName("transform-command-number-input");
         for (let j = 0; j < inputFields.length; ++j)
@@ -128,7 +127,7 @@ function OnChangeTransformCommand(index, values)
 function OnChangeName()
 {
     ipcRenderer.invoke("update-object", {
-        name: propertyElements.nameInput.value
+        name: elements.propertyNameInput.value
     });
 }
 
@@ -144,7 +143,7 @@ function OnAddTransformCommand(command)
 
 function SetupEventListeners(root)
 {
-    propertyElements.nameInput.addEventListener("keypress", function (keyEvent)
+    elements.propertyNameInput.addEventListener("keypress", function (keyEvent)
     {
         if (keyEvent.key !== "Enter")
         {
@@ -153,7 +152,7 @@ function SetupEventListeners(root)
         OnChangeName();
     });
 
-    const transformCommandButtons = root.getElementsByClassName("object-editor--property--transform-add-controls")[0].children;
+    const transformCommandButtons = elements.propertyTransformAddControls.children;
     for (let i = 0; i < transformCommandButtons.length; ++i)
     {
         const type = transformCommandButtons[i].dataset.transformCommandType;
