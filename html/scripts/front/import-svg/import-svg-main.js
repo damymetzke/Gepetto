@@ -68,7 +68,8 @@ function OnImport()
                 return;
             }
 
-            errorOutput.innerHTML += result.message;
+            const convertedErrorMessage = result.message.replace("\n", "<br>");
+            errorOutput.innerHTML += convertedErrorMessage;
         });
 }
 

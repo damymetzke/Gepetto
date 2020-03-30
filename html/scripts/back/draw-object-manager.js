@@ -1,9 +1,10 @@
 //nodejs imports
 const { ipcMain } = require("electron");
 const fs = require("fs");
-const xml = require("xml2js");
 
 const { DrawObjectTree, DrawObject } = require("../core/draw-object-tree");
+
+const { SvgToObjectXml } = require("./draw-object-xmlhandler");
 
 //file variables//
 //////////////////
@@ -24,13 +25,9 @@ function AddDrawObject(object)
 
 //ipc main//
 ////////////
-
-//todo: split up this horrific creature of the dark
 function OnImportSvg(event, importArguments)
 {
-    let parsingFailed = false;
-    let parsingError = "";
-
+    //test for problems with the name
     if (!/^\w*$/.test(importArguments.name))
     {
         return {
@@ -47,59 +44,55 @@ function OnImportSvg(event, importArguments)
         };
     }
 
-    xml.parseString(fs.readFileSync(importArguments.filePath, "utf-8"), { async: false }, function (error, content)
+    //read file
+    let fileContent;
+    try
     {
-        if (error)
-        {
-            parsingFailed = true;
-            parsingError = error;
-            return;
-        }
+        fileContent = fs.readFileSync(importArguments.filePath, "utf-8");
+    }
+    catch (error)
+    {
+        return {
+            success: false,
+            message: "error opening file\n" + error
+        };
+    }
 
-        let innerContent = content.svg;
-        if (innerContent === undefined || innerContent === null)
-        {
-            parsingFailed = true;
-            parsingError = "xml file is not properly formatted for svg";
-            return;
-        }
+    //convert file
+    const convertResult = SvgToObjectXml(fileContent);
+    if (!convertResult.success)
+    {
+        return {
+            success: false,
+            message: "XML conversion failed:\n" + convertResult.error
+        };
+    }
 
-        delete innerContent["$"];
-        innerContent = { g: innerContent };
-        let builder = new xml.Builder({ headless: true });
-        let result;
-        try
-        {
-            result = builder.buildObject(innerContent);
-        }
-        catch (error)
-        {
-            parsingFailed = true;
-            parsingError = "error when rebuilding svg content<br>" + error;
-            return;
-        }
-
+    //write  converted file
+    try
+    {
         if (!fs.existsSync(ResourceDirectory))
         {
             fs.mkdirSync(ResourceDirectory);
         }
-        fs.writeFileSync(`${ResourceDirectory}/${importArguments.name}.xml`, result);
-
-        AddDrawObject(new DrawObject(importArguments.name));
-    });
-
-    if (parsingFailed)
+        fs.writeFileSync(`${ResourceDirectory}/${importArguments.name}.xml`, convertResult.content);
+    }
+    catch (error)
     {
         return {
             success: false,
-            message: "XML parsing failed with error:<br>" + parsingError
+            message: "error writing file\n" + error
         };
     }
+
+    //everything succeeded, add the craw object
+    AddDrawObject(new DrawObject(importArguments.name));
 
     return {
         success: true
     };
 }
+
 
 function OnSelectObject(event, name)
 {
