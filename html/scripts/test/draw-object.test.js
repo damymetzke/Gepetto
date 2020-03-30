@@ -1,23 +1,27 @@
 const { DrawObject, Transform } = require("../core/draw-object");
+const { TransformCommand } = require("../core/transform-command");
 
-const base = new DrawObject("Base", new Transform([0, 1, 2, 3, 4, 5]));
-const child = new DrawObject("Child", new Transform([5, 4, 3, 2, 1, 0]), base);
+const base = new DrawObject("Base");
+const child = new DrawObject("Child", base);
+
+base.AddTransformCommand(new TransformCommand("TRANSLATE", 10, 20));
+child.AddTransformCommand(new TransformCommand("SCALE", 30, 40));
 
 test("DrawObject Constructor", function ()
 {
     //base
     expect(base.name).toStrictEqual("Base");
     expect(base.parent).toBeNull();
-    expect(base.relativeTransform).toStrictEqual(new Transform([0, 1, 2, 3, 4, 5]));
+    expect(base.relativeTransform).toStrictEqual(new Transform([1, 0, 0, 1, 10, 20]));
 
     //child
     expect(child.name).toStrictEqual("Child");
     expect(child.parent).toBe(base);
-    expect(child.relativeTransform).toStrictEqual(new Transform([5, 4, 3, 2, 1, 0]));
+    expect(child.relativeTransform).toStrictEqual(new Transform([30, 0, 0, 40, 0, 0]));
 });
 
 test("DrawObject WorldTransform", function ()
 {
-    expect(base.WorldTransform()).toStrictEqual(new Transform([0, 1, 2, 3, 4, 5]));
-    expect(child.WorldTransform()).toStrictEqual(new Transform([3, 2, 19, 14, 36, 26]));
+    expect(base.WorldTransform()).toStrictEqual(new Transform([1, 0, 0, 1, 10, 20]));
+    expect(child.WorldTransform()).toStrictEqual(new Transform([30, 0, 0, 40, 10, 20]));
 });

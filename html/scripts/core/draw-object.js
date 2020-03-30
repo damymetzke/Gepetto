@@ -27,6 +27,12 @@ class DrawObject
         this._dirty = true;
     }
 
+    /**
+     * should be called whenever transformCommands is changed manually.
+     * 
+     * when calling this function the object is notified that the transform is dirty.
+     * The next time the transform is required it will be recalculated.
+     */
     OnTransformCommandsUpdate()
     {
         this._dirty = true;
@@ -55,13 +61,28 @@ class DrawObject
         return this._relativeTransform;
     }
 
+    /**
+     * calculate the world transform of the object.
+     * 
+     * the relative transform stored in this object is in object-space;
+     * in order to get the position on screen it needs to be converted to world space.
+     * 
+     * to convert it to world space the following operation is done:
+     * ```
+     * parent.transform * this.transform
+     * ```
+     * 
+     * @see Transform#MultiplyMatrix
+     * 
+     * @returns the transform of the object in world space.
+     */
     WorldTransform()
     {
         if (this.parent === null)
         {
             return this.relativeTransform;
         }
-        return this.relativeTransform.MultiplyMatrix(this.parent.relativeTransform);
+        return this.parent.relativeTransform.MultiplyMatrix(this.relativeTransform);
     }
 
     constructor(name, parent = null)
