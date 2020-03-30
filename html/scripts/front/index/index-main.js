@@ -21,8 +21,10 @@ function ImportSvg()
     win.loadFile("./svg-import.html");
 }
 
-export function Run(root)
+function Run()
 {
+    const root = document.getElementById("body");
+
     Dropdown.OnScriptLoad(root);
     Tabs.OnScriptLoad(root);
 
@@ -31,3 +33,5 @@ export function Run(root)
 
     document.getElementById("toolbar--buttons--import-object").addEventListener("click", ImportSvg);
 }
+
+Run();

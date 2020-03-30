@@ -9,15 +9,7 @@
         </title>
         <link rel="stylesheet" href="./style/index/index.css" />
 
-        <script type="module">
-            import * as IndexMain from "./scripts/front/index/index-main.js"
-            //Setup dropdowns
-            window.onload = function ()
-            {
-                const root = document.getElementById("body");
-                IndexMain.Run(root);
-            };
-        </script>
+        <script type="module" src="./scripts/front/index/index-main.js" defer></script>
     </head>
 
     <body>

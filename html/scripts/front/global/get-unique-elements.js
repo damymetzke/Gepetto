@@ -11,7 +11,7 @@
  * 
  * @param root element under which the unique elements will be searched.
  * @param classNames an object containing class names of the elements that should be searched.
- * @returns an object based on the key structure of classnames, each class name in classNames corresponds to an element in the return value.
+ * @return an object based on the key structure of classnames, each class name in classNames corresponds to an element in the return value.
  */
 export default function GetUniqueElements(root, classNames)
 {
