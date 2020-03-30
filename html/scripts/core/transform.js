@@ -2,9 +2,11 @@
  * fundamental class for all transforms
  * 
  * transforms are a 3x3 matrix in concept, however not all values are saved. The matrix looks like this:
- *     ┌.a.c.e.┐
- *     |.b.d.f.|
- *     └.0.0.1.┘
+ * ```
+ * ┌ a.c.e ┐
+ * | b.d.f |
+ * └ 0.0.1 ┘
+ * ```
  * this matrix can dircetly be used in SVG Transformations.
  */
 class Transform
@@ -44,7 +46,7 @@ class Transform
      * 
      * the calculation is nearly the same as lerp, however before interpolating the rotation is extracted and interpolated seperately.
      * 
-     * @see Transform.Lerp
+     * @see Transform#Lerp
      * 
      * @param {Transform} target a transform which will be the end point of the slerp
      * @param {Number} progress a unit value (0.0 - 1.0) which represents the progress of the slerp;
@@ -74,13 +76,15 @@ class Transform
      * a multiplication, or dot product, operation with this on the left and right on the right.
      * 
      * the right hand side looks like this:
-     *     ┌.x.┐
-     *     |.y.|
-     *     └.1.┘
+     * ```
+     * ┌ x ┐
+     * | y |
+     * └ 1 ┘
+     * ```
      * 
      * @see https://en.wikipedia.org/wiki/Matrix_multiplication
      * 
-     * @param {Number[2]} right right hand side of the operation.
+     * @param {Number[]} right right hand side of the operation.
      */
     MultiplyVector(right)
     {
