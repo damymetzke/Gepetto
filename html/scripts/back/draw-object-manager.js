@@ -2,13 +2,13 @@
 const { ipcMain } = require("electron");
 const fs = require("fs");
 
-const { DrawObjectTree, DrawObject } = require("../core/draw-object-tree");
+const { DrawObjectTree, DrawObject } = require("../core/core");
 
 const { SvgToObjectXml } = require("./draw-object-xmlhandler");
 
 //file variables//
 //////////////////
-let ResourceDirectory = "./saved";
+let ResourceDirectory = "./saved/objects";
 let window = null;
 
 

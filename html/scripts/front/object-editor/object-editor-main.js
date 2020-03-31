@@ -5,7 +5,7 @@ import GetUniqueElements from "../global/get-unique-elements.js";
 //nodejs imports
 const { ipcRenderer } = require("electron");
 
-const { TransformCommand } = require("electron").remote.require("../core/transform-command");
+const { TransformCommand } = require("electron").remote.require("../core/core");
 
 //utility functions//
 /////////////////////
