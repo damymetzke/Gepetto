@@ -9,15 +9,35 @@ const { TransformCommand } = require("electron").remote.require("../core/core");
 
 //utility functions//
 /////////////////////
+
+/**
+ * generate the inside of a TransformCommand black to be displayed in the editor.
+ * 
+ * generated based on the following template:
+ * ```html
+ * <h5>{name}</h5>
+ * 
+ * <p>x</p>
+ * <input class="transform-command-number-input" data-transform-command-key="x" type="number" value="{x}">
+ * 
+ * <p>y</p>
+ * <input class="transform-command-number-input" data-transform-command-key="y" type="number" value="{y}">
+ * ```
+ * 
+ * @param {String} name name of the transform command.
+ * should be one of the following:
+ * 
+ * - TRANSLATE
+ * - SCALE
+ * - ROTATE
+ * - SHEARX
+ * - SHEARY
+ * @param {Number} x
+ * @param {Number} y 
+ */
 function TransformCommandTemplate(name, x, y)
 {
-    return `
-<h5>${name}</h5>
-<p>x</p>
-<input class="transform-command-number-input" data-transform-command-key="x" type="number" value="${x}">
-<p>y</p>
-<input class="transform-command-number-input" data-transform-command-key="y" type="number" value="${y}">
-`;
+    return `<h5>${name}</h5><p>x</p><input class="transform-command-number-input" data-transform-command-key="x" type="number" value="${x}"><p>y</p><input class="transform-command-number-input" data-transform-command-key="y" type="number" value="${y}">`;
 }
 
 //file variables//
@@ -26,9 +46,20 @@ let currentTransformCommands = [];
 let treeRoot = null;
 let elements = null;
 
+/**
+ * setup the file wide variables.
+ * 
+ * does the following:
+ * 
+ * - gets all unique elements.
+ * - creates a root for the text-tree.
+ * 
+ * @see GetUniqueElements
+ * 
+ * @param {HTMLElement} root root element for the object editor
+ */
 function SetupFileVariables(root)
 {
-    treeRoot = document.createElement("ol");
     elements = GetUniqueElements(root, {
         textTree: "object-editor--text-tree",
         propertyName: "object-editor--property--name",
@@ -37,12 +68,22 @@ function SetupFileVariables(root)
         propertyTransformAddControls: "object-editor--property--transform-add-controls"
     });
 
+    treeRoot = document.createElement("ol");
     elements.textTree.appendChild(treeRoot);
 }
 
 //ipcRenderer//
 ///////////////
-function OnRefreshTree(event, treeData)
+/**
+ * called whenever the DrawObjectTree is changed.
+ * 
+ * this function will recreate the text tree based on the tree data.
+ * 
+ * @alias module:ObjectEditor_Main#OnRefreshTree
+ * 
+ * @param {DrawObjectTree} treeData current DrawObjectTree from the main process.
+ */
+function OnRefreshTree(_event, treeData)
 {
     treeRoot.innerHTML = "";
     for (let i = 0; i < treeData.rootObjects.length; ++i)
@@ -59,7 +100,19 @@ function OnRefreshTree(event, treeData)
     }
 }
 
-function OnRefreshSelectedContent(event, object)
+/**
+ * called whenever the selected object changes, or if any of its values change.
+ * 
+ * this function will do the following:
+ * 
+ * - highlight the current object in the text-tree.
+ * - update the values in the property panel. 
+ * 
+ * @alias module:ObjectEditor_Main#OnRefreshSelectedContent
+ * 
+ * @param {DrawObject} object the currently selected object
+ */
+function OnRefreshSelectedContent(_event, object)
 {
     let treeElements = treeRoot.querySelectorAll("[data-draw-object-name]");
     for (let i = 0; i < treeElements.length; ++i)
@@ -106,6 +159,12 @@ function OnRefreshSelectedContent(event, object)
     currentTransformCommands = object.transformCommands;
 }
 
+/**
+ * setup listners for inter-process communication
+ * 
+ * @see module:ObjectEditor_Main#OnRefreshTree
+ * @see module:ObjectEditor_Main#OnRefreshSelectedContent
+ */
 function SetupIpcRenderer()
 {
     ipcRenderer.on("refresh-text-tree", OnRefreshTree);
@@ -115,6 +174,14 @@ function SetupIpcRenderer()
 //event listners//
 //////////////////
 
+/**
+ * called whenever a transform command changes.
+ * 
+ * will update the local copy based on the index and pass everything to the main process.
+ * 
+ * @param {Number} index integer value which is the offset in the array of transforms.
+ * @param {Object} values object containing all properties that should be updated in the given TransformCommand.
+ */
 function OnChangeTransformCommand(index, values)
 {
     console.log(index, values, currentTransformCommands[index]);
@@ -124,6 +191,11 @@ function OnChangeTransformCommand(index, values)
     });
 }
 
+/**
+ * called whenever the name of the selected object should be changed.
+ * 
+ * this is directly passed to the main process.
+ */
 function OnChangeName()
 {
     ipcRenderer.invoke("update-object", {
@@ -131,16 +203,40 @@ function OnChangeName()
     });
 }
 
+/**
+ * called whenever an object has been selected.
+ * 
+ * the name is passed to the main process which will select the correct object.
+ * 
+ * @param {String} objectName unique name of the object
+ */
 function OnSelectObject(objectName)
 {
     ipcRenderer.invoke("select-object", objectName);
 }
 
+/**
+ * called whenever a new TransformCommand object should be created.
+ * 
+ * the object is directly passed to the main process where it will be added to the active DrawObject.
+ * 
+ * @param {TransformCommand} command the commands that should be added
+ */
 function OnAddTransformCommand(command)
 {
     ipcRenderer.invoke("add-transform-command", command);
 }
 
+/**
+ * setup listners based on user action
+ * 
+ * setup listners for:
+ * 
+ * - buttons to add TransformCommand objects.
+ * - enter on the name input field.
+ * 
+ * @param {HTMLElement} root root element for the object editor
+ */
 function SetupEventListeners(root)
 {
     elements.propertyNameInput.addEventListener("keypress", function (keyEvent)
@@ -163,6 +259,13 @@ function SetupEventListeners(root)
     }
 }
 
+/**
+ * run the initialization code for the object editor.
+ * 
+ * whenever an object editor tab is created this should be called.
+ * 
+ * @param {HTMLElement} root root element for the object editor
+ */
 export function Run(root)
 {
     DropDown.OnScriptLoad(root);
@@ -172,3 +275,9 @@ export function Run(root)
     SetupEventListeners(root);
 
 }
+
+/**
+ * this module is in charge of the object editor
+ *
+ * @module ObjectEditor_Main
+ */
