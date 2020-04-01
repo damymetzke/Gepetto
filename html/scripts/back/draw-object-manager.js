@@ -4,7 +4,7 @@ const fs = require("fs");
 
 const { DrawObjectTree, DrawObject } = require("../core/core");
 
-const { SvgToObjectXml } = require("./draw-object-xmlhandler");
+const { SvgToObjectXml, ReadObjectXml } = require("./draw-object-xmlhandler");
 
 //file variables//
 //////////////////

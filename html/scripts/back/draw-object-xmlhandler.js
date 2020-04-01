@@ -1,4 +1,7 @@
 const xml = require("xml2js");
+const fs = require("fs");
+
+let ResourceDirectory = "./saved/objects/";
 
 /**
  * convert a standart svg file into an object xml file.
@@ -30,8 +33,6 @@ const xml = require("xml2js");
  */
 function SvgToObjectXml(svgContent)
 {
-    console.log(svgContent);
-
     let result = null;
 
     xml.parseString(svgContent, { async: false }, function (error, content)
@@ -57,10 +58,18 @@ function SvgToObjectXml(svgContent)
 
         //todo: transform all values into normalized coordinates (from -1 to 1)
         delete innerContent["$"];
-        innerContent = { g: innerContent };
-        let builder = new xml.Builder({ headless: true });
+        innerContent = { root: innerContent };
+        let builder = new xml.Builder({
+            headless: true,
+            normalize: true,
+            normalizeTags: true,
+            renderOpts: {
+                pretty: false
+            }
+        });
         try
         {
+            const tmp = builder.buildObject(innerContent);
             result = {
                 success: true,
                 content: builder.buildObject(innerContent)
@@ -78,10 +87,49 @@ function SvgToObjectXml(svgContent)
 
     return result;
 }
+
+/**
+ * read objects that are already imported.
+ * 
+ * the following conditions must be true:
+ * 
+ * - the root node should be called 'root'.
+ * - there must be no whitepace before or after the root node.
+ * - while not nescecarily required it is expected that the data is compactly stored with minimal whitespace.
+ * 
+ * @param {String|String[]} name name or names of the objects that should be loaded
+ */
+function ReadObjectXml(name)
+{
+    names = name;
+    if (!Array.isArray(name))
+    {
+        names = [name];
+    }
+
+    let result = {};
+
+    for (let i = 0; i < names.length; ++i)
+    {
+        const fileContent = fs.readFileSync(ResourceDirectory + names[i] + ".xml", "utf8");
+        if (!(/^<root>.*<\/root>$/.test(fileContent)))
+        {
+            console.warning("Attempted to read object xml, however no root tags were found '<root>*</root>'");
+        }
+        result[names[i]] = fileContent.substring(6, fileContent.length - 7);
+    }
+
+    return result;
+}
+
 /**
  * @alias module:DrawObjectXmlhandler.svgToObjectXml
  */
 module.exports.SvgToObjectXml = SvgToObjectXml;
+/**
+ * @alias module:DrawObjectXmlhandler.ReadObjectXml
+ */
+module.exports.ReadObjectXml = ReadObjectXml;
 
 /**
  * this module is in charge of all DrawObject xml functionality.
