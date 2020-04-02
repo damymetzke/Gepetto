@@ -29,20 +29,20 @@ class TransformCommand
                 return [
                     1, 0,
                     0, 1,
-                    this.x, this.y
+                    Number(this.x), Number(this.y)
                 ];
             },
             SCALE: function ()
             {
                 return [
-                    this.x, 0,
-                    0, this.y,
+                    Number(this.x), 0,
+                    0, Number(this.y),
                     0, 0
                 ];
             },
             ROTATE: function ()
             {
-                const rotation = (this.x * Math.PI) / 180;
+                const rotation = (Number(this.x) * Math.PI) / 180;
                 console.log(Math.sin(rotation));
                 return [
                     Math.cos(rotation), Math.sin(rotation),
@@ -54,14 +54,14 @@ class TransformCommand
             {
                 return [
                     1, 0,
-                    this.x, 1,
+                    Number(this.x), 1,
                     0, 0
                 ];
             },
             SHEARY: function ()
             {
                 return [
-                    1, this.y,
+                    1, Number(this.y),
                     0, 1,
                     0, 0
                 ];

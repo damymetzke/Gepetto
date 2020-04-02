@@ -26,7 +26,7 @@ function AddSvgObject(name, data)
         return;
     }
 
-    if (!(content in data))
+    if (!("content" in data))
     {
         return;
     }
@@ -57,6 +57,7 @@ function AddSvgObject(name, data)
  */
 function UpdateSvgObject(name, data)
 {
+    console.log(name, data);
     if (!svgObjects.has(name))
     {
         return;
@@ -114,6 +115,8 @@ module.exports.UpdateSvgObject = UpdateSvgObject;
  * @alias module:SvgManager.RemoveSvgObject
  */
 module.exports.RemoveSvgObject = RemoveSvgObject;
+
+module.exports.Init = Init;
 
 /**
  * will manage the svg side of the draw objects.

@@ -2,7 +2,7 @@
 const { ipcMain } = require("electron");
 const fs = require("fs");
 
-const { DrawObjectTree, DrawObject } = require("../core/core");
+const { DrawObjectTree, DrawObject, TransformCommand } = require("../core/core");
 
 const { SvgToObjectXml, ReadObjectXml } = require("./draw-object-xmlhandler");
 
@@ -88,7 +88,12 @@ function OnImportSvg(event, importArguments)
     }
 
     //everything succeeded, add the craw object
-    AddDrawObject(new DrawObject(importArguments.name));
+    const newDrawObject = new DrawObject(importArguments.name);
+    AddDrawObject(newDrawObject);
+
+    svgManager.AddSvgObject(newDrawObject.name, {
+        content: ReadObjectXml(newDrawObject.name)[newDrawObject.name]
+    });
 
     return {
         success: true
@@ -104,6 +109,7 @@ function OnSelectObject(event, name)
 
 function OnUpdateObject(event, updateValues)
 {
+    console.log(updateValues);
     if (activeObject === null)
     {
         return;
@@ -115,26 +121,42 @@ function OnUpdateObject(event, updateValues)
         delete objectTree.objects[activeObject.name];
     }
 
+    activeObject = Object.assign(activeObject, updateValues);
     if ("transformCommands" in updateValues)
     {
-        activeObject.OnTransformCommandsUpdate();
-    }
+        for (let i = 0; i < activeObject.transformCommands.length; ++i)
+        {
+            let newData = activeObject.transformCommands[i];
+            delete newData.matrixFunctions;
+            activeObject.transformCommands[i] = Object.assign(new TransformCommand(), newData);
+        }
 
-    activeObject = Object.assign(activeObject, updateValues);
+        activeObject.OnTransformCommandsUpdate();
+        svgManager.UpdateSvgObject(activeObject.name, {
+            transform: activeObject.WorldTransform()
+        });
+    }
+    console.log(activeObject);
+
     window.webContents.send("refresh-text-tree", objectTree);
     window.webContents.send("refresh-selected-object", activeObject);
+
 }
 
 function OnAddTransformCommand(event, command)
 {
+    delete command["matrixFunctions"];
     if (activeObject === null)
     {
         return;
     }
-    activeObject.AddTransformCommand(command);
+    activeObject.AddTransformCommand(Object.assign(new TransformCommand("invalid", 0, 0), command));
     activeObject.OnTransformCommandsUpdate();
 
     window.webContents.send("refresh-selected-object", activeObject);
+    svgManager.UpdateSvgObject(activeObject.name, {
+        transform: activeObject.WorldTransform()
+    });
 }
 
 function SetupIpcMain()
