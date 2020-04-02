@@ -25,7 +25,8 @@ function UpdateSvgData(element, data)
     }
     if ("transform" in data)
     {
-        console.log("updating transform: ", data.transform);
+        const transformString = `matrix(${data.transform.matrix[0]} ${data.transform.matrix[1]} ${data.transform.matrix[2]} ${data.transform.matrix[3]} ${data.transform.matrix[4]} ${data.transform.matrix[5]} )`;
+        element.setAttribute("transform", transformString);
     }
 }
 
