@@ -112,9 +112,9 @@ function ReadObjectXml(name)
     for (let i = 0; i < names.length; ++i)
     {
         const fileContent = fs.readFileSync(ResourceDirectory + names[i] + ".xml", "utf8");
-        if (!(/^<root>.*<\/root>$/.test(fileContent)))
+        if (!(/^<root>[^]*<\/root>$/.test(fileContent)))
         {
-            console.warning("Attempted to read object xml, however no root tags were found '<root>*</root>'");
+            console.warn("Attempted to read object xml, however no root tags were found '<root>*</root>'\n" + fileContent);
         }
         result[names[i]] = fileContent.substring(6, fileContent.length - 7);
     }

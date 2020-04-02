@@ -3,4 +3,10 @@
     background-color: white;
 
     grid-area: main;
+
+    .selected-svg-object
+    {
+        outline: solid 3px blue;
+        outline-offset: 5px;
+    }
 }

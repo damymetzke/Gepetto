@@ -2,6 +2,19 @@ import GetUniqueElements from "../global/get-unique-elements.js";
 
 const { ipcRenderer } = require("electron");
 
+function UpdateSvgData(element, data)
+{
+    if ("content" in data)
+    {
+        element.innerHTML = data.content;
+    }
+    if ("transform" in data)
+    {
+        const transformString = `matrix(${data.transform.matrix[0]} ${data.transform.matrix[1]} ${data.transform.matrix[2]} ${data.transform.matrix[3]} ${data.transform.matrix[4]} ${data.transform.matrix[5]} )`;
+        element.setAttribute("transform", transformString);
+    }
+}
+
 //file variables//
 //////////////////
 let elements = null;
@@ -17,22 +30,18 @@ function SetupFileVariables(root)
 //ipc renderer//
 ////////////////
 
-function UpdateSvgData(element, data)
+function OnRefreshSelectedObject(_event, object)
 {
-    if ("content" in data)
+    if (!(object.name in svgObjects))
     {
-        element.innerHTML = data.content;
+        return;
     }
-    if ("transform" in data)
-    {
-        const transformString = `matrix(${data.transform.matrix[0]} ${data.transform.matrix[1]} ${data.transform.matrix[2]} ${data.transform.matrix[3]} ${data.transform.matrix[4]} ${data.transform.matrix[5]} )`;
-        element.setAttribute("transform", transformString);
-    }
+
+    svgObjects[object.name].classList.add("selected-svg-object");
 }
 
 function OnAddSvgObject(_event, data)
 {
-    console.log(data);
     if (!("name" in data) || !("data" in data))
     {
         return;
@@ -70,6 +79,7 @@ function OnRemoveSvgObject(_event, data)
 
 function SetupIpcRenderer()
 {
+    ipcRenderer.on("refresh-selected-object", OnRefreshSelectedObject);
     ipcRenderer.on("add-svg-object", OnAddSvgObject);
     ipcRenderer.on("update-svg-object", OnUpdateSvgObject);
     ipcRenderer.on("remove-svg-object", OnRemoveSvgObject);

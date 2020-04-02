@@ -171,6 +171,11 @@ h1 {
   grid-area: main;
 }
 
+.object-editor--main .selected-svg-object {
+  outline: solid 3px blue;
+  outline-offset: 5px;
+}
+
 .object-editor--property {
   background-color: var(--light-object-editor, #d1cef9);
   -ms-grid-row: 2;
