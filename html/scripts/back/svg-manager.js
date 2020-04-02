@@ -57,13 +57,12 @@ function AddSvgObject(name, data)
  */
 function UpdateSvgObject(name, data)
 {
-    console.log(name, data);
     if (!svgObjects.has(name))
     {
         return;
     }
 
-    window.webContents.send("update-svg-transform", {
+    window.webContents.send("update-svg-object", {
         name: name,
         data: data
     });
@@ -85,7 +84,7 @@ function RemoveSvgObject(name)
 
     svgObjects.delete(name);
 
-    window.webContents.send("remove-svg-content", {
+    window.webContents.send("remove-svg-object", {
         name: name
     });
 }

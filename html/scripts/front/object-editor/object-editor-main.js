@@ -2,6 +2,8 @@
 import * as DropDown from "../global/dropdown.js";
 import GetUniqueElements from "../global/get-unique-elements.js";
 
+import * as ObjectEditorSvg from "./object-editor-svg.js";
+
 //nodejs imports
 const { ipcRenderer } = require("electron");
 
@@ -134,7 +136,6 @@ function OnRefreshSelectedContent(_event, object)
     for (let i = 0; i < object.transformCommands.length; ++i)
     {
         let newElement = document.createElement("li");
-        console.log(object.transformCommands[i]);
         newElement.innerHTML = TransformCommandTemplate(object.transformCommands[i].type, object.transformCommands[i].x, object.transformCommands[i].y);
         elements.propertyTransformCommandList.appendChild(newElement);
 
@@ -184,7 +185,6 @@ function SetupIpcRenderer()
  */
 function OnChangeTransformCommand(index, values)
 {
-    console.log(index, values, currentTransformCommands[index]);
     Object.assign(currentTransformCommands[index], values);
     ipcRenderer.invoke("update-object", {
         transformCommands: currentTransformCommands
@@ -269,6 +269,8 @@ function SetupEventListeners(root)
 export function Run(root)
 {
     DropDown.OnScriptLoad(root);
+
+    ObjectEditorSvg.Init(root);
 
     SetupFileVariables(root);
     SetupIpcRenderer();

@@ -109,7 +109,6 @@ function OnSelectObject(event, name)
 
 function OnUpdateObject(event, updateValues)
 {
-    console.log(updateValues);
     if (activeObject === null)
     {
         return;
@@ -136,7 +135,6 @@ function OnUpdateObject(event, updateValues)
             transform: activeObject.WorldTransform()
         });
     }
-    console.log(activeObject);
 
     window.webContents.send("refresh-text-tree", objectTree);
     window.webContents.send("refresh-selected-object", activeObject);
