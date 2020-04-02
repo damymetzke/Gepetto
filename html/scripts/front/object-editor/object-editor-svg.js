@@ -37,6 +37,12 @@ function OnRefreshSelectedObject(_event, object)
         return;
     }
 
+    const currentlySelected = elements.svg.getElementsByClassName("selected-svg-object");
+    for (let i = 0; i < currentlySelected.length; ++i)
+    {
+        currentlySelected[i].classList.remove("selected-svg-object");
+    }
+
     svgObjects[object.name].classList.add("selected-svg-object");
 }
 
