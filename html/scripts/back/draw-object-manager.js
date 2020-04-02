@@ -6,6 +6,8 @@ const { DrawObjectTree, DrawObject } = require("../core/core");
 
 const { SvgToObjectXml, ReadObjectXml } = require("./draw-object-xmlhandler");
 
+const svgManager = require("./svg-manager");
+
 //file variables//
 //////////////////
 let ResourceDirectory = "./saved/objects";
@@ -147,6 +149,7 @@ function Init(mainWindow)
 {
     window = mainWindow;
     SetupIpcMain();
+    svgManager.Init(window);
 }
 
 module.exports.Init = Init;
