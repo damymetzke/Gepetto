@@ -47,9 +47,15 @@ function OnAddSvgObject(_event, data)
         return;
     }
 
+    const name = data.name;
+
     let newElement = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    newElement.addEventListener("click", function ()
+    {
+        OnSelectObject(name);
+    });
     elements.svg.appendChild(newElement);
-    svgObjects[data.name] = newElement;
+    svgObjects[name] = newElement;
 
     UpdateSvgData(newElement, data.data);
 }
@@ -83,6 +89,14 @@ function SetupIpcRenderer()
     ipcRenderer.on("add-svg-object", OnAddSvgObject);
     ipcRenderer.on("update-svg-object", OnUpdateSvgObject);
     ipcRenderer.on("remove-svg-object", OnRemoveSvgObject);
+}
+
+//event listners//
+//////////////////
+
+function OnSelectObject(objectName)
+{
+    ipcRenderer.invoke("select-object", objectName);
 }
 
 export function Init(root)
