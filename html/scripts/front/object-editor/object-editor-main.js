@@ -135,9 +135,15 @@ function OnRefreshSelectedContent(_event, object)
     elements.propertyTransformCommandList.innerHTML = "";
     for (let i = 0; i < object.transformCommands.length; ++i)
     {
+        const index = i;
         let newElement = document.createElement("li");
         newElement.innerHTML = TransformCommandTemplate(object.transformCommands[i].type, object.transformCommands[i].x, object.transformCommands[i].y);
         elements.propertyTransformCommandList.appendChild(newElement);
+
+        newElement.addEventListener("click", function ()
+        {
+            OnSelectTransformCommand(index);
+        });
 
         let inputFields = newElement.getElementsByClassName("transform-command-number-input");
         for (let j = 0; j < inputFields.length; ++j)
@@ -213,6 +219,13 @@ function OnChangeName()
 function OnSelectObject(objectName)
 {
     ipcRenderer.invoke("select-object", objectName);
+}
+
+function OnSelectTransformCommand(index)
+{
+    ipcRenderer.invoke("select-transform-command", {
+        index: index
+    });
 }
 
 /**

@@ -27,7 +27,7 @@ function AddDrawObject(object)
 
 //ipc main//
 ////////////
-function OnImportSvg(event, importArguments)
+function OnImportSvg(_event, importArguments)
 {
     //test for problems with the name
     if (!/^\w*$/.test(importArguments.name))
@@ -100,11 +100,20 @@ function OnImportSvg(event, importArguments)
     };
 }
 
-
-function OnSelectObject(event, name)
+function OnSelectObject(_event, name)
 {
     activeObject = (name in objectTree.objects) ? objectTree.objects[name] : null;
     window.webContents.send("refresh-selected-object", activeObject);
+}
+
+function OnSelectTransformCommand(_event, data)
+{
+    if (!("index" in data))
+    {
+        return;
+    }
+
+    console.log(data.index);
 }
 
 function OnUpdateObject(event, updateValues)
@@ -141,7 +150,7 @@ function OnUpdateObject(event, updateValues)
 
 }
 
-function OnAddTransformCommand(event, command)
+function OnAddTransformCommand(_event, command)
 {
     delete command["matrixFunctions"];
     if (activeObject === null)
@@ -161,6 +170,7 @@ function SetupIpcMain()
 {
     ipcMain.handle("import-svg", OnImportSvg);
     ipcMain.handle("select-object", OnSelectObject);
+    ipcMain.handle("select-transform-command", OnSelectTransformCommand);
     ipcMain.handle("update-object", OnUpdateObject);
     ipcMain.handle("add-transform-command", OnAddTransformCommand);
 }
