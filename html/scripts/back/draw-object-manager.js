@@ -18,6 +18,7 @@ let window = null;
 ////////////////
 let objectTree = new DrawObjectTree();
 let activeObject = null;
+let selectedTransformCommandIndex = 0;
 
 function AddDrawObject(object)
 {
@@ -113,7 +114,10 @@ function OnSelectTransformCommand(_event, data)
         return;
     }
 
-    console.log(data.index);
+    selectedTransformCommandIndex = data.index;
+    window.webContents.send("refresh-selected-transform-command", {
+        index: selectedTransformCommandIndex
+    });
 }
 
 function OnUpdateObject(event, updateValues)

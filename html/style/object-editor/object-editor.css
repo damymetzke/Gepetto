@@ -250,4 +250,8 @@ h1 {
 .object-editor--property .object-editor--property--transform-list li input::-webkit-inner-spin-button, .object-editor--property .object-editor--property--transform-list li input::-webkit-outer-spin-button {
   display: none;
 }
+
+.object-editor--property .object-editor--property--transform-list li.selected-transform-command {
+  border-color: orange;
+}
 /*# sourceMappingURL=object-editor.css.map */

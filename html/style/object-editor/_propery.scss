@@ -80,6 +80,11 @@
             {
                 display: none;
             }
+
+            &.selected-transform-command
+            {
+                border-color: orange;
+            }
         }
     }
 }

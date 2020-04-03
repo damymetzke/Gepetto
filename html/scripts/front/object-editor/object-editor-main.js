@@ -166,6 +166,27 @@ function OnRefreshSelectedContent(_event, object)
     currentTransformCommands = object.transformCommands;
 }
 
+function OnRefreshSelectedTransformCommand(_event, data)
+{
+    if (!("index" in data))
+    {
+        return;
+    }
+
+    let children = elements.propertyTransformCommandList.children;
+    for (let i = 0; i < children.length; ++i)
+    {
+        if (i == data.index)
+        {
+            children[i].classList.add("selected-transform-command");
+        }
+        else
+        {
+            children[i].classList.remove("selected-transform-command");
+        }
+    }
+}
+
 /**
  * setup listners for inter-process communication
  * 
@@ -176,6 +197,7 @@ function SetupIpcRenderer()
 {
     ipcRenderer.on("refresh-text-tree", OnRefreshTree);
     ipcRenderer.on("refresh-selected-object", OnRefreshSelectedContent);
+    ipcRenderer.on("refresh-selected-transform-command", OnRefreshSelectedTransformCommand);
 }
 
 //event listners//
