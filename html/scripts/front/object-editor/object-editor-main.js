@@ -115,8 +115,14 @@ function OnRefreshTree(_event, data)
  * 
  * @param {DrawObject} object the currently selected object
  */
-function OnRefreshSelectedContent(_event, object)
+function OnRefreshSelectedContent(_event, data)
 {
+    if (!("object" in data))
+    {
+        return;
+    }
+
+    const object = data.object;
     let treeElements = treeRoot.querySelectorAll("[data-draw-object-name]");
     for (let i = 0; i < treeElements.length; ++i)
     {

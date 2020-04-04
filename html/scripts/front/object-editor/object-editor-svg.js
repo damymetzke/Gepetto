@@ -30,8 +30,15 @@ function SetupFileVariables(root)
 //ipc renderer//
 ////////////////
 
-function OnRefreshSelectedObject(_event, object)
+function OnRefreshSelectedObject(_event, data)
 {
+    if (!("object" in data))
+    {
+        return;
+    }
+
+    const object = data.object;
+
     if (!(object.name in svgObjects))
     {
         return;
