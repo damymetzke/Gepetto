@@ -23,7 +23,9 @@ let selectedTransformCommandIndex = 0;
 function AddDrawObject(object)
 {
     objectTree.AddObjectToRoot(object);
-    window.webContents.send("refresh-text-tree", objectTree);
+    window.webContents.send("refresh-text-tree", {
+        objectTree: objectTree
+    });
 }
 
 //ipc main//
@@ -149,7 +151,9 @@ function OnUpdateObject(event, updateValues)
         });
     }
 
-    window.webContents.send("refresh-text-tree", objectTree);
+    window.webContents.send("refresh-text-tree", {
+        objectTree: objectTree
+    });
     window.webContents.send("refresh-selected-object", activeObject);
 
 }

@@ -83,14 +83,15 @@ function SetupFileVariables(root)
  * 
  * @alias module:ObjectEditor_Main#OnRefreshTree
  * 
- * @param {DrawObjectTree} treeData current DrawObjectTree from the main process.
+ * @param {DrawObjectTree} data current DrawObjectTree from the main process.
  */
-function OnRefreshTree(_event, treeData)
+function OnRefreshTree(_event, data)
 {
+    const objectTree = data.objectTree;
     treeRoot.innerHTML = "";
-    for (let i = 0; i < treeData.rootObjects.length; ++i)
+    for (let i = 0; i < objectTree.rootObjects.length; ++i)
     {
-        const name = treeData.rootObjects[i].name;
+        const name = objectTree.rootObjects[i].name;
         let newElement = document.createElement("li");
         newElement.innerText = name;
         newElement.dataset.drawObjectName = name;
