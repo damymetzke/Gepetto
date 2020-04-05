@@ -43,12 +43,7 @@
         <th>to</th>
     <tr>
     <tr>
-        <td>refresh-text-tree</td>
-        <td>draw-object-manager</td>
-        <td>object-editor-main</td>
-    <tr>
-    <tr>
-        <td>refresh-selected-object</td>
+        <td>refresh-objects</td>
         <td>draw-object-manager</td>
         <td>object-editor-main, object-editor-svg</td>
     <tr>

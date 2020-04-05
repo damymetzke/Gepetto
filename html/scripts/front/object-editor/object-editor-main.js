@@ -76,50 +76,31 @@ function SetupFileVariables(root)
 
 //ipcRenderer//
 ///////////////
-/**
- * called whenever the DrawObjectTree is changed.
- * 
- * this function will recreate the text tree based on the tree data.
- * 
- * @alias module:ObjectEditor_Main#OnRefreshTree
- * 
- * @param {DrawObjectTree} data current DrawObjectTree from the main process.
- */
-function OnRefreshTree(_event, data)
-{
-    const objectTree = data.objectTree;
-    treeRoot.innerHTML = "";
-    for (let i = 0; i < objectTree.rootObjects.length; ++i)
-    {
-        const name = objectTree.rootObjects[i].name;
-        let newElement = document.createElement("li");
-        newElement.innerText = name;
-        newElement.dataset.drawObjectName = name;
-        newElement.addEventListener("click", function ()
-        {
-            OnSelectObject(name);
-        });
-        treeRoot.appendChild(newElement);
-    }
-}
 
-/**
- * called whenever the selected object changes, or if any of its values change.
- * 
- * this function will do the following:
- * 
- * - highlight the current object in the text-tree.
- * - update the values in the property panel. 
- * 
- * @alias module:ObjectEditor_Main#OnRefreshSelectedContent
- * 
- * @param {DrawObject} object the currently selected object
- */
-function OnRefreshSelectedContent(_event, data)
+//todo: split up this chunky boi
+function OnRefreshObjects(_event, data)
 {
-    if ("object" in data)
+    if ("objectTree" in data)
     {
-        const object = data.object;
+        const objectTree = data.objectTree;
+        treeRoot.innerHTML = "";
+        for (let i = 0; i < objectTree.rootObjects.length; ++i)
+        {
+            const name = objectTree.rootObjects[i].name;
+            let newElement = document.createElement("li");
+            newElement.innerText = name;
+            newElement.dataset.drawObjectName = name;
+            newElement.addEventListener("click", function ()
+            {
+                OnSelectObject(name);
+            });
+            treeRoot.appendChild(newElement);
+        }
+    }
+
+    if ("selectedObject" in data)
+    {
+        const object = data.selectedObject;
         let treeElements = treeRoot.querySelectorAll("[data-draw-object-name]");
         for (let i = 0; i < treeElements.length; ++i)
         {
@@ -187,15 +168,6 @@ function OnRefreshSelectedContent(_event, data)
     }
 }
 
-function OnRefreshSelectedTransformCommand(_event, data)
-{
-    if (!("index" in data))
-    {
-        return;
-    }
-
-}
-
 /**
  * setup listners for inter-process communication
  * 
@@ -204,9 +176,7 @@ function OnRefreshSelectedTransformCommand(_event, data)
  */
 function SetupIpcRenderer()
 {
-    ipcRenderer.on("refresh-text-tree", OnRefreshTree);
-    ipcRenderer.on("refresh-selected-object", OnRefreshSelectedContent);
-    ipcRenderer.on("refresh-selected-transform-command", OnRefreshSelectedTransformCommand);
+    ipcRenderer.on("refresh-objects", OnRefreshObjects);
 }
 
 //event listners//

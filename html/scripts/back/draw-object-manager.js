@@ -23,7 +23,7 @@ let selectedTransformCommandIndex = -1;
 function AddDrawObject(object)
 {
     objectTree.AddObjectToRoot(object);
-    window.webContents.send("refresh-text-tree", {
+    window.webContents.send("refresh-objects", {
         objectTree: objectTree
     });
 }
@@ -107,8 +107,8 @@ function OnSelectObject(_event, name)
 {
     activeObject = (name in objectTree.objects) ? objectTree.objects[name] : null;
     selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
-    window.webContents.send("refresh-selected-object", {
-        object: activeObject,
+    window.webContents.send("refresh-objects", {
+        selectedObject: activeObject,
         transformCommandIndex: selectedTransformCommandIndex
     });
 }
@@ -121,7 +121,7 @@ function OnSelectTransformCommand(_event, data)
     }
 
     selectedTransformCommandIndex = data.index;
-    window.webContents.send("refresh-selected-object", {
+    window.webContents.send("refresh-objects", {
         transformCommandIndex: selectedTransformCommandIndex
     });
 }
@@ -155,13 +155,10 @@ function OnUpdateObject(event, updateValues)
         });
     }
 
-    window.webContents.send("refresh-text-tree", {
-        objectTree: objectTree
+    window.webContents.send("refresh-objects", {
+        objectTree: objectTree,
+        selectedObject: activeObject
     });
-    window.webContents.send("refresh-selected-object", {
-        object: activeObject
-    });
-
 }
 
 function OnAddTransformCommand(_event, command)
@@ -176,8 +173,8 @@ function OnAddTransformCommand(_event, command)
 
     selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
 
-    window.webContents.send("refresh-selected-object", {
-        object: activeObject,
+    window.webContents.send("refresh-objects", {
+        selectedObject: activeObject,
         transformCommandIndex: selectedTransformCommandIndex
     });
     svgManager.UpdateSvgObject(activeObject.name, {

@@ -30,14 +30,14 @@ function SetupFileVariables(root)
 //ipc renderer//
 ////////////////
 
-function OnRefreshSelectedObject(_event, data)
+function OnRefreshObjects(_event, data)
 {
-    if (!("object" in data))
+    if (!("selectedObject" in data))
     {
         return;
     }
 
-    const object = data.object;
+    const object = data.selectedObject;
 
     if (!(object.name in svgObjects))
     {
@@ -98,7 +98,7 @@ function OnRemoveSvgObject(_event, data)
 
 function SetupIpcRenderer()
 {
-    ipcRenderer.on("refresh-selected-object", OnRefreshSelectedObject);
+    ipcRenderer.on("refresh-objects", OnRefreshObjects);
     ipcRenderer.on("add-svg-object", OnAddSvgObject);
     ipcRenderer.on("update-svg-object", OnUpdateSvgObject);
     ipcRenderer.on("remove-svg-object", OnRemoveSvgObject);
