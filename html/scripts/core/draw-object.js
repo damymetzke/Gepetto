@@ -42,7 +42,6 @@ class DrawObject
     {
         if (!this._dirty)
         {
-            console.log("not dirty");
             return this._relativeTransform;
         }
 
@@ -51,11 +50,9 @@ class DrawObject
         for (let i = 0; i < this.transformCommands.length; ++i)
         {
             let tmp = this.transformCommands[i];
-            console.log(typeof tmp.MultiplyMatrix);
             this._relativeTransform = this.transformCommands[i].CreateMatrix().MultiplyMatrix(this._relativeTransform);
         }
 
-        console.log("dirty");
         this._dirty = false;
 
         return this._relativeTransform;

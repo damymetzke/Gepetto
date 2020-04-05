@@ -53,11 +53,6 @@
         <td>object-editor-main, object-editor-svg</td>
     <tr>
     <tr>
-        <td>refresh-selected-transform-command</td>
-        <td>draw-object-manager</td>
-        <td>object-editor-main</td>
-    <tr>
-    <tr>
         <td>add-svg-object</td>
         <td>svg-manager</td>
         <td>object-editor-svg</td>

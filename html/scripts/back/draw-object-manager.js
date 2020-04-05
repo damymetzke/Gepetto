@@ -18,7 +18,7 @@ let window = null;
 ////////////////
 let objectTree = new DrawObjectTree();
 let activeObject = null;
-let selectedTransformCommandIndex = 0;
+let selectedTransformCommandIndex = -1;
 
 function AddDrawObject(object)
 {
@@ -106,8 +106,10 @@ function OnImportSvg(_event, importArguments)
 function OnSelectObject(_event, name)
 {
     activeObject = (name in objectTree.objects) ? objectTree.objects[name] : null;
+    selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
     window.webContents.send("refresh-selected-object", {
-        object: activeObject
+        object: activeObject,
+        transformCommandIndex: selectedTransformCommandIndex
     });
 }
 
@@ -119,8 +121,8 @@ function OnSelectTransformCommand(_event, data)
     }
 
     selectedTransformCommandIndex = data.index;
-    window.webContents.send("refresh-selected-transform-command", {
-        index: selectedTransformCommandIndex
+    window.webContents.send("refresh-selected-object", {
+        transformCommandIndex: selectedTransformCommandIndex
     });
 }
 
@@ -172,8 +174,11 @@ function OnAddTransformCommand(_event, command)
     activeObject.AddTransformCommand(Object.assign(new TransformCommand("invalid", 0, 0), command));
     activeObject.OnTransformCommandsUpdate();
 
+    selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
+
     window.webContents.send("refresh-selected-object", {
-        object: activeObject
+        object: activeObject,
+        transformCommandIndex: selectedTransformCommandIndex
     });
     svgManager.UpdateSvgObject(activeObject.name, {
         transform: activeObject.WorldTransform()

@@ -117,60 +117,74 @@ function OnRefreshTree(_event, data)
  */
 function OnRefreshSelectedContent(_event, data)
 {
-    if (!("object" in data))
+    if ("object" in data)
     {
-        return;
-    }
-
-    const object = data.object;
-    let treeElements = treeRoot.querySelectorAll("[data-draw-object-name]");
-    for (let i = 0; i < treeElements.length; ++i)
-    {
-        if (treeElements[i].dataset.drawObjectName === object.name)
+        const object = data.object;
+        let treeElements = treeRoot.querySelectorAll("[data-draw-object-name]");
+        for (let i = 0; i < treeElements.length; ++i)
         {
-            treeElements[i].classList.add("selected-element");
+            if (treeElements[i].dataset.drawObjectName === object.name)
+            {
+                treeElements[i].classList.add("selected-element");
+            }
+            else
+            {
+                treeElements[i].classList.remove("selected-element");
+            }
         }
-        else
-        {
-            treeElements[i].classList.remove("selected-element");
-        }
-    }
 
-    elements.propertyName.innerText = object.name;
-    elements.propertyNameInput.value = object.name;
+        elements.propertyName.innerText = object.name;
+        elements.propertyNameInput.value = object.name;
 
-    elements.propertyTransformCommandList.innerHTML = "";
-    for (let i = 0; i < object.transformCommands.length; ++i)
-    {
-        const index = i;
-        let newElement = document.createElement("li");
-        newElement.innerHTML = TransformCommandTemplate(object.transformCommands[i].type, object.transformCommands[i].x, object.transformCommands[i].y);
-        elements.propertyTransformCommandList.appendChild(newElement);
-
-        newElement.addEventListener("click", function ()
-        {
-            OnSelectTransformCommand(index);
-        });
-
-        let inputFields = newElement.getElementsByClassName("transform-command-number-input");
-        for (let j = 0; j < inputFields.length; ++j)
+        elements.propertyTransformCommandList.innerHTML = "";
+        for (let i = 0; i < object.transformCommands.length; ++i)
         {
             const index = i;
-            const key = inputFields[j].dataset.transformCommandKey;
-            inputFields[j].addEventListener("keypress", function (keyEvent)
+            let newElement = document.createElement("li");
+            newElement.innerHTML = TransformCommandTemplate(object.transformCommands[i].type, object.transformCommands[i].x, object.transformCommands[i].y);
+            elements.propertyTransformCommandList.appendChild(newElement);
+
+            newElement.addEventListener("click", function ()
             {
-                if (keyEvent.key !== "Enter")
-                {
-                    return;
-                }
-                let newObject = {};
-                newObject[key] = inputFields[j].value;
-                OnChangeTransformCommand(index, newObject);
+                OnSelectTransformCommand(index);
             });
+
+            let inputFields = newElement.getElementsByClassName("transform-command-number-input");
+            for (let j = 0; j < inputFields.length; ++j)
+            {
+                const index = i;
+                const key = inputFields[j].dataset.transformCommandKey;
+                inputFields[j].addEventListener("keypress", function (keyEvent)
+                {
+                    if (keyEvent.key !== "Enter")
+                    {
+                        return;
+                    }
+                    let newObject = {};
+                    newObject[key] = inputFields[j].value;
+                    OnChangeTransformCommand(index, newObject);
+                });
+            }
         }
+
+        currentTransformCommands = object.transformCommands;
     }
 
-    currentTransformCommands = object.transformCommands;
+    if ("transformCommandIndex" in data)
+    {
+        let children = elements.propertyTransformCommandList.children;
+        for (let i = 0; i < children.length; ++i)
+        {
+            if (i == data.transformCommandIndex)
+            {
+                children[i].classList.add("selected-transform-command");
+            }
+            else
+            {
+                children[i].classList.remove("selected-transform-command");
+            }
+        }
+    }
 }
 
 function OnRefreshSelectedTransformCommand(_event, data)
@@ -180,18 +194,6 @@ function OnRefreshSelectedTransformCommand(_event, data)
         return;
     }
 
-    let children = elements.propertyTransformCommandList.children;
-    for (let i = 0; i < children.length; ++i)
-    {
-        if (i == data.index)
-        {
-            children[i].classList.add("selected-transform-command");
-        }
-        else
-        {
-            children[i].classList.remove("selected-transform-command");
-        }
-    }
 }
 
 /**

@@ -43,7 +43,6 @@ class TransformCommand
             ROTATE: function ()
             {
                 const rotation = (Number(this.x) * Math.PI) / 180;
-                console.log(Math.sin(rotation));
                 return [
                     Math.cos(rotation), Math.sin(rotation),
                     -Math.sin(rotation), Math.cos(rotation),
