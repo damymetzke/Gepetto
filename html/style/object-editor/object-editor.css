@@ -176,23 +176,23 @@ h1 {
   outline-offset: 5px;
 }
 
-.object-editor--main #drag-display > * {
+.object-editor--main .drag-display > * {
   display: none;
 }
 
-.object-editor--main #drag-display.drag-display-active--translate > #drag-display--translate {
+.object-editor--main .drag-display.drag-display-active--translate > .drag-display--translate {
   display: inherit;
 }
 
-.object-editor--main #drag-display.drag-display-active--scale > #drag-display--scale {
+.object-editor--main .drag-display.drag-display-active--scale > .drag-display--scale {
   display: inherit;
 }
 
-.object-editor--main #drag-display.drag-display-active--rotate > #drag-display--rotate {
+.object-editor--main .drag-display.drag-display-active--rotate > .drag-display--rotate {
   display: inherit;
 }
 
-.object-editor--main #drag-display.drag-display-active--shear > #drag-display--shear {
+.object-editor--main .drag-display.drag-display-active--shear > .drag-display--shear {
   display: inherit;
 }
 

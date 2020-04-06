@@ -2,7 +2,7 @@
 {
     &.drag-display-active--#{$name}
     {
-        > #drag-display--#{$name}
+        > .drag-display--#{$name}
         {
             display: inherit
         }
@@ -21,7 +21,7 @@
         outline-offset: 5px;
     }
 
-    #drag-display
+    .drag-display
     {
         > *
         {
