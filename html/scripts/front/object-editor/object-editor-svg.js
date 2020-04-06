@@ -32,6 +32,8 @@ function SetupFileVariables(root)
 /////////////////
 
 let dragDisplayElements = null;
+let currentTransformCommandIndex = -1;
+let currentTransforms = "";
 
 function SetupDragDisplays()
 {
@@ -55,7 +57,6 @@ function SetupDragDisplays()
         shearTriangle: "drag-display--shear--triangle",
         shearCenter: "drag-display--shear--center"
     });
-    console.log("drag display elements:\n", dragDisplayElements);
 }
 
 //ipc renderer//
@@ -63,25 +64,58 @@ function SetupDragDisplays()
 
 function OnRefreshObjects(_event, data)
 {
-    if (!("selectedObject" in data))
+    if ("selectedObject" in data)
+    {
+        const object = data.selectedObject;
+        currentTransforms = object.transformCommands;
+
+        if (!(object.name in svgObjects))
+        {
+            return;
+        }
+
+        const currentlySelected = elements.svg.getElementsByClassName("selected-svg-object");
+        for (let i = 0; i < currentlySelected.length; ++i)
+        {
+            currentlySelected[i].classList.remove("selected-svg-object");
+        }
+
+        svgObjects[object.name].classList.add("selected-svg-object");
+    }
+
+    if ("transformCommandIndex" in data)
+    {
+        currentTransformCommandIndex = data.transformCommandIndex;
+    }
+
+    elements.svg.classList.remove("drag-display-active--translate");
+    elements.svg.classList.remove("drag-display-active--scale");
+    elements.svg.classList.remove("drag-display-active--rotate");
+    elements.svg.classList.remove("drag-display-active--shear");
+
+    if (currentTransformCommandIndex === -1)
     {
         return;
     }
 
-    const object = data.selectedObject;
-
-    if (!(object.name in svgObjects))
+    switch (currentTransforms[currentTransformCommandIndex].type)
     {
-        return;
+        case "TRANSLATE":
+            elements.svg.classList.add("drag-display-active--translate");
+            break;
+        case "SCALE":
+            elements.svg.classList.add("drag-display-active--scale");
+            break;
+        case "ROTATE":
+            elements.svg.classList.add("drag-display-active--rotate");
+            break;
+        case "SHEARX":
+        case "SHEARY":
+            elements.svg.classList.add("drag-display-active--shear");
     }
 
-    const currentlySelected = elements.svg.getElementsByClassName("selected-svg-object");
-    for (let i = 0; i < currentlySelected.length; ++i)
-    {
-        currentlySelected[i].classList.remove("selected-svg-object");
-    }
 
-    svgObjects[object.name].classList.add("selected-svg-object");
+
 }
 
 function OnAddSvgObject(_event, data)
