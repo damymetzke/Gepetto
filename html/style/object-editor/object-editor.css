@@ -180,19 +180,19 @@ h1 {
   display: none;
 }
 
-.object-editor--main .drag-display.drag-display-active--translate > .drag-display--translate {
+.object-editor--main--svg.drag-display-active--translate .drag-display--translate {
   display: inherit;
 }
 
-.object-editor--main .drag-display.drag-display-active--scale > .drag-display--scale {
+.object-editor--main--svg.drag-display-active--scale .drag-display--scale {
   display: inherit;
 }
 
-.object-editor--main .drag-display.drag-display-active--rotate > .drag-display--rotate {
+.object-editor--main--svg.drag-display-active--rotate .drag-display--rotate {
   display: inherit;
 }
 
-.object-editor--main .drag-display.drag-display-active--shear > .drag-display--shear {
+.object-editor--main--svg.drag-display-active--shear .drag-display--shear {
   display: inherit;
 }
 

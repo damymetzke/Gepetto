@@ -1,6 +1,7 @@
 import GetUniqueElements from "../global/get-unique-elements.js";
 
 const { ipcRenderer } = require("electron");
+const fs = require("fs");
 
 function UpdateSvgData(element, data)
 {
@@ -116,4 +117,6 @@ export function Init(root)
 {
     SetupFileVariables(root);
     SetupIpcRenderer();
+
+    elements.svg.innerHTML = fs.readFileSync("./resources/drag-icons.xml");
 }

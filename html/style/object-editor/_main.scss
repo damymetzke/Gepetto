@@ -2,7 +2,7 @@
 {
     &.drag-display-active--#{$name}
     {
-        > .drag-display--#{$name}
+        .drag-display--#{$name}
         {
             display: inherit
         }
@@ -28,9 +28,14 @@
             display: none;
         }
 
+    }
+
+    &--svg
+    {
         @include drag-display-active(translate);
         @include drag-display-active(scale);
         @include drag-display-active(rotate);
         @include drag-display-active(shear);
     }
+
 }
