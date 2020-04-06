@@ -115,6 +115,22 @@ class TransformCommand
         return new Transform(this.matrixFunctions[this.type].apply(this, []));
     }
 
+    ToPureObject()
+    {
+        return {
+            type: this.type,
+            x: this.x,
+            y: this.y
+        };
+    }
+
+    FromPureObject(object)
+    {
+        this.type = object.type;
+        this.x = object.x;
+        this.y = object.y;
+    }
+
     constructor(type, x, y)
     {
         this.type = type;

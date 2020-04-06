@@ -1,7 +1,7 @@
 <g class="drag-display">
     <g class="drag-display--translate">
         <g class="drag-display--translate--y">
-            <path d="M0.1 0 L0.1 9.5 L0.5 9.5 L0 10 L -0.5 9.5 L -0.1 9.5 L -0.1 0 Z" fill="green"/>
+            <path z="-1" d="M0.1 0 L0.1 9.5 L0.5 9.5 L0 10 L -0.5 9.5 L -0.1 9.5 L -0.1 0 Z" fill="green"/>
         </g>
         <g class="drag-display--translate--x">
             <path d="M0 0.1 L9.5 0.1 L9.5 0.5 L10 0 L 9.5 -0.5 L 9.5 -0.1 L 0 -0.1 Z" fill="red"/>

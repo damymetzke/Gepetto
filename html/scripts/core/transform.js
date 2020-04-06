@@ -94,6 +94,15 @@ class Transform
         ];
     }
 
+    InnerMatrix()
+    {
+        return new Transform([
+            this.matrix[0], this.matrix[1],
+            this.matrix[2], this.matrix[3],
+            0, 0
+        ]);
+    }
+
     constructor(matrix = [1, 0, 0, 1, 0, 0])
     {
         this.matrix = matrix;

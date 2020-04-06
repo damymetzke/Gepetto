@@ -1,6 +1,7 @@
 import GetUniqueElements from "../global/get-unique-elements.js";
 
 const { ipcRenderer } = require("electron");
+const { Transform, DrawObject, TransformCommand } = require("electron").remote.require("../core/core");
 const fs = require("fs");
 
 function UpdateSvgData(element, data)
@@ -11,7 +12,7 @@ function UpdateSvgData(element, data)
     }
     if ("transform" in data)
     {
-        const transformString = `matrix(${data.transform.matrix[0]} ${data.transform.matrix[1]} ${data.transform.matrix[2]} ${data.transform.matrix[3]} ${data.transform.matrix[4]} ${data.transform.matrix[5]} )`;
+        const transformString = `matrix(${data.transform.matrix[0]} ${data.transform.matrix[1]} ${data.transform.matrix[2]} ${data.transform.matrix[3]} ${data.transform.matrix[4]} ${data.transform.matrix[5]})`;
         element.setAttribute("transform", transformString);
     }
 }
@@ -33,12 +34,14 @@ function SetupFileVariables(root)
 
 let dragDisplayElements = null;
 let currentTransformCommandIndex = -1;
-let currentTransforms = "";
+let currentTransformCommands = null;
+let currentTransform = new Transform();
 
 function SetupDragDisplays()
 {
     elements.svg.innerHTML = fs.readFileSync("./resources/drag-icons.xml");
     dragDisplayElements = GetUniqueElements(elements.svg, {
+        root: "drag-display",
         translate: "drag-display--translate",
         translateX: "drag-display--translate--x",
         translateY: "drag-display--translate--y",
@@ -66,12 +69,26 @@ function OnRefreshObjects(_event, data)
 {
     if ("selectedObject" in data)
     {
-        const object = data.selectedObject;
-        currentTransforms = object.transformCommands;
+        let object = new DrawObject();
+        object.FromPureObject(data.selectedObject);
+        currentTransformCommands = object.transformCommands;
+        currentTransform = object.WorldTransform();
+
 
         if (!(object.name in svgObjects))
         {
             return;
+        }
+
+        {
+            const resultVector = currentTransform.InnerMatrix().MultiplyVector([0, 1]);
+            const length = Math.sqrt(resultVector[0] * resultVector[0] + resultVector[1] * resultVector[1]);
+            const adaptedTransform = new TransformCommand("SCALE", 1 / length, 1 / length).CreateMatrix().MultiplyMatrix(currentTransform);
+
+            console.log(length);
+
+            const transformString = `matrix(${adaptedTransform.matrix[0]} ${adaptedTransform.matrix[1]} ${adaptedTransform.matrix[2]} ${adaptedTransform.matrix[3]} ${adaptedTransform.matrix[4]} ${adaptedTransform.matrix[5]})`;
+            dragDisplayElements.root.setAttribute("transform", transformString);
         }
 
         const currentlySelected = elements.svg.getElementsByClassName("selected-svg-object");
@@ -98,7 +115,7 @@ function OnRefreshObjects(_event, data)
         return;
     }
 
-    switch (currentTransforms[currentTransformCommandIndex].type)
+    switch (currentTransformCommands[currentTransformCommandIndex].type)
     {
         case "TRANSLATE":
             elements.svg.classList.add("drag-display-active--translate");
@@ -132,7 +149,7 @@ function OnAddSvgObject(_event, data)
     {
         OnSelectObject(name);
     });
-    elements.svg.appendChild(newElement);
+    elements.svg.insertBefore(newElement, elements.svg.firstChild);
     svgObjects[name] = newElement;
 
     UpdateSvgData(newElement, data.data);

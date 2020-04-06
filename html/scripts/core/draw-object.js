@@ -1,4 +1,5 @@
 const Transform = require("./transform");
+const { TransformCommand } = require("./transform-command");
 
 /**
  * the class used to store objects to be drawn.
@@ -80,6 +81,35 @@ class DrawObject
             return this.relativeTransform;
         }
         return this.parent.relativeTransform.MultiplyMatrix(this.relativeTransform);
+    }
+
+    ToPureObject()
+    {
+        result = {
+            name: this.name,
+            parent: this.parent === null ? null : parent.name,
+            transformCommands: []
+        };
+
+        for (let i = 0; i < this.transformCommands.length; ++i)
+        {
+            result.transformCommands.push(this.transformCommands[i].ToPureObject());
+        }
+
+        return result;
+    }
+
+    FromPureObject(object)
+    {
+        this.name = object.name;
+        this.parent = object.parent;
+        this._dirty = true;
+        for (let i = 0; i < object.transformCommands.length; ++i)
+        {
+            let newTransformCommand = new TransformCommand();
+            newTransformCommand.FromPureObject(object.transformCommands[i]);
+            this.transformCommands.push(newTransformCommand);
+        }
     }
 
     constructor(name, parent = null)
