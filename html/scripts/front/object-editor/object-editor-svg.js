@@ -28,6 +28,36 @@ function SetupFileVariables(root)
     });
 }
 
+//drag displays//
+/////////////////
+
+let dragDisplayElements = null;
+
+function SetupDragDisplays()
+{
+    elements.svg.innerHTML = fs.readFileSync("./resources/drag-icons.xml");
+    dragDisplayElements = GetUniqueElements(elements.svg, {
+        translate: "drag-display--translate",
+        translateX: "drag-display--translate--x",
+        translateY: "drag-display--translate--y",
+        translateCenter: "drag-display--translate--center",
+
+        scale: "drag-display--scale",
+        scaleX: "drag-display--scale--x",
+        scaleY: "drag-display--scale--y",
+        scaleCenter: "drag-display--scale--center",
+
+        rotate: "drag-display--rotate",
+        rotateCircle: "drag-display--rotate--circle",
+        rotateCenter: "drag-display--rotate--center",
+
+        shear: "drag-display--shear",
+        shearTriangle: "drag-display--shear--triangle",
+        shearCenter: "drag-display--shear--center"
+    });
+    console.log("drag display elements:\n", dragDisplayElements);
+}
+
 //ipc renderer//
 ////////////////
 
@@ -116,7 +146,6 @@ function OnSelectObject(objectName)
 export function Init(root)
 {
     SetupFileVariables(root);
+    SetupDragDisplays();
     SetupIpcRenderer();
-
-    elements.svg.innerHTML = fs.readFileSync("./resources/drag-icons.xml");
 }
