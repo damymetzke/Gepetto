@@ -19,12 +19,12 @@
         <rect id="drag-display--scale--center" width="0.8" height="0.8" x="-0.4" y="-0.4" fill="#383838"/>
     </g>
 
-    <g id="drag-display--rotation">
-        <g id="drag-display--rotation--circle">  
+    <g id="drag-display--rotate">
+        <g id="drag-display--rotate--circle">  
             <circle cy="0" cx="0" r="8" fill="transparent" stroke="blue" stroke-width="0.25"/>
             <rect width="1" height="1" x="-0.5" y="7.5" fill="blue"/>
         </g>
-        <circle id="drag-display--rotation--center" cy="0" cx="0" r="0.4" fill="transparent" stroke="#383838" stroke-width="0.15"/>
+        <circle id="drag-display--rotate--center" cy="0" cx="0" r="0.4" fill="transparent" stroke="#383838" stroke-width="0.15"/>
     </g>
 
     <g id="drag-display--shear">

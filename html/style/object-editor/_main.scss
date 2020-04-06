@@ -1,3 +1,14 @@
+@mixin drag-display-active($name) 
+{
+    &.drag-display-active--#{$name}
+    {
+        > #drag-display--#{$name}
+        {
+            display: inherit
+        }
+    }
+}
+
 .object-editor--main
 {
     background-color: white;
@@ -8,5 +19,18 @@
     {
         outline: solid 3px blue;
         outline-offset: 5px;
+    }
+
+    #drag-display
+    {
+        > *
+        {
+            display: none;
+        }
+
+        @include drag-display-active(translate);
+        @include drag-display-active(scale);
+        @include drag-display-active(rotate);
+        @include drag-display-active(shear);
     }
 }
