@@ -201,50 +201,78 @@ function OnSelectObject(objectName)
 
 let MouseUpCallback = null;
 let MouseUpdateCallback = null;
+let dragDropStartPosition = [0, 0];
 
 //translate//
-function OnDragTranslateX()
+function OnDragTranslateX(mouseEvent)
 {
-    MouseUpdateCallback = function ()
+    MouseUpdateCallback = function (mouseUpdateEvent)
     {
-        console.log("update translate X");
+        console.log([
+            mouseUpdateEvent.pageX - dragDropStartPosition[0],
+            mouseUpdateEvent.pageY - dragDropStartPosition[1]
+        ]);
     };
+
+    MouseUpCallback = function (mouseUpEvent)
+    {
+        currentTransformCommands[currentTransformCommandIndex].x = mouseUpEvent.pageX - dragDropStartPosition[0];
+        currentTransformCommands[currentTransformCommandIndex].y = mouseUpEvent.pageY - dragDropStartPosition[1];
+        ipcRenderer.invoke("update-object", {
+            transformCommands: currentTransformCommands
+        });
+    };
+
+    dragDropStartPosition = [
+        mouseEvent.pageX,
+        mouseEvent.pageY
+    ];
 }
 
-function OnDragTranslateY()
+function OnDragTranslateY(mouseEvent)
 {
-    MouseUpdateCallback = function ()
+    MouseUpdateCallback = function (mouseUpdateEvent)
     {
         console.log("update translate Y");
     };
+
+    dragDropStartPosition = [
+        mouseEvent.pageX,
+        mouseEvent.pageY
+    ];
 }
 
-function OnDragTranslateCenter()
+function OnDragTranslateCenter(mouseEvent)
 {
-    MouseUpdateCallback = function ()
+    MouseUpdateCallback = function (mouseUpdateEvent)
     {
         console.log("update translate Center");
     };
+
+    dragDropStartPosition = [
+        mouseEvent.pageX,
+        mouseEvent.pageY
+    ];
 }
 
 function SetupDragAndDrop()
 {
     //update and mouseUp
-    document.onmousemove = function ()
+    document.onmousemove = function (mouseEvent)
     {
         if (MouseUpdateCallback === null)
         {
             return;
         }
 
-        MouseUpdateCallback();
+        MouseUpdateCallback(mouseEvent);
     };
 
-    document.onmouseup = function ()
+    document.onmouseup = function (mouseEvent)
     {
         if (MouseUpCallback !== null)
         {
-            MouseUpCallback();
+            MouseUpCallback(mouseEvent);
         }
 
         MouseUpCallback = null;
