@@ -36,7 +36,7 @@ class DrawObjectTree
             objects: {}
         };
 
-        for (name in this.objects)
+        for (let name in this.objects)
         {
             result.objects[name] = this.objects[name].ToPureObject();
         }
@@ -51,7 +51,7 @@ class DrawObjectTree
 
     FromPureObject(object)
     {
-        for (name in object.objects)
+        for (let name in object.objects)
         {
             let newDrawObject = new DrawObject();
             newDrawObject.FromPureObject(object.objects[name]);
@@ -62,6 +62,8 @@ class DrawObjectTree
         {
             this.rootObjects.push(this.objects[object.rootObjects[i]]);
         }
+
+        //todo: change names into objects
     }
 
     constructor(rootObjects = [])

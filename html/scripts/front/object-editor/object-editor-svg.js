@@ -42,6 +42,7 @@ function SetupDragDisplays()
     elements.svg.innerHTML = fs.readFileSync("./resources/drag-icons.xml");
     dragDisplayElements = GetUniqueElements(elements.svg, {
         root: "drag-display",
+
         translate: "drag-display--translate",
         translateX: "drag-display--translate--x",
         translateY: "drag-display--translate--y",
@@ -83,7 +84,8 @@ function OnRefreshObjects(_event, data)
         {
             const resultVector = currentTransform.InnerMatrix().MultiplyVector([0, 1]);
             const length = Math.sqrt(resultVector[0] * resultVector[0] + resultVector[1] * resultVector[1]);
-            const adaptedTransform = new TransformCommand("SCALE", 1 / length, 1 / length).CreateMatrix().MultiplyMatrix(currentTransform);
+            //todo: implement setting to change the scale
+            const adaptedTransform = new TransformCommand("SCALE", 4 / length, 4 / length).CreateMatrix().MultiplyMatrix(currentTransform);
 
             console.log(length);
 
@@ -194,9 +196,71 @@ function OnSelectObject(objectName)
     ipcRenderer.invoke("select-object", objectName);
 }
 
+//drag and drop//
+/////////////////
+
+let MouseUpCallback = null;
+let MouseUpdateCallback = null;
+
+//translate//
+function OnDragTranslateX()
+{
+    MouseUpdateCallback = function ()
+    {
+        console.log("update translate X");
+    };
+}
+
+function OnDragTranslateY()
+{
+    MouseUpdateCallback = function ()
+    {
+        console.log("update translate Y");
+    };
+}
+
+function OnDragTranslateCenter()
+{
+    MouseUpdateCallback = function ()
+    {
+        console.log("update translate Center");
+    };
+}
+
+function SetupDragAndDrop()
+{
+    //update and mouseUp
+    document.onmousemove = function ()
+    {
+        if (MouseUpdateCallback === null)
+        {
+            return;
+        }
+
+        MouseUpdateCallback();
+    };
+
+    document.onmouseup = function ()
+    {
+        if (MouseUpCallback !== null)
+        {
+            MouseUpCallback();
+        }
+
+        MouseUpCallback = null;
+        MouseUpdateCallback = null;
+    };
+
+    //translate
+    dragDisplayElements.translateX.addEventListener("mousedown", OnDragTranslateX);
+    dragDisplayElements.translateY.addEventListener("mousedown", OnDragTranslateY);
+    dragDisplayElements.translateCenter.addEventListener("mousedown", OnDragTranslateCenter);
+}
+
 export function Init(root)
 {
     SetupFileVariables(root);
     SetupDragDisplays();
     SetupIpcRenderer();
+    SetupDragAndDrop();
 }

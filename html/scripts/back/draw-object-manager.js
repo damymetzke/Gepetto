@@ -24,7 +24,7 @@ function AddDrawObject(object)
 {
     objectTree.AddObjectToRoot(object);
     window.webContents.send("refresh-objects", {
-        objectTree: objectTree
+        objectTree: objectTree.ToPureObject()
     });
 }
 
@@ -108,7 +108,7 @@ function OnSelectObject(_event, name)
     activeObject = (name in objectTree.objects) ? objectTree.objects[name] : null;
     selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
     window.webContents.send("refresh-objects", {
-        selectedObject: activeObject,
+        selectedObject: activeObject.ToPureObject(),
         transformCommandIndex: selectedTransformCommandIndex
     });
 }
@@ -156,8 +156,8 @@ function OnUpdateObject(event, updateValues)
     }
 
     window.webContents.send("refresh-objects", {
-        objectTree: objectTree,
-        selectedObject: activeObject
+        objectTree: objectTree.ToPureObject(),
+        selectedObject: activeObject.ToPureObject()
     });
 }
 
@@ -174,7 +174,7 @@ function OnAddTransformCommand(_event, command)
     selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
 
     window.webContents.send("refresh-objects", {
-        selectedObject: activeObject,
+        selectedObject: activeObject.ToPureObject(),
         transformCommandIndex: selectedTransformCommandIndex
     });
     svgManager.UpdateSvgObject(activeObject.name, {

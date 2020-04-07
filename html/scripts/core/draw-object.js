@@ -85,7 +85,7 @@ class DrawObject
 
     ToPureObject()
     {
-        result = {
+        let result = {
             name: this.name,
             parent: this.parent === null ? null : parent.name,
             transformCommands: []
