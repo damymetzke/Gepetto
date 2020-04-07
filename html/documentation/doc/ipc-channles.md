@@ -1,7 +1,7 @@
 # ipc channels
 
 ## overview
-### renderer to main
+### front to back
 <table>
     <tr>
         <th>Channel Name</th>
@@ -35,7 +35,7 @@
     <tr>
 </table>
 
-### main to renderer
+### back to front
 <table>
     <tr>
         <th>Channel Name</th>
@@ -64,4 +64,41 @@
     <tr>
 </table>
 
-<!--  todo: document specific channels -->
+## channels - front to back
+
+### update-object
+keys:
+
+- transformCommands
+- name
+
+### select-transform-command
+keys:
+
+- index
+
+## channels - front to back
+
+### refresh-objects
+keys:
+
+- objectTree
+- selectedObject
+- transformCommandIndex
+
+### add-svg-object
+keys:
+
+- name
+- data
+
+### update-svg-object
+keys:
+
+- name
+- data
+
+### remove-svg-object
+keys:
+
+- name
