@@ -13,6 +13,6 @@ module.exports = {
     opts: {
         encoding: "utf8",
         recurse: true,
-        destination: "./documentation/js-doc-output/"
+        destination: "./documentation/build/js-doc-output/"
     }
 }
