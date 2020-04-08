@@ -69,7 +69,6 @@ function SvgToObjectXml(svgContent)
         });
         try
         {
-            const tmp = builder.buildObject(innerContent);
             result = {
                 success: true,
                 content: builder.buildObject(innerContent)
