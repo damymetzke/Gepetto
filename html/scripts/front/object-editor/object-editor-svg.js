@@ -87,8 +87,6 @@ function OnRefreshObjects(_event, data)
             //todo: implement setting to change the scale
             const adaptedTransform = new TransformCommand("SCALE", 4 / length, 4 / length).CreateMatrix().MultiplyMatrix(currentTransform);
 
-            console.log(length);
-
             const transformString = `matrix(${adaptedTransform.matrix[0]} ${adaptedTransform.matrix[1]} ${adaptedTransform.matrix[2]} ${adaptedTransform.matrix[3]} ${adaptedTransform.matrix[4]} ${adaptedTransform.matrix[5]})`;
             dragDisplayElements.root.setAttribute("transform", transformString);
         }
@@ -208,19 +206,10 @@ function OnDragTranslateX(mouseEvent)
 {
     MouseUpdateCallback = function (mouseUpdateEvent)
     {
-        console.log([
-            mouseUpdateEvent.pageX - dragDropStartPosition[0],
-            mouseUpdateEvent.pageY - dragDropStartPosition[1]
-        ]);
     };
 
     MouseUpCallback = function (mouseUpEvent)
     {
-        currentTransformCommands[currentTransformCommandIndex].x = mouseUpEvent.pageX - dragDropStartPosition[0];
-        currentTransformCommands[currentTransformCommandIndex].y = mouseUpEvent.pageY - dragDropStartPosition[1];
-        ipcRenderer.invoke("update-object", {
-            transformCommands: currentTransformCommands
-        });
     };
 
     dragDropStartPosition = [

@@ -142,11 +142,25 @@ function OnUpdateObject(event, updateValues)
     activeObject = Object.assign(activeObject, updateValues);
     if ("transformCommands" in updateValues)
     {
+        console.warn("⚠ transformCommands is depricated");
         for (let i = 0; i < activeObject.transformCommands.length; ++i)
         {
             let newData = activeObject.transformCommands[i];
             delete newData.matrixFunctions;
             activeObject.transformCommands[i] = Object.assign(new TransformCommand(), newData);
+        }
+
+        activeObject.OnTransformCommandsUpdate();
+        svgManager.UpdateSvgObject(activeObject.name, {
+            transform: activeObject.WorldTransform()
+        });
+    }
+
+    if ("transformCommandUpdates" in updateValues)
+    {
+        for (let index in updateValues.transformCommandUpdates)
+        {
+            Object.assign(activeObject.transformCommands[index], updateValues.transformCommandUpdates[index]);
         }
 
         activeObject.OnTransformCommandsUpdate();

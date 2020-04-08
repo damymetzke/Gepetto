@@ -135,6 +135,7 @@ function OnRefreshObjects(_event, data)
             {
                 const index = i;
                 const key = inputFields[j].dataset.transformCommandKey;
+                const target = inputFields[j];
                 inputFields[j].addEventListener("keypress", function (keyEvent)
                 {
                     if (keyEvent.key !== "Enter")
@@ -142,7 +143,7 @@ function OnRefreshObjects(_event, data)
                         return;
                     }
                     let newObject = {};
-                    newObject[key] = inputFields[j].value;
+                    newObject[key] = target.value;
                     OnChangeTransformCommand(index, newObject);
                 });
             }
@@ -192,9 +193,10 @@ function SetupIpcRenderer()
  */
 function OnChangeTransformCommand(index, values)
 {
-    Object.assign(currentTransformCommands[index], values);
+    let transformCommandUpdates = {};
+    transformCommandUpdates[index] = values;
     ipcRenderer.invoke("update-object", {
-        transformCommands: currentTransformCommands
+        transformCommandUpdates: transformCommandUpdates
     });
 }
 
