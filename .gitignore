@@ -5,3 +5,4 @@
 html/node_modules/
 html/saved/
 html/documentation/js-doc-output/
+*.css
