@@ -4,12 +4,14 @@
   "description": "gepetto - SVG animation tool",
   "main": "scripts/back/main.js",
   "scripts": {
+    "prestart": "npm run compile:sass",
     "start": "electron .",
-    "test": "jest"
+    "test": "jest",
+    "compile:sass": "./node_modules/.bin/npm-sass ./style/all-styles.scss > ./style/output/style.css"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:damymetzke/Gepetto.git"
+    "url": "https://github.com/damymetzke/Gepetto"
   },
   "author": "Damy Metzke",
   "license": "UNLICENCED",
@@ -21,9 +23,11 @@
     "electron": "^8.2.0",
     "jest": "^25.2.7",
     "jsdoc": "^3.6.3",
+    "npm-run-all": "^4.1.5",
     "on-change": "^2.0.1"
   },
   "dependencies": {
+    "npm-sass": "^2.3.0",
     "xml2js": "^0.4.23"
   },
   "babel": {
