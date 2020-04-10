@@ -3,6 +3,8 @@ import * as DropDown from "../global/dropdown.js";
 import GetUniqueElements from "../global/get-unique-elements.js";
 
 import * as ObjectEditorSvg from "./object-editor-svg.js";
+import * as ObjectEditorRefresh from "./object-editor-refresh.js";
+import common from "./object-editor-common.js";
 
 //nodejs imports
 const { ipcRenderer } = require("electron");
@@ -44,9 +46,6 @@ function TransformCommandTemplate(name, x, y)
 
 //file variables//
 //////////////////
-let currentTransformCommands = [];
-let treeRoot = null;
-let elements = null;
 
 /**
  * setup the file wide variables.
@@ -62,16 +61,14 @@ let elements = null;
  */
 function SetupFileVariables(root)
 {
-    elements = GetUniqueElements(root, {
+    common.elements = GetUniqueElements(root, {
         textTree: "object-editor--text-tree",
+        textTreeList: "object-editor--text-tree--list",
         propertyName: "object-editor--property--name",
         propertyNameInput: "object-editor--property--name-input",
         propertyTransformCommandList: "object-editor--property--transform-list",
         propertyTransformAddControls: "object-editor--property--transform-add-controls"
     });
-
-    treeRoot = document.createElement("ol");
-    elements.textTree.appendChild(treeRoot);
 }
 
 //ipcRenderer//
@@ -83,7 +80,7 @@ function OnRefreshObjects(_event, data)
     if ("objectTree" in data)
     {
         const objectTree = data.objectTree;
-        treeRoot.innerHTML = "";
+        common.elements.textTreeList.innerHTML = "";
         for (let i = 0; i < objectTree.rootObjects.length; ++i)
         {
             const name = objectTree.rootObjects[i].name;
@@ -94,14 +91,14 @@ function OnRefreshObjects(_event, data)
             {
                 OnSelectObject(name);
             });
-            treeRoot.appendChild(newElement);
+            common.elements.textTreeList.appendChild(newElement);
         }
     }
 
     if ("selectedObject" in data)
     {
         const object = data.selectedObject;
-        let treeElements = treeRoot.querySelectorAll("[data-draw-object-name]");
+        let treeElements = common.elements.textTreeList.querySelectorAll("[data-draw-object-name]");
         for (let i = 0; i < treeElements.length; ++i)
         {
             if (treeElements[i].dataset.drawObjectName === object.name)
@@ -114,16 +111,16 @@ function OnRefreshObjects(_event, data)
             }
         }
 
-        elements.propertyName.innerText = object.name;
-        elements.propertyNameInput.value = object.name;
+        common.elements.propertyName.innerText = object.name;
+        common.elements.propertyNameInput.value = object.name;
 
-        elements.propertyTransformCommandList.innerHTML = "";
+        common.elements.propertyTransformCommandList.innerHTML = "";
         for (let i = 0; i < object.transformCommands.length; ++i)
         {
             const index = i;
             let newElement = document.createElement("li");
             newElement.innerHTML = TransformCommandTemplate(object.transformCommands[i].type, object.transformCommands[i].x, object.transformCommands[i].y);
-            elements.propertyTransformCommandList.appendChild(newElement);
+            common.elements.propertyTransformCommandList.appendChild(newElement);
 
             newElement.addEventListener("click", function ()
             {
@@ -154,7 +151,7 @@ function OnRefreshObjects(_event, data)
 
     if ("transformCommandIndex" in data)
     {
-        let children = elements.propertyTransformCommandList.children;
+        let children = common.elements.propertyTransformCommandList.children;
         for (let i = 0; i < children.length; ++i)
         {
             if (i == data.transformCommandIndex)
@@ -255,7 +252,7 @@ function OnAddTransformCommand(command)
  */
 function SetupEventListeners(root)
 {
-    elements.propertyNameInput.addEventListener("keypress", function (keyEvent)
+    common.elements.propertyNameInput.addEventListener("keypress", function (keyEvent)
     {
         if (keyEvent.key !== "Enter")
         {
@@ -264,7 +261,7 @@ function SetupEventListeners(root)
         OnChangeName();
     });
 
-    const transformCommandButtons = elements.propertyTransformAddControls.children;
+    const transformCommandButtons = common.elements.propertyTransformAddControls.children;
     for (let i = 0; i < transformCommandButtons.length; ++i)
     {
         const type = transformCommandButtons[i].dataset.transformCommandType;
@@ -287,6 +284,9 @@ export function Run(root)
     DropDown.OnScriptLoad(root);
 
     ObjectEditorSvg.Init(root);
+    ObjectEditorRefresh.Init();
+
+    console.log("🐳💨", common.test);
 
     SetupFileVariables(root);
     SetupIpcRenderer();

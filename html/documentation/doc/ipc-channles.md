@@ -69,7 +69,7 @@
 ### update-object
 keys:
 
-- transformCommands
+- transformCommandUpdates
 - name
 
 ### select-transform-command
