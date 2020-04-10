@@ -77,7 +77,7 @@ function SetupFileVariables(root)
 //todo: split up this chunky boi
 function OnRefreshObjects(_event, data)
 {
-    if ("objectTree" in data)
+    if (false)
     {
         const objectTree = data.objectTree;
         common.elements.textTreeList.innerHTML = "";
@@ -285,8 +285,6 @@ export function Run(root)
 
     ObjectEditorSvg.Init(root);
     ObjectEditorRefresh.Init();
-
-    console.log("🐳💨", common.test);
 
     SetupFileVariables(root);
     SetupIpcRenderer();

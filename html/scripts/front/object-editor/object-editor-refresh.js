@@ -1,21 +1,23 @@
 import common from "./object-editor-common.js";
 
-// function RefreshObjectTree(objectTree)
-// {
-//     treeRoot.innerHTML = "";
-//     for (let i = 0; i < objectTree.rootObjects.length; ++i)
-//     {
-//         const name = objectTree.rootObjects[i].name;
-//         let newElement = document.createElement("li");
-//         newElement.innerText = name;
-//         newElement.dataset.drawObjectName = name;
-//         newElement.addEventListener("click", function ()
-//         {
-//             OnSelectObject(name);
-//         });
-//         treeRoot.appendChild(newElement);
-//     }
-// }
+const { ipcRenderer } = require("electron");
+
+function RefreshObjectTree(objectTree)
+{
+    common.elements.textTreeList.innerHTML = "";
+    for (let i = 0; i < objectTree.rootObjects.length; ++i)
+    {
+        const name = objectTree.rootObjects[i].name;
+        let newElement = document.createElement("li");
+        newElement.innerText = name;
+        newElement.dataset.drawObjectName = name;
+        newElement.addEventListener("click", function ()
+        {
+            OnSelectObject(name);
+        });
+        common.elements.textTreeList.appendChild(newElement);
+    }
+}
 
 // function RefreshSelectedObject(object)
 // {
@@ -86,25 +88,30 @@ import common from "./object-editor-common.js";
 //     }
 // }
 
-// function OnRefreshObjects(_event, data)
-// {
-//     if ("objectTree" in data)
-//     {
+function OnRefreshObjects(_event, data)
+{
+    if ("objectTree" in data)
+    {
+        RefreshObjectTree(data.objectTree);
+    }
 
-//     }
+    if ("selectedObject" in data)
+    {
 
-//     if ("selectedObject" in data)
-//     {
+    }
 
-//     }
+    if ("transformCommandIndex" in data)
+    {
 
-//     if ("transformCommandIndex" in data)
-//     {
+    }
+}
 
-//     }
-// }
+function SetupIpcRenderer()
+{
+    ipcRenderer.on("refresh-objects", OnRefreshObjects);
+}
 
 export function Init()
 {
-    common.test = 69;
+    SetupIpcRenderer();
 }
