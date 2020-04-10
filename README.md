@@ -29,5 +29,9 @@ on vsc simply press f5, or go to [Run -> Start Debugging]. This has the benefit 
 ## Testing
 This project comes with the jest testing framework. Right now only the files under 'scripts/core/' are tested. The test scripts are under 'scripts/test/'. To run the tests simply run `npm test` from the root directory ('./html/').
 
-## jsdoc
-This project comes with jsdoc documentation. For more information click [here](https://jsdoc.app/). To generate the documentation simply run `.\node_modules\.bin\jsdoc -c .\jsdoc.config.js` from the root directory ('./html/'). This will output the documentation to 'documentation/js-doc-output/'. open '[index.html](./html/documentation/js-doc-output/index.html)' in that folder *after generation* to view the documentation.
+## Build Documentation
+This project comes with 2 types of documentation:
+- [jsdoc](https://jsdoc.app/)
+- markdown
+
+in order to build the documentation simply run the npm script `build:docs` using `npm run build:docs`. This will put the output in './html/documentation/build/'
