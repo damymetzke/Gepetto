@@ -160,7 +160,7 @@ function OnUpdateObject(event, updateValues)
     {
         for (let index in updateValues.transformCommandUpdates)
         {
-            Object.assign(activeObject.transformCommands[index], updateValues.transformCommandUpdates[index]);
+            Object.assign(activeObject.transformCommands[index].fields, updateValues.transformCommandUpdates[index]);
         }
 
         activeObject.OnTransformCommandsUpdate();

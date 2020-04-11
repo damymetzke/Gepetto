@@ -19,6 +19,7 @@ const Transform = require("./transform");
 class TransformCommand
 {
     type = "TRANSLATE";
+    fields = {};
     x = 0;
     y = 0;
 
@@ -29,20 +30,20 @@ class TransformCommand
                 return [
                     1, 0,
                     0, 1,
-                    Number(this.x), Number(this.y)
+                    Number(this.fields.x), Number(this.fields.y)
                 ];
             },
             SCALE: function ()
             {
                 return [
-                    Number(this.x), 0,
-                    0, Number(this.y),
+                    Number(this.fields.x), 0,
+                    0, Number(this.fields.y),
                     0, 0
                 ];
             },
             ROTATE: function ()
             {
-                const rotation = (Number(this.x) * Math.PI) / 180;
+                const rotation = (Number(this.fields.x) * Math.PI) / 180;
                 return [
                     Math.cos(rotation), Math.sin(rotation),
                     -Math.sin(rotation), Math.cos(rotation),
@@ -53,14 +54,14 @@ class TransformCommand
             {
                 return [
                     1, 0,
-                    Number(this.x), 1,
+                    Number(this.fields.x), 1,
                     0, 0
                 ];
             },
             SHEARY: function ()
             {
                 return [
-                    1, Number(this.y),
+                    1, Number(this.fields.y),
                     0, 1,
                     0, 0
                 ];
@@ -119,23 +120,23 @@ class TransformCommand
     {
         return {
             type: this.type,
-            x: this.x,
-            y: this.y
+            fields: this.fields
         };
     }
 
     FromPureObject(object)
     {
         this.type = object.type;
-        this.x = object.x;
-        this.y = object.y;
+        this.fields = object.fields;
     }
 
     constructor(type, x, y)
     {
         this.type = type;
-        this.x = x;
-        this.y = y;
+        this.fields = {
+            x: x,
+            y: y
+        };
     }
 }
 
