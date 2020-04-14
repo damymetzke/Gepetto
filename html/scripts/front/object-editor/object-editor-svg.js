@@ -1,4 +1,5 @@
 import GetUniqueElements from "../global/get-unique-elements.js";
+import { GetCallbacks } from "./svg-drag/svg-drag.js";
 
 const { ipcRenderer } = require("electron");
 const { Transform, DrawObject, TransformCommand } = require("electron").remote.require("../core/core");
@@ -202,46 +203,20 @@ let MouseUpdateCallback = null;
 let dragDropStartPosition = [0, 0];
 
 //translate//
-function OnDragTranslateX(mouseEvent)
+function OnDragStart(name, x, y)
 {
-    MouseUpdateCallback = function (mouseUpdateEvent)
-    {
-    };
-
-    MouseUpCallback = function (mouseUpEvent)
-    {
-    };
-
-    dragDropStartPosition = [
-        mouseEvent.pageX,
-        mouseEvent.pageY
-    ];
+    let callbacks = GetCallbacks(name);
+    MouseUpCallback = callbacks.MouseUpCallback;
+    MouseUpdateCallback = callbacks.MouseUpdateCallback;
+    dragDropStartPosition = [x, y];
 }
 
-function OnDragTranslateY(mouseEvent)
+function GetOnDragStart(name)
 {
-    MouseUpdateCallback = function (mouseUpdateEvent)
+    return function (mouseEvent)
     {
-        console.log("update translate Y");
+        OnDragStart(name, mouseEvent.pageX, mouseEvent.pageY);
     };
-
-    dragDropStartPosition = [
-        mouseEvent.pageX,
-        mouseEvent.pageY
-    ];
-}
-
-function OnDragTranslateCenter(mouseEvent)
-{
-    MouseUpdateCallback = function (mouseUpdateEvent)
-    {
-        console.log("update translate Center");
-    };
-
-    dragDropStartPosition = [
-        mouseEvent.pageX,
-        mouseEvent.pageY
-    ];
 }
 
 function SetupDragAndDrop()
@@ -254,14 +229,19 @@ function SetupDragAndDrop()
             return;
         }
 
-        MouseUpdateCallback(mouseEvent);
+        const relativeX = mouseEvent.pageX - dragDropStartPosition[0];
+        const relativeY = mouseEvent.pageY - dragDropStartPosition[1];
+
+        MouseUpdateCallback(relativeX, relativeY);
     };
 
     document.onmouseup = function (mouseEvent)
     {
         if (MouseUpCallback !== null)
         {
-            MouseUpCallback(mouseEvent);
+            const relativeX = mouseEvent.pageX - dragDropStartPosition[0];
+            const relativeY = mouseEvent.pageY - dragDropStartPosition[1];
+            MouseUpCallback(relativeX, relativeY);
         }
 
         MouseUpCallback = null;
@@ -269,9 +249,9 @@ function SetupDragAndDrop()
     };
 
     //translate
-    dragDisplayElements.translateX.addEventListener("mousedown", OnDragTranslateX);
-    dragDisplayElements.translateY.addEventListener("mousedown", OnDragTranslateY);
-    dragDisplayElements.translateCenter.addEventListener("mousedown", OnDragTranslateCenter);
+    dragDisplayElements.translateX.addEventListener("mousedown", GetOnDragStart("OnDragTranslateX"));
+    dragDisplayElements.translateY.addEventListener("mousedown", GetOnDragStart("OnDragTranslateY"));
+    dragDisplayElements.translateCenter.addEventListener("mousedown", GetOnDragStart("OnDragTranslateCenter"));
 }
 
 export function Init(root)

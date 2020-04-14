@@ -175,6 +175,30 @@ function OnUpdateObject(event, updateValues)
     });
 }
 
+function OnUpdateTransformCommand(_event, data)
+{
+    if (!("fields" in data))
+    {
+        return;
+    }
+
+    var isRelative = ("relative" in data) ? data.relative : false;
+
+    let fields = activeObject.transformCommands[selectedTransformCommandIndex].fields;
+
+    for (let key in data.fields) 
+    {
+        fields[key] = isRelative ?
+            Number(fields[key]) + Number(data.fields[key]) :
+            data.fields[key];
+    }
+
+    window.webContents.send("refresh-objects", {
+        objectTree: objectTree.ToPureObject(),
+        selectedObject: activeObject.ToPureObject()
+    });
+}
+
 function OnAddTransformCommand(_event, command)
 {
     delete command["matrixFunctions"];
@@ -202,6 +226,7 @@ function SetupIpcMain()
     ipcMain.handle("select-object", OnSelectObject);
     ipcMain.handle("select-transform-command", OnSelectTransformCommand);
     ipcMain.handle("update-object", OnUpdateObject);
+    ipcMain.handle("update-transform-command", OnUpdateTransformCommand);
     ipcMain.handle("add-transform-command", OnAddTransformCommand);
 }
 

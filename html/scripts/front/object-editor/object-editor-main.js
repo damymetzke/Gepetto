@@ -41,7 +41,7 @@ function SetupCommonVariables(root)
 function OnChangeName()
 {
     ipcRenderer.invoke("update-object", {
-        name: elements.propertyNameInput.value
+        name: common.elements.propertyNameInput.value
     });
 }
 
