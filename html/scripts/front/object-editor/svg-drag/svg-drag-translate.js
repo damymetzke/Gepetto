@@ -1,3 +1,5 @@
+import { TransformCommand } from "../../../core/transform-command";
+
 const { ipcRenderer } = require("electron");
 
 export function OnDragTranslateX()
@@ -5,7 +7,6 @@ export function OnDragTranslateX()
     return {
         MouseUpdateCallback: function (x, y)
         {
-            console.log("x -> drag = ", x, ", ", y);
         },
 
         MouseUpCallback: function (x, y)
@@ -25,7 +26,6 @@ export function OnDragTranslateY()
     return {
         MouseUpdateCallback: function (x, y)
         {
-            console.log("y -> drag = ", x, ", ", y);
         },
 
         MouseUpCallback: function (x, y)
@@ -45,7 +45,7 @@ export function OnDragTranslateCenter()
     return {
         MouseUpdateCallback: function (x, y)
         {
-            console.log("center -> drag = ", x, ", ", y);
+            //return new TransformCommand("TRANSLATE", x, y).CreateMatrix();
         },
 
         MouseUpCallback: function (x, y)

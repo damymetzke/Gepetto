@@ -64,6 +64,16 @@ function SetupDragDisplays()
     });
 }
 
+function MoveDragDisplay(transform)
+{
+    const resultVector = transform.InnerMatrix().MultiplyVector([0, 1]);
+    const length = Math.sqrt(resultVector[0] * resultVector[0] + resultVector[1] * resultVector[1]);
+    const adaptedTransform = new TransformCommand("SCALE", 1 / length, 1 / length).CreateMatrix().MultiplyMatrix(transform);
+
+    const transformString = `matrix(${adaptedTransform.matrix[0]} ${adaptedTransform.matrix[1]} ${adaptedTransform.matrix[2]} ${adaptedTransform.matrix[3]} ${adaptedTransform.matrix[4]} ${adaptedTransform.matrix[5]})`;
+    dragDisplayElements.root.setAttribute("transform", transformString);
+}
+
 //ipc renderer//
 ////////////////
 
@@ -82,15 +92,7 @@ function OnRefreshObjects(_event, data)
             return;
         }
 
-        {
-            const resultVector = currentTransform.InnerMatrix().MultiplyVector([0, 1]);
-            const length = Math.sqrt(resultVector[0] * resultVector[0] + resultVector[1] * resultVector[1]);
-            //todo: implement setting to change the scale
-            const adaptedTransform = new TransformCommand("SCALE", 4 / length, 4 / length).CreateMatrix().MultiplyMatrix(currentTransform);
-
-            const transformString = `matrix(${adaptedTransform.matrix[0]} ${adaptedTransform.matrix[1]} ${adaptedTransform.matrix[2]} ${adaptedTransform.matrix[3]} ${adaptedTransform.matrix[4]} ${adaptedTransform.matrix[5]})`;
-            dragDisplayElements.root.setAttribute("transform", transformString);
-        }
+        MoveDragDisplay(currentTransform);
 
         const currentlySelected = elements.svg.getElementsByClassName("selected-svg-object");
         for (let i = 0; i < currentlySelected.length; ++i)
@@ -201,47 +203,59 @@ function OnSelectObject(objectName)
 let MouseUpCallback = null;
 let MouseUpdateCallback = null;
 let dragDropStartPosition = [0, 0];
+let currentSvgPosition = [0, 0];
 
 //translate//
-function OnDragStart(name, x, y)
+function OnDragStart(name)
 {
     let callbacks = GetCallbacks(name);
     MouseUpCallback = callbacks.MouseUpCallback;
     MouseUpdateCallback = callbacks.MouseUpdateCallback;
-    dragDropStartPosition = [x, y];
+    dragDropStartPosition = currentSvgPosition;
 }
 
 function GetOnDragStart(name)
 {
-    return function (mouseEvent)
+    return function (_mouseEvent)
     {
-        OnDragStart(name, mouseEvent.pageX, mouseEvent.pageY);
+        OnDragStart(name);
     };
 }
 
 function SetupDragAndDrop()
 {
     //update and mouseUp
-    document.onmousemove = function (mouseEvent)
+    elements.svg.addEventListener("mousemove", function (mouseEvent)
     {
+        const x = (mouseEvent.offsetX / elements.svg.clientWidth * 200) - 100;
+        const y = (mouseEvent.offsetY / elements.svg.clientHeight * 200) - 100;
+        currentSvgPosition = [x, y];
+
         if (MouseUpdateCallback === null)
         {
             return;
         }
 
-        const relativeX = mouseEvent.pageX - dragDropStartPosition[0];
-        const relativeY = mouseEvent.pageY - dragDropStartPosition[1];
+        const relativeX = x - dragDropStartPosition[0];
+        const relativeY = y - dragDropStartPosition[1];
 
-        MouseUpdateCallback(relativeX, relativeY);
-    };
+        const relativeTransform = MouseUpdateCallback(relativeX, relativeY);
+        const resultingTransform = relativeTransform === undefined || relativeTransform === null ?
+            currentTransform :
+            relativeTransform.MultiplyMatrix(currentTransform);
+        MoveDragDisplay(resultingTransform);
+    });
 
     document.onmouseup = function (mouseEvent)
     {
         if (MouseUpCallback !== null)
         {
-            const relativeX = mouseEvent.pageX - dragDropStartPosition[0];
-            const relativeY = mouseEvent.pageY - dragDropStartPosition[1];
+            const relativeX = currentSvgPosition[0] - dragDropStartPosition[0];
+            const relativeY = currentSvgPosition[1] - dragDropStartPosition[1];
             MouseUpCallback(relativeX, relativeY);
+
+            console.log(relativeX, relativeY);
+
         }
 
         MouseUpCallback = null;

@@ -1,12 +1,12 @@
 <g class="drag-display">
     <g class="drag-display--translate">
         <g class="drag-display--translate--y">
-            <path z="-1" d="M0.1 0 L0.1 9.5 L0.5 9.5 L0 10 L -0.5 9.5 L -0.1 9.5 L -0.1 0 Z" fill="green"/>
+            <path z="-1" d="M0.4 0 L0.4 38 L2 38 L0 40 L -2 38 L -0.4 38 L -0.4 0 Z" fill="green"/>
         </g>
         <g class="drag-display--translate--x">
-            <path d="M0 0.1 L9.5 0.1 L9.5 0.5 L10 0 L 9.5 -0.5 L 9.5 -0.1 L 0 -0.1 Z" fill="red"/>
+            <path d="M0 0.4 L38 0.4 L38 2 L40 0 L 38 -2 L 38 -0.4 L 0 -0.4 Z" fill="red"/>
         </g>
-        <circle class="drag-display--translate--center" cy="0" cx="0" r="0.4" fill="#383838"/>
+        <circle class="drag-display--translate--center" cy="0" cx="0" r="1.6" fill="#383838"/>
     </g>
 
     <g class="drag-display--scale">
