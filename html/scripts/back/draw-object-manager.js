@@ -193,6 +193,11 @@ function OnUpdateTransformCommand(_event, data)
             data.fields[key];
     }
 
+    activeObject.OnTransformCommandsUpdate();
+    svgManager.UpdateSvgObject(activeObject.name, {
+        transform: activeObject.WorldTransform()
+    });
+
     window.webContents.send("refresh-objects", {
         objectTree: objectTree.ToPureObject(),
         selectedObject: activeObject.ToPureObject()
