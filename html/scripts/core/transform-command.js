@@ -127,7 +127,10 @@ class TransformCommand
     FromPureObject(object)
     {
         this.type = object.type;
-        this.fields = object.fields;
+        for (let key in object.fields)
+        {
+            this.fields[key] = object.fields[key];
+        }
     }
 
     constructor(type, x, y)

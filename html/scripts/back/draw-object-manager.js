@@ -225,6 +225,16 @@ function OnAddTransformCommand(_event, command)
     });
 }
 
+function OnRetrieveGhost()
+{
+    console.log(activeObject.transformCommands[0].ToPureObject().fields);
+    return {
+        transformCommands: activeObject.ToPureObject(),
+        name: activeObject.name,
+        transformCommandIndex: selectedTransformCommandIndex
+    };
+}
+
 function SetupIpcMain()
 {
     ipcMain.handle("import-svg", OnImportSvg);
@@ -233,6 +243,7 @@ function SetupIpcMain()
     ipcMain.handle("update-object", OnUpdateObject);
     ipcMain.handle("update-transform-command", OnUpdateTransformCommand);
     ipcMain.handle("add-transform-command", OnAddTransformCommand);
+    ipcMain.handle("retrieve-ghost", OnRetrieveGhost);
 }
 
 function Init(mainWindow)

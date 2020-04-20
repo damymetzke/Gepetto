@@ -204,6 +204,10 @@ let MouseUpCallback = null;
 let MouseUpdateCallback = null;
 let dragDropStartPosition = [0, 0];
 let currentSvgPosition = [0, 0];
+let ghostElement = null;
+let ghostTransformCommands = new DrawObject();
+let ghostChangingTransformCommand = null;
+let ghostBaseTransform = null;
 
 //translate//
 function OnDragStart(name)
@@ -212,6 +216,15 @@ function OnDragStart(name)
     MouseUpCallback = callbacks.MouseUpCallback;
     MouseUpdateCallback = callbacks.MouseUpdateCallback;
     dragDropStartPosition = currentSvgPosition;
+    ipcRenderer.invoke("retrieve-ghost", {}).then(function (ghost)
+    {
+        ghostElement = svgObjects[ghost.name].cloneNode(true);
+        elements.svg.insertBefore(ghostElement, elements.svg.lastChild);
+        ghostTransformCommands.FromPureObject(ghost.transformCommands);
+        ghostChangingTransformCommand = ghostTransformCommands.transformCommands[ghost.transformCommandIndex];
+        ghostBaseTransform = ghostChangingTransformCommand.fields;
+        console.log(ghostBaseTransform);
+    });
 }
 
 function GetOnDragStart(name)
@@ -260,6 +273,11 @@ function SetupDragAndDrop()
 
         MouseUpCallback = null;
         MouseUpdateCallback = null;
+        if (ghostElement)
+        {
+            elements.svg.removeChild(ghostElement);
+            ghostElement = null;
+        }
     };
 
     //translate
