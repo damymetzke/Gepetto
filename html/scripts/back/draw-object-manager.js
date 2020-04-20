@@ -188,9 +188,24 @@ function OnUpdateTransformCommand(_event, data)
 
     for (let key in data.fields) 
     {
-        fields[key] = isRelative ?
-            Number(fields[key]) + Number(data.fields[key]) :
-            data.fields[key];
+        if (isRelative)
+        {
+            switch (activeObject.transformCommands[selectedTransformCommandIndex].type)
+            {
+                case "TRANSLATE":
+                    fields[key] = Number(fields[key]) + Number(data.fields[key]);
+                    break;
+                case "SCALE":
+                    fields[key] = Number(fields[key]) * Number(data.fields[key]);
+                    break;
+                default:
+                    fields[key] = data.fields[key];
+            }
+        }
+        else
+        {
+            fields[key] = data.fields[key];
+        }
     }
 
     activeObject.OnTransformCommandsUpdate();
@@ -227,7 +242,6 @@ function OnAddTransformCommand(_event, command)
 
 function OnRetrieveGhost()
 {
-    console.log(activeObject.transformCommands[0].ToPureObject().fields);
     return {
         transformCommands: activeObject.ToPureObject(),
         name: activeObject.name,

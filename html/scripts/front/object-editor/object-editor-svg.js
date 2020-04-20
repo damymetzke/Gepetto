@@ -64,11 +64,13 @@ function SetupDragDisplays()
     });
 }
 
-function MoveDragDisplay(transform)
+function MoveDragDisplay(transform, sizeX = 1, sizeY = 1)
 {
-    const resultVector = transform.InnerMatrix().MultiplyVector([0, 1]);
-    const length = Math.sqrt(resultVector[0] * resultVector[0] + resultVector[1] * resultVector[1]);
-    const adaptedTransform = new TransformCommand("SCALE", 1 / length, 1 / length).CreateMatrix().MultiplyMatrix(transform);
+    const resultVectorX = transform.InnerMatrix().MultiplyVector([sizeX, 0]);
+    const resultVectorY = transform.InnerMatrix().MultiplyVector([0, sizeY]);
+    const lengthX = Math.sqrt(resultVectorX[0] * resultVectorX[0] + resultVectorX[1] * resultVectorX[1]);
+    const lengthY = Math.sqrt(resultVectorY[0] * resultVectorY[0] + resultVectorY[1] * resultVectorY[1]);
+    const adaptedTransform = new TransformCommand("SCALE", 1 / lengthX, 1 / lengthY).CreateMatrix().MultiplyMatrix(transform);
 
     const transformString = `matrix(${adaptedTransform.matrix[0]} ${adaptedTransform.matrix[1]} ${adaptedTransform.matrix[2]} ${adaptedTransform.matrix[3]} ${adaptedTransform.matrix[4]} ${adaptedTransform.matrix[5]})`;
     dragDisplayElements.root.setAttribute("transform", transformString);
@@ -253,10 +255,18 @@ function SetupDragAndDrop()
         const relativeY = y - dragDropStartPosition[1];
 
         const relativeTransform = MouseUpdateCallback(relativeX, relativeY);
+
+
+        const vectorX = relativeTransform.InnerMatrix().MultiplyVector([1, 0]);
+        const vectorY = relativeTransform.InnerMatrix().MultiplyVector([0, 1]);
+
+        const lengthX = Math.sqrt(vectorX[0] * vectorX[0] + vectorX[1] * vectorX[1]);
+        const lengthY = Math.sqrt(vectorY[0] * vectorY[0] + vectorY[1] * vectorY[1]);
+
         const resultingTransform = relativeTransform === undefined || relativeTransform === null ?
             currentTransform :
             relativeTransform.MultiplyMatrix(currentTransform);
-        MoveDragDisplay(resultingTransform);
+        MoveDragDisplay(resultingTransform, 1 / lengthX, 1 / lengthY);
     });
 
     document.onmouseup = function (mouseEvent)
@@ -284,6 +294,11 @@ function SetupDragAndDrop()
     dragDisplayElements.translateX.addEventListener("mousedown", GetOnDragStart("OnDragTranslateX"));
     dragDisplayElements.translateY.addEventListener("mousedown", GetOnDragStart("OnDragTranslateY"));
     dragDisplayElements.translateCenter.addEventListener("mousedown", GetOnDragStart("OnDragTranslateCenter"));
+
+    //scale
+    dragDisplayElements.scaleX.addEventListener("mousedown", GetOnDragStart("OnDragScaleX"));
+    dragDisplayElements.scaleY.addEventListener("mousedown", GetOnDragStart("OnDragScaleY"));
+    dragDisplayElements.scaleCenter.addEventListener("mousedown", GetOnDragStart("OnDragScaleCenter"));
 }
 
 export function Init(root)
