@@ -1,5 +1,6 @@
 import { OnDragTranslateX, OnDragTranslateY, OnDragTranslateCenter } from "./svg-drag-translate.js";
 import { OnDragScaleX, OnDragScaleY, OnDragScaleCenter } from "./svg-drag-scale.js";
+import { OnDragRotate } from "./svg-drag-rotate.js";
 
 const functionMap = {
     OnDragTranslateX: OnDragTranslateX,
@@ -8,7 +9,9 @@ const functionMap = {
 
     OnDragScaleX: OnDragScaleX,
     OnDragScaleY: OnDragScaleY,
-    OnDragScaleCenter: OnDragScaleCenter
+    OnDragScaleCenter: OnDragScaleCenter,
+
+    OnDragRotate: OnDragRotate
 };
 
 export function GetCallbacks(name)

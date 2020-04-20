@@ -198,6 +198,17 @@ function OnUpdateTransformCommand(_event, data)
                 case "SCALE":
                     fields[key] = Number(fields[key]) * Number(data.fields[key]);
                     break;
+                case "ROTATE":
+                    fields[key] = Number(fields[key]) + Number(data.fields[key]);
+                    while (fields[key] < 0)
+                    {
+                        fields[key] += 360;
+                    }
+                    while (fields[key] >= 360)
+                    {
+                        fields[key] -= 360;
+                    }
+                    break;
                 default:
                     fields[key] = data.fields[key];
             }

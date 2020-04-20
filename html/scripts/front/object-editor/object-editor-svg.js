@@ -299,6 +299,9 @@ function SetupDragAndDrop()
     dragDisplayElements.scaleX.addEventListener("mousedown", GetOnDragStart("OnDragScaleX"));
     dragDisplayElements.scaleY.addEventListener("mousedown", GetOnDragStart("OnDragScaleY"));
     dragDisplayElements.scaleCenter.addEventListener("mousedown", GetOnDragStart("OnDragScaleCenter"));
+
+    //rotate
+    dragDisplayElements.rotateCircle.addEventListener("mousedown", GetOnDragStart("OnDragRotate"));
 }
 
 export function Init(root)
