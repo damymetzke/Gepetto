@@ -302,6 +302,9 @@ function SetupDragAndDrop()
 
     //rotate
     dragDisplayElements.rotateCircle.addEventListener("mousedown", GetOnDragStart("OnDragRotate"));
+
+    //shear
+    dragDisplayElements.shearTriangle.addEventListener("mousedown", GetOnDragStart("OnDragShear"));
 }
 
 export function Init(root)
