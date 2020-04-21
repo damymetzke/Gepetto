@@ -112,6 +112,25 @@ class DrawObject
         }
     }
 
+    Clone(recursiveParents = false)
+    {
+        let result = new DrawObject(
+            this.name,
+            recursiveParents ?
+                this.parent === null ?
+                    null
+                    : this.parent.Clone(true)
+                : this.parent.name
+        );
+
+        this.transformCommands.forEach((command) =>
+        {
+            result.transformCommands.push(command.Clone());
+        });
+
+        return result;
+    }
+
     constructor(name, parent = null)
     {
         this.name = name;

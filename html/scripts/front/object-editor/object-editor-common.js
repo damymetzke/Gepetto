@@ -1,3 +1,4 @@
 export default {
-    elements: null
+    elements: null,
+    activeDrawObject: null
 };

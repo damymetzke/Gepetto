@@ -7,7 +7,7 @@ export function OnDragTranslateX()
     return {
         MouseUpdateCallback: function (x, y)
         {
-            return new TransformCommand("TRANSLATE", x, 0).CreateMatrix();
+            return new TransformCommand("TRANSLATE", x, 0);
         },
 
         MouseUpCallback: function (x, y)
@@ -27,7 +27,7 @@ export function OnDragTranslateY()
     return {
         MouseUpdateCallback: function (x, y)
         {
-            return new TransformCommand("TRANSLATE", 0, y).CreateMatrix();
+            return new TransformCommand("TRANSLATE", 0, y);
         },
 
         MouseUpCallback: function (x, y)
@@ -47,7 +47,7 @@ export function OnDragTranslateCenter()
     return {
         MouseUpdateCallback: function (x, y)
         {
-            return new TransformCommand("TRANSLATE", x, y).CreateMatrix();
+            return new TransformCommand("TRANSLATE", x, y);
         },
 
         MouseUpCallback: function (x, y)

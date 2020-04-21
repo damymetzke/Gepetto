@@ -7,7 +7,7 @@ export function OnDragShear()
     return {
         MouseUpdateCallback: function (x, _y)
         {
-            return new TransformCommand("SHEARX", x / 9, 0).CreateMatrix();
+            return new TransformCommand("SHEARX", x / 9, 0);
         },
 
         MouseUpCallback: function (x, _y)

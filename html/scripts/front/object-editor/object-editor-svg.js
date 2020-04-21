@@ -1,5 +1,6 @@
 import GetUniqueElements from "../global/get-unique-elements.js";
 import { GetCallbacks } from "./svg-drag/svg-drag.js";
+import common from "./object-editor-common.js";
 
 const { ipcRenderer } = require("electron");
 const { Transform, DrawObject, TransformCommand } = require("electron").remote.require("../core/core");
@@ -254,7 +255,8 @@ function SetupDragAndDrop()
         const relativeX = x - dragDropStartPosition[0];
         const relativeY = y - dragDropStartPosition[1];
 
-        const relativeTransform = MouseUpdateCallback(relativeX, relativeY);
+        const relativeTransformCommand = MouseUpdateCallback(relativeX, relativeY);
+        const relativeTransform = relativeTransformCommand.CreateMatrix();
 
 
         const vectorX = relativeTransform.InnerMatrix().MultiplyVector([1, 0]);

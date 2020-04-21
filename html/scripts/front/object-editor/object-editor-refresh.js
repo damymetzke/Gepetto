@@ -4,6 +4,8 @@ import { GenerateTransformCommandElement } from "../global/element-generators.js
 
 const { ipcRenderer } = require("electron");
 
+const { DrawObject } = require("electron").remote.require("../core/core");
+
 /**
  * called whenever an object has been selected.
  * 
@@ -76,6 +78,7 @@ function RefreshSelectedObject(object)
     common.elements.propertyName.innerText = object.name;
     common.elements.propertyNameInput.value = object.name;
     common.elements.propertyTransformCommandList.innerHTML = "";
+    common.activeDrawObject = object;
 
     //fill transform command list
     for (let i = 0; i < object.transformCommands.length; ++i)
@@ -138,7 +141,9 @@ function OnRefreshObjects(_event, data)
 
     if ("selectedObject" in data)
     {
-        RefreshSelectedObject(data.selectedObject);
+        let selectedObject = new DrawObject();
+        selectedObject.FromPureObject(data.selectedObject);
+        RefreshSelectedObject(selectedObject);
     }
 
     if ("transformCommandIndex" in data)

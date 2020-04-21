@@ -20,8 +20,6 @@ class TransformCommand
 {
     type = "TRANSLATE";
     fields = {};
-    x = 0;
-    y = 0;
 
     matrixFunctions =
         {
@@ -131,6 +129,11 @@ class TransformCommand
         {
             this.fields[key] = object.fields[key];
         }
+    }
+
+    Clone()
+    {
+        result = new TransformCommand(this.type, this.fields.x, this.fields.y);
     }
 
     constructor(type, x, y)

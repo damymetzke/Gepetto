@@ -9,7 +9,7 @@ export function OnDragRotate()
         {
             const angle = ((Math.atan2(y + 32, x)) / Math.PI * 180) - 90;
 
-            return new TransformCommand("ROTATE", angle, 0).CreateMatrix();
+            return new TransformCommand("ROTATE", angle, 0);
         },
 
         MouseUpCallback: function (x, y)
