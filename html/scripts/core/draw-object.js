@@ -116,15 +116,16 @@ class DrawObject
     {
         let result = new DrawObject(
             this.name,
-            recursiveParents ?
-                this.parent === null ?
-                    null
-                    : this.parent.Clone(true)
-                : this.parent.name
+            this.parent === null ?
+                null
+                : recursiveParents ?
+                    this.parent.Clone(true)
+                    : this.parent.name
         );
 
         this.transformCommands.forEach((command) =>
         {
+            console.log("👌", result.transformCommands);
             result.transformCommands.push(command.Clone());
         });
 

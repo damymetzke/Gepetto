@@ -133,7 +133,40 @@ class TransformCommand
 
     Clone()
     {
-        result = new TransformCommand(this.type, this.fields.x, this.fields.y);
+        return new TransformCommand(this.type, this.fields.x, this.fields.y);
+    }
+
+    AddRelative(other)
+    {
+        if (this.type !== other.type)
+        {
+            return;
+        }
+
+        switch (this.type)
+        {
+            case "TRANSLATE":
+                this.fields.x += other.fields.x;
+                this.fields.y += other.fields.y;
+                break;
+            case "SCALE":
+                this.fields.x *= other.fields.x;
+                this.fields.y *= other.fields.y;
+                break;
+            case "ROTATE":
+                this.fields.x += other.fields.x;
+                while (this.fields.x < 0)
+                {
+                    this.fields.x += 360;
+                }
+                while (this.fields.x >= 360)
+                {
+                    this.fields.x -= 360;
+                }
+                break;
+            case "SHEARX":
+                this.fields.x += ither.fields.x;
+        }
     }
 
     constructor(type, x, y)

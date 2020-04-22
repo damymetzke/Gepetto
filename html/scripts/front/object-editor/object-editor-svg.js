@@ -268,7 +268,12 @@ function SetupDragAndDrop()
         const resultingTransform = relativeTransform === undefined || relativeTransform === null ?
             currentTransform :
             relativeTransform.MultiplyMatrix(currentTransform);
-        MoveDragDisplay(resultingTransform, 1 / lengthX, 1 / lengthY);
+        //MoveDragDisplay(resultingTransform, 1 / lengthX, 1 / lengthY);
+
+        let dragDisplayObject = common.activeDrawObject.Clone();
+        dragDisplayObject.transformCommands[common.transformCommandIndex].AddRelative(relativeTransformCommand);
+        dragDisplayObject.OnTransformCommandsUpdate();
+        MoveDragDisplay(dragDisplayObject.relativeTransform);
     });
 
     document.onmouseup = function (mouseEvent)
