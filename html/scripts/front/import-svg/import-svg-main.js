@@ -68,12 +68,16 @@ function OnImport()
         {
             if (result.success)
             {
+                ipcRenderer.invoke("select-object", {
+                    selectLastObject: true
+                });
                 getCurrentWindow().close();
                 return;
             }
 
             const convertedErrorMessage = result.message.replace("\n", "<br>");
             errorOutput.innerHTML += convertedErrorMessage;
+
         });
 }
 

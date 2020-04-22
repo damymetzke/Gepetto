@@ -103,14 +103,42 @@ function OnImportSvg(_event, importArguments)
     };
 }
 
-function OnSelectObject(_event, name)
+function OnSelectObject(_event, data)
 {
-    activeObject = (name in objectTree.objects) ? objectTree.objects[name] : null;
-    selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
-    window.webContents.send("refresh-objects", {
-        selectedObject: activeObject.ToPureObject(),
-        transformCommandIndex: selectedTransformCommandIndex
-    });
+    if (typeof data === "string")
+    {
+        activeObject = (data in objectTree.objects) ? objectTree.objects[data] : null;
+        selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
+        window.webContents.send("refresh-objects", {
+            selectedObject: activeObject.ToPureObject(),
+            transformCommandIndex: selectedTransformCommandIndex
+        });
+    }
+    else
+    {
+        if ("name" in data)
+        {
+            const name = data.name;
+            activeObject = (name in objectTree.objects) ? objectTree.objects[name] : null;
+            selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
+            window.webContents.send("refresh-objects", {
+                selectedObject: activeObject.ToPureObject(),
+                transformCommandIndex: selectedTransformCommandIndex
+            });
+        }
+        else
+        {
+            if (data.selectLastObject === true)
+            {
+                activeObject = objectTree.rootObjects[objectTree.rootObjects.length - 1];
+                selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
+                window.webContents.send("refresh-objects", {
+                    selectedObject: activeObject.ToPureObject(),
+                    transformCommandIndex: selectedTransformCommandIndex
+                });
+            }
+        }
+    }
 }
 
 function OnSelectTransformCommand(_event, data)
