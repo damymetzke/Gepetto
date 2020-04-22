@@ -1,6 +1,9 @@
 const { dialog, getCurrentWindow } = require("electron").remote;
 const { ipcRenderer } = require("electron");
 
+const currentWindow = require('electron').remote.getCurrentWindow();
+
+
 const fileNameElement = document.getElementById("svg-file-name");
 
 let currentFilePath = null;
@@ -8,6 +11,7 @@ let currentFilePath = null;
 function OpenFile()
 {
     dialog.showOpenDialog(
+        currentWindow,
         {
             properties: ['openFile'],
             filters:
