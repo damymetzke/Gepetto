@@ -4,9 +4,11 @@ import * as ContentLoader from "../global/content-loader.js";
 
 import * as ObjectEditorMain from "../object-editor/object-editor-main.js";
 
+const currentWindow = require('electron').remote.getCurrentWindow();
+const BrowserWindow = require("electron").remote.BrowserWindow;
+
 function ImportSvg()
 {
-    const BrowserWindow = require("electron").remote.BrowserWindow;
     let win = new BrowserWindow({
         width: 300,
         height: 300,
@@ -15,10 +17,17 @@ function ImportSvg()
         },
         useContentSize: true,
         resizable: false,
-        minimizable: false
+        minimizable: false,
+        parent: currentWindow,
+        modal: true,
+        show: false
     });
 
     win.loadFile("./svg-import.html");
+    win.once("ready-to-show", () =>
+    {
+        win.show();
+    });
 }
 
 function Run()
