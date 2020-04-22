@@ -118,6 +118,7 @@ function RefreshSelectedObject(object)
 
 function RefreshTransformCommandIndex(index)
 {
+    common.transformCommandIndex = index;
     let children = common.elements.propertyTransformCommandList.children;
     for (let i = 0; i < children.length; ++i)
     {
