@@ -112,6 +112,18 @@ class Transform
         ]);
     }
 
+    Inverse()
+    {
+        const determinant = (this.matrix[0] * this.matrix[3]) - (this.matrix[1] * this.matrix[2]);
+
+        return new Transform([
+            this.matrix[3] / determinant, this.matrix[1] / -determinant,
+            this.matrix[2] / -determinant, this.matrix[0] / determinant,
+            ((this.matrix[2] * this.matrix[5]) - (this.matrix[4] * this.matrix[3])) / determinant,
+            ((this.matrix[0] * this.matrix[5]) - (this.matrix[4] * this.matrix[1])) / -determinant
+        ]);
+    }
+
     constructor(matrix = [1, 0, 0, 1, 0, 0])
     {
         this.matrix = matrix;
