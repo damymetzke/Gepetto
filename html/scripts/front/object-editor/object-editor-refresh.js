@@ -61,6 +61,13 @@ function RefreshObjectTree(tree)
 
 function RefreshSelectedObject(object)
 {
+    if (object === null)
+    {
+        common.elements.body.classList.add("hide-property");
+        return;
+    }
+    common.elements.body.classList.remove("hide-property");
+
     //mark the selected object in the tree root
     let treeElements = common.elements.textTreeList.querySelectorAll("[data-draw-object-name]");
     for (let i = 0; i < treeElements.length; ++i)

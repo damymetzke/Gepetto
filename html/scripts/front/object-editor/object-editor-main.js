@@ -21,6 +21,7 @@ const { TransformCommand } = require("electron").remote.require("../core/core");
 function SetupCommonVariables(root)
 {
     common.elements = GetUniqueElements(root, {
+        body: "object-editor--body",
         textTree: "object-editor--text-tree",
         textTreeList: "object-editor--text-tree--list",
         propertyName: "object-editor--property--name",

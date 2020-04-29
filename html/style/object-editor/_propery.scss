@@ -1,3 +1,9 @@
+//hide properties when no property has been selected.
+.object-editor--body.hide-property .object-editor--property > *
+{
+    display: none;
+}
+
 .object-editor--property
 {
     background-color: $light-object-editor;
