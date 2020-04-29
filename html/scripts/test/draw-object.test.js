@@ -4,8 +4,13 @@ const { TransformCommand } = require("../core/transform-command");
 const base = new DrawObject("Base");
 const child = new DrawObject("Child", base);
 
-base.AddTransformCommand(new TransformCommand("TRANSLATE", 10, 20));
-child.AddTransformCommand(new TransformCommand("SCALE", 30, 40));
+base.AddTransformCommand(new TransformCommand("TRANSLATE", {
+    x: 10, y: 20
+}));
+child.AddTransformCommand(new TransformCommand("SCALE", {
+    x: 30,
+    y: 40
+}));
 
 test("DrawObject Constructor", function ()
 {

@@ -4,11 +4,23 @@ const { TransformCommand } = require("../core/transform-command");
 const Transform = require("../core/transform");
 
 
-let translateCommand = new TransformCommand("TRANSLATE", 10, 20);
-let scaleCommand = new TransformCommand("SCALE", 30, 40);
-let rotateCommand = new TransformCommand("ROTATE", 180, 999);
-let shearXCommand = new TransformCommand("SHEARX", 50, 999);
-let shearYCommand = new TransformCommand("SHEARY", 999, 60);
+let translateCommand = new TransformCommand("TRANSLATE", {
+    x: 10,
+    y: 20
+});
+let scaleCommand = new TransformCommand("SCALE", {
+    x: 30,
+    y: 40
+});
+let rotateCommand = new TransformCommand("ROTATE", {
+    rotation: 180
+});
+let shearXCommand = new TransformCommand("SHEARX", {
+    x: 50
+});
+let shearYCommand = new TransformCommand("SHEARY", {
+    y: 60
+});
 
 test("Translate Command", function ()
 {
