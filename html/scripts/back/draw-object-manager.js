@@ -154,7 +154,7 @@ function OnSelectTransformCommand(_event, data)
     });
 }
 
-function OnUpdateObject(event, updateValues)
+function OnUpdateObject(_event, updateValues)
 {
     if (activeObject === null)
     {
@@ -163,6 +163,7 @@ function OnUpdateObject(event, updateValues)
 
     if ("name" in updateValues)
     {
+        fs.rename(ResourceDirectory + "/" + activeObject.name + ".xml", ResourceDirectory + "/" + updateValues.name + ".xml", () => { });
         objectTree.objects[updateValues.name] = activeObject;
         delete objectTree.objects[activeObject.name];
     }
