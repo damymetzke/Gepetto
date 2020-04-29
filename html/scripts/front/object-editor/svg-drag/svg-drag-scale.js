@@ -5,7 +5,7 @@ const { TransformCommand } = require("electron").remote.require("../core/core");
 export function OnDragScaleX()
 {
     return {
-        MouseUpdateCallback: function (x, _y)
+        MouseUpdateCallback: function (x, _y, selectedTransform)
         {
             return new TransformCommand("SCALE", {
                 x: (x + 6) / 6
@@ -27,7 +27,7 @@ export function OnDragScaleX()
 export function OnDragScaleY()
 {
     return {
-        MouseUpdateCallback: function (_x, y)
+        MouseUpdateCallback: function (_x, y, selectedTransform)
         {
             return new TransformCommand("SCALE", {
                 y: (y + 6) / 6
@@ -49,7 +49,7 @@ export function OnDragScaleY()
 export function OnDragScaleCenter()
 {
     return {
-        MouseUpdateCallback: function (x, y)
+        MouseUpdateCallback: function (x, y, selectedTransform)
         {
             return new TransformCommand("SCALE", {
                 x: (x + 6) / 6,

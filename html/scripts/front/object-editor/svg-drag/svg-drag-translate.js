@@ -5,7 +5,7 @@ const { TransformCommand } = require("electron").remote.require("../core/core");
 export function OnDragTranslateX()
 {
     return {
-        MouseUpdateCallback: function (x, y)
+        MouseUpdateCallback: function (x, _y, selectedTransform)
         {
             return new TransformCommand("TRANSLATE", {
                 x: x
@@ -27,7 +27,7 @@ export function OnDragTranslateX()
 export function OnDragTranslateY()
 {
     return {
-        MouseUpdateCallback: function (x, y)
+        MouseUpdateCallback: function (_x, y, selectedTransform)
         {
             return new TransformCommand("TRANSLATE", {
                 y: y
@@ -49,7 +49,7 @@ export function OnDragTranslateY()
 export function OnDragTranslateCenter()
 {
     return {
-        MouseUpdateCallback: function (x, y)
+        MouseUpdateCallback: function (x, y, selectedTransform)
         {
             return new TransformCommand("TRANSLATE", {
                 x: x,

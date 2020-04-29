@@ -5,7 +5,7 @@ const { TransformCommand } = require("electron").remote.require("../core/core");
 export function OnDragShear()
 {
     return {
-        MouseUpdateCallback: function (x, _y)
+        MouseUpdateCallback: function (x, _y, selectedTransform)
         {
             return new TransformCommand("SHEARX", {
                 x: x / 9

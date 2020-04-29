@@ -265,17 +265,19 @@ function SetupDragAndDrop()
         const selectedMatrix = common.activeDrawObject.transformCommands[common.transformCommandIndex].CreateMatrix();
         const afterMatrix = afterDrawObject.relativeTransform;
 
-        console.table({
-            before: beforeMatrix.matrix,
-            selected: selectedMatrix.matrix,
-            after: afterMatrix.matrix
-        });
+        const relativeVector = [
+            x - dragDropStartPosition[0],
+            y - dragDropStartPosition[1]
+        ];
 
-        // const relativeX = x - dragDropStartPosition[0];
-        // const relativeY = y - dragDropStartPosition[1];
+        const relativeTransformCommand = MouseUpdateCallback(relativeVector[0], relativeVector[1], selectedMatrix);
+        const relativeTransform = relativeTransformCommand.CreateMatrix();
 
-        // const relativeTransformCommand = MouseUpdateCallback(relativeX, relativeY);
-        // const relativeTransform = relativeTransformCommand.CreateMatrix();
+        const dragDisplayPositionMatrix = common.activeDrawObject.relativeTransform.PositionMatrix();
+        const dragDisplayMatrix = relativeTransform.MultiplyMatrix(dragDisplayPositionMatrix);
+
+        MoveDragDisplay(dragDisplayMatrix, 1, 1);
+
 
         // console.log("🐳", relativeTransformCommand);
 

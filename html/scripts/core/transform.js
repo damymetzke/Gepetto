@@ -103,6 +103,15 @@ class Transform
         ]);
     }
 
+    PositionMatrix()
+    {
+        return new Transform([
+            1, 0,
+            0, 1,
+            this.matrix[4], this.matrix[5]
+        ]);
+    }
+
     constructor(matrix = [1, 0, 0, 1, 0, 0])
     {
         this.matrix = matrix;

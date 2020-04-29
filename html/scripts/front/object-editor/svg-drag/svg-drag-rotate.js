@@ -5,7 +5,7 @@ const { TransformCommand } = require("electron").remote.require("../core/core");
 export function OnDragRotate()
 {
     return {
-        MouseUpdateCallback: function (x, y)
+        MouseUpdateCallback: function (x, y, selectedTransform)
         {
             const angle = ((Math.atan2(y + 32, x)) / Math.PI * 180) - 90;
 
@@ -14,7 +14,7 @@ export function OnDragRotate()
             });
         },
 
-        MouseUpCallback: function (x, y)
+        MouseUpCallback: function (x, y, selectedTransform)
         {
             const angle = ((Math.atan2(y + 32, x)) / Math.PI * 180) - 90;
             ipcRenderer.invoke("update-transform-command", {
