@@ -252,29 +252,48 @@ function SetupDragAndDrop()
             return;
         }
 
-        const relativeX = x - dragDropStartPosition[0];
-        const relativeY = y - dragDropStartPosition[1];
+        let beforeDrawObject = new DrawObject();
+        let afterDrawObject = new DrawObject();
+        {
+            beforeDrawObject.transformCommands = common.activeDrawObject.transformCommands.slice(0, common.transformCommandIndex);
+            afterDrawObject.transformCommands = common.activeDrawObject.transformCommands.slice(common.transformCommandIndex + 1, common.activeDrawObject.transformCommands.length);
 
-        const relativeTransformCommand = MouseUpdateCallback(relativeX, relativeY);
-        const relativeTransform = relativeTransformCommand.CreateMatrix();
+            beforeDrawObject.OnTransformCommandsUpdate();
+            afterDrawObject.OnTransformCommandsUpdate();
+        }
+        const beforeMatrix = beforeDrawObject.relativeTransform;
+        const selectedMatrix = common.activeDrawObject.transformCommands[common.transformCommandIndex].CreateMatrix();
+        const afterMatrix = afterDrawObject.relativeTransform;
 
-        console.log("🐳", relativeTransformCommand);
+        console.table({
+            before: beforeMatrix.matrix,
+            selected: selectedMatrix.matrix,
+            after: afterMatrix.matrix
+        });
 
-        const vectorX = relativeTransform.InnerMatrix().MultiplyVector([1, 0]);
-        const vectorY = relativeTransform.InnerMatrix().MultiplyVector([0, 1]);
+        // const relativeX = x - dragDropStartPosition[0];
+        // const relativeY = y - dragDropStartPosition[1];
 
-        const lengthX = Math.sqrt(vectorX[0] * vectorX[0] + vectorX[1] * vectorX[1]);
-        const lengthY = Math.sqrt(vectorY[0] * vectorY[0] + vectorY[1] * vectorY[1]);
+        // const relativeTransformCommand = MouseUpdateCallback(relativeX, relativeY);
+        // const relativeTransform = relativeTransformCommand.CreateMatrix();
 
-        const resultingTransform = relativeTransform === undefined || relativeTransform === null ?
-            currentTransform :
-            relativeTransform.MultiplyMatrix(currentTransform);
+        // console.log("🐳", relativeTransformCommand);
 
-        MoveDragDisplay(resultingTransform, 1 / lengthX, 1 / lengthY);
+        // const vectorX = relativeTransform.InnerMatrix().MultiplyVector([1, 0]);
+        // const vectorY = relativeTransform.InnerMatrix().MultiplyVector([0, 1]);
 
-        let dragDisplayObject = common.activeDrawObject.Clone();
-        dragDisplayObject.transformCommands[common.transformCommandIndex].AddRelative(relativeTransformCommand);
-        dragDisplayObject.OnTransformCommandsUpdate();
+        // const lengthX = Math.sqrt(vectorX[0] * vectorX[0] + vectorX[1] * vectorX[1]);
+        // const lengthY = Math.sqrt(vectorY[0] * vectorY[0] + vectorY[1] * vectorY[1]);
+
+        // const resultingTransform = relativeTransform === undefined || relativeTransform === null ?
+        //     currentTransform :
+        //     relativeTransform.MultiplyMatrix(currentTransform);
+
+        // MoveDragDisplay(resultingTransform, 1 / lengthX, 1 / lengthY);
+
+        // let dragDisplayObject = common.activeDrawObject.Clone();
+        // dragDisplayObject.transformCommands[common.transformCommandIndex].AddRelative(relativeTransformCommand);
+        // dragDisplayObject.OnTransformCommandsUpdate();
         //MoveDragDisplay(dragDisplayObject.relativeTransform);
     });
 
