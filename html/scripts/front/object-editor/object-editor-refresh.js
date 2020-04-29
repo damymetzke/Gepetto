@@ -149,9 +149,16 @@ function OnRefreshObjects(_event, data)
 
     if ("selectedObject" in data)
     {
-        let selectedObject = new DrawObject();
-        selectedObject.FromPureObject(data.selectedObject);
-        RefreshSelectedObject(selectedObject);
+        if (data.selectedObject === null)
+        {
+            RefreshSelectedObject(data.selectedObject);
+        }
+        else
+        {
+            let selectedObject = new DrawObject();
+            selectedObject.FromPureObject(data.selectedObject);
+            RefreshSelectedObject(selectedObject);
+        }
     }
 
     if ("transformCommandIndex" in data)
