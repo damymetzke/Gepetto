@@ -7,7 +7,9 @@ export function OnDragTranslateX()
     return {
         MouseUpdateCallback: function (x, y)
         {
-            return new TransformCommand("TRANSLATE", x, 0);
+            return new TransformCommand("TRANSLATE", {
+                x: x
+            });
         },
 
         MouseUpCallback: function (x, y)
@@ -27,7 +29,9 @@ export function OnDragTranslateY()
     return {
         MouseUpdateCallback: function (x, y)
         {
-            return new TransformCommand("TRANSLATE", 0, y);
+            return new TransformCommand("TRANSLATE", {
+                y: y
+            });
         },
 
         MouseUpCallback: function (x, y)
@@ -47,7 +51,10 @@ export function OnDragTranslateCenter()
     return {
         MouseUpdateCallback: function (x, y)
         {
-            return new TransformCommand("TRANSLATE", x, y);
+            return new TransformCommand("TRANSLATE", {
+                x: x,
+                y: y
+            });
         },
 
         MouseUpCallback: function (x, y)

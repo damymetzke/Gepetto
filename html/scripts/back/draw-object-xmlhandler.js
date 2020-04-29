@@ -65,7 +65,7 @@ function SvgToObjectXml(svgContent)
             normalizeTags: true,
             renderOpts: {
                 pretty: false
-            }
+            },
         });
         try
         {

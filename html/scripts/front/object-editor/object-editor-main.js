@@ -84,7 +84,7 @@ function SetupEventListeners(root)
         const type = transformCommandButtons[i].dataset.transformCommandType;
         transformCommandButtons[i].addEventListener("click", function ()
         {
-            OnAddTransformCommand(new TransformCommand(type, 0, 0));
+            OnAddTransformCommand(new TransformCommand(type));
         });
     }
 }

@@ -53,7 +53,7 @@ function OnImportSvg(_event, importArguments)
     let fileContent;
     try
     {
-        fileContent = fs.readFileSync(importArguments.filePath, "utf-8");
+        fileContent = fs.readFileSync(importArguments.filePath, "utf8");
     }
     catch (error)
     {
@@ -265,7 +265,11 @@ function OnAddTransformCommand(_event, command)
     {
         return;
     }
-    activeObject.AddTransformCommand(Object.assign(new TransformCommand("invalid", 0, 0), command));
+    if (!("type" in command))
+    {
+
+    }
+    activeObject.AddTransformCommand(new TransformCommand(command.type));
     activeObject.OnTransformCommandsUpdate();
 
     selectedTransformCommandIndex = activeObject.transformCommands.length - 1;

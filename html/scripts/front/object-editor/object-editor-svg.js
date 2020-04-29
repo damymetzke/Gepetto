@@ -71,7 +71,7 @@ function MoveDragDisplay(transform, sizeX = 1, sizeY = 1)
     const resultVectorY = transform.InnerMatrix().MultiplyVector([0, sizeY]);
     const lengthX = Math.sqrt(resultVectorX[0] * resultVectorX[0] + resultVectorX[1] * resultVectorX[1]);
     const lengthY = Math.sqrt(resultVectorY[0] * resultVectorY[0] + resultVectorY[1] * resultVectorY[1]);
-    const adaptedTransform = new TransformCommand("SCALE", 1 / lengthX, 1 / lengthY).CreateMatrix().MultiplyMatrix(transform);
+    const adaptedTransform = new TransformCommand("SCALE", { x: 1 / lengthX, y: 1 / lengthY }).CreateMatrix().MultiplyMatrix(transform);
 
     const transformString = `matrix(${adaptedTransform.matrix[0]} ${adaptedTransform.matrix[1]} ${adaptedTransform.matrix[2]} ${adaptedTransform.matrix[3]} ${adaptedTransform.matrix[4]} ${adaptedTransform.matrix[5]})`;
     dragDisplayElements.root.setAttribute("transform", transformString);
@@ -258,6 +258,7 @@ function SetupDragAndDrop()
         const relativeTransformCommand = MouseUpdateCallback(relativeX, relativeY);
         const relativeTransform = relativeTransformCommand.CreateMatrix();
 
+        console.log("🐳", relativeTransformCommand);
 
         const vectorX = relativeTransform.InnerMatrix().MultiplyVector([1, 0]);
         const vectorY = relativeTransform.InnerMatrix().MultiplyVector([0, 1]);
@@ -268,12 +269,13 @@ function SetupDragAndDrop()
         const resultingTransform = relativeTransform === undefined || relativeTransform === null ?
             currentTransform :
             relativeTransform.MultiplyMatrix(currentTransform);
-        //MoveDragDisplay(resultingTransform, 1 / lengthX, 1 / lengthY);
+
+        MoveDragDisplay(resultingTransform, 1 / lengthX, 1 / lengthY);
 
         let dragDisplayObject = common.activeDrawObject.Clone();
         dragDisplayObject.transformCommands[common.transformCommandIndex].AddRelative(relativeTransformCommand);
         dragDisplayObject.OnTransformCommandsUpdate();
-        MoveDragDisplay(dragDisplayObject.relativeTransform);
+        //MoveDragDisplay(dragDisplayObject.relativeTransform);
     });
 
     document.onmouseup = function (mouseEvent)

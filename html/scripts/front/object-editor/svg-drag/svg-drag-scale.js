@@ -7,7 +7,9 @@ export function OnDragScaleX()
     return {
         MouseUpdateCallback: function (x, _y)
         {
-            return new TransformCommand("SCALE", (x + 6) / 6, 1);
+            return new TransformCommand("SCALE", {
+                x: (x + 6) / 6
+            });
         },
 
         MouseUpCallback: function (x, _y)
@@ -27,7 +29,9 @@ export function OnDragScaleY()
     return {
         MouseUpdateCallback: function (_x, y)
         {
-            return new TransformCommand("SCALE", 1, (y + 6) / 6);
+            return new TransformCommand("SCALE", {
+                y: (y + 6) / 6
+            });
         },
 
         MouseUpCallback: function (_x, y)
@@ -47,7 +51,10 @@ export function OnDragScaleCenter()
     return {
         MouseUpdateCallback: function (x, y)
         {
-            return new TransformCommand("SCALE", (x + 6) / 6, (y + 6) / 6);
+            return new TransformCommand("SCALE", {
+                x: (x + 6) / 6,
+                y: (y + 6) / 6
+            });
         },
 
         MouseUpCallback: function (x, y)

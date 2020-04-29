@@ -9,7 +9,9 @@ export function OnDragRotate()
         {
             const angle = ((Math.atan2(y + 32, x)) / Math.PI * 180) - 90;
 
-            return new TransformCommand("ROTATE", angle, 0);
+            return new TransformCommand("ROTATE", {
+                rotation: angle
+            });
         },
 
         MouseUpCallback: function (x, y)
@@ -18,7 +20,7 @@ export function OnDragRotate()
             ipcRenderer.invoke("update-transform-command", {
                 relative: true, //this will add the values rather than override them
                 fields: {
-                    x: angle
+                    rotation: angle
                 }
             });
         }

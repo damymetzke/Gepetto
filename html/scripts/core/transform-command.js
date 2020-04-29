@@ -41,7 +41,7 @@ class TransformCommand
             },
             ROTATE: function ()
             {
-                const rotation = (Number(this.fields.x) * Math.PI) / 180;
+                const rotation = (Number(this.fields.rotation) * Math.PI) / 180;
                 return [
                     Math.cos(rotation), Math.sin(rotation),
                     -Math.sin(rotation), Math.cos(rotation),
@@ -65,6 +65,25 @@ class TransformCommand
                 ];
             }
         };
+    _typeFieldMap = {
+        TRANSLATE: {
+            x: 0,
+            y: 0
+        },
+        SCALE: {
+            x: 1,
+            y: 1
+        },
+        ROTATE: {
+            rotation: 0
+        },
+        SHEARX: {
+            x: 0
+        },
+        SHEARY: {
+            y: 0
+        }
+    };
 
     /**
      * create a matrix based on the type and variables.
@@ -133,7 +152,7 @@ class TransformCommand
 
     Clone()
     {
-        return new TransformCommand(this.type, this.fields.x, this.fields.y);
+        return new TransformCommand(this.type, this.fields);
     }
 
     AddRelative(other)
@@ -154,14 +173,14 @@ class TransformCommand
                 this.fields.y *= other.fields.y;
                 break;
             case "ROTATE":
-                this.fields.x += other.fields.x;
-                while (this.fields.x < 0)
+                this.fields.rotation += other.fields.rotation;
+                while (this.fields.rotation < 0)
                 {
-                    this.fields.x += 360;
+                    this.fields.rotation += 360;
                 }
-                while (this.fields.x >= 360)
+                while (this.fields.rotation >= 360)
                 {
-                    this.fields.x -= 360;
+                    this.fields.rotation -= 360;
                 }
                 break;
             case "SHEARX":
@@ -169,13 +188,10 @@ class TransformCommand
         }
     }
 
-    constructor(type, x, y)
+    constructor(type = "", fields = {})
     {
         this.type = type;
-        this.fields = {
-            x: x,
-            y: y
-        };
+        this.fields = Object.assign(this.fields, (type in this._typeFieldMap) ? this._typeFieldMap[type] : {}, fields);
     }
 }
 
