@@ -265,16 +265,20 @@ function SetupDragAndDrop()
         const selectedMatrix = common.activeDrawObject.transformCommands[common.transformCommandIndex].CreateMatrix();
         const afterMatrix = afterDrawObject.relativeTransform;
 
-        const relativeVector = [
+        const relativeScreenVector = [
             x - dragDropStartPosition[0],
             y - dragDropStartPosition[1]
         ];
+
+        const relativeVector = afterMatrix.Inverse().MultiplyVector(relativeScreenVector);
+
+        console.log("🥨", relativeScreenVector, relativeVector);
 
         const relativeTransformCommand = MouseUpdateCallback(relativeVector[0], relativeVector[1], selectedMatrix);
         const relativeTransform = relativeTransformCommand.CreateMatrix();
 
         const dragDisplayPositionMatrix = common.activeDrawObject.relativeTransform.PositionMatrix();
-        const dragDisplayMatrix = relativeTransform.MultiplyMatrix(dragDisplayPositionMatrix);
+        const dragDisplayMatrix = dragDisplayPositionMatrix.Add(relativeTransform);
 
         MoveDragDisplay(dragDisplayMatrix, 1, 1);
 

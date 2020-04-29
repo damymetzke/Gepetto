@@ -72,6 +72,19 @@ class Transform
             this.matrix[1] * right.matrix[4] + this.matrix[3] * right.matrix[5] + this.matrix[5],
         ]);
     }
+
+    Add(nextTransform)
+    {
+        return new Transform([
+            nextTransform.matrix[0] * this.matrix[0] + nextTransform.matrix[2] * this.matrix[1],
+            nextTransform.matrix[1] * this.matrix[0] + nextTransform.matrix[3] * this.matrix[1],
+            nextTransform.matrix[0] * this.matrix[2] + nextTransform.matrix[2] * this.matrix[3],
+            nextTransform.matrix[1] * this.matrix[2] + nextTransform.matrix[3] * this.matrix[3],
+            nextTransform.matrix[0] * this.matrix[4] + nextTransform.matrix[2] * this.matrix[5] + nextTransform.matrix[4],
+            nextTransform.matrix[1] * this.matrix[4] + nextTransform.matrix[3] * this.matrix[5] + nextTransform.matrix[5],
+        ]);
+    }
+
     /**
      * a multiplication, or dot product, operation with this on the left and right on the right.
      * 
