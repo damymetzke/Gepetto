@@ -252,16 +252,11 @@ function SetupDragAndDrop()
             return;
         }
 
-        let beforeDrawObject = new DrawObject();
         let afterDrawObject = new DrawObject();
         {
-            beforeDrawObject.transformCommands = common.activeDrawObject.transformCommands.slice(0, common.transformCommandIndex);
             afterDrawObject.transformCommands = common.activeDrawObject.transformCommands.slice(common.transformCommandIndex + 1, common.activeDrawObject.transformCommands.length);
-
-            beforeDrawObject.OnTransformCommandsUpdate();
             afterDrawObject.OnTransformCommandsUpdate();
         }
-        const beforeMatrix = beforeDrawObject.relativeTransform;
         const selectedMatrix = common.activeDrawObject.transformCommands[common.transformCommandIndex].CreateMatrix();
         const afterMatrix = afterDrawObject.relativeTransform;
 
@@ -278,7 +273,7 @@ function SetupDragAndDrop()
         const relativeTransform = relativeTransformCommand.CreateMatrix();
 
         const dragDisplayPositionMatrix = common.activeDrawObject.relativeTransform.PositionMatrix();
-        const dragDisplayMatrix = dragDisplayPositionMatrix.Add(relativeTransform);
+        const dragDisplayMatrix = dragDisplayPositionMatrix.Add(relativeTransform).Add(afterMatrix);
 
         MoveDragDisplay(dragDisplayMatrix, 1, 1);
 
@@ -307,12 +302,20 @@ function SetupDragAndDrop()
     {
         if (MouseUpCallback !== null)
         {
-            const relativeX = currentSvgPosition[0] - dragDropStartPosition[0];
-            const relativeY = currentSvgPosition[1] - dragDropStartPosition[1];
-            MouseUpCallback(relativeX, relativeY);
+            let afterDrawObject = new DrawObject();
+            {
+                afterDrawObject.transformCommands = common.activeDrawObject.transformCommands.slice(common.transformCommandIndex + 1, common.activeDrawObject.transformCommands.length);
+                afterDrawObject.OnTransformCommandsUpdate();
+            }
+            const afterMatrix = afterDrawObject.relativeTransform;
 
-            console.log(relativeX, relativeY);
+            const relativeScreenVector = [
+                currentSvgPosition[0] - dragDropStartPosition[0],
+                currentSvgPosition[1] - dragDropStartPosition[1]
+            ];
 
+            const relativeVector = afterMatrix.Inverse().MultiplyVector(relativeScreenVector);
+            MouseUpCallback(relativeVector[0], relativeVector[1]);
         }
 
         MouseUpCallback = null;
