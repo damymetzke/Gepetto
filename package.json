@@ -7,7 +7,10 @@
     "prestart": "npm run compile:sass",
     "start": "electron .",
     "test": "jest",
-    "compile:sass": "./node_modules/.bin/npm-sass ./style/style.scss > ./style/style.css",
+    "compile:html": "node ./node_scripts/compile-html.js",
+    "compile:sass": "node ./node_scripts/compile-sass.js",
+    "compile:typescript": "./node_modules/.bin/tsc -p ./",
+    "compile:all": "node ./node_scripts/compile-all.js",
     "build:docs": "python ./documentation/build_docs.py"
   },
   "repository": {
@@ -17,9 +20,8 @@
   "author": "Damy Metzke",
   "license": "UNLICENCED",
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/types": "^7.9.6",
     "jest": "^25.2.7",
     "jsdoc": "^3.6.3",
     "npm-sass": "^2.3.0",
