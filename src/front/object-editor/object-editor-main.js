@@ -4,6 +4,7 @@ import GetUniqueElements from "../global/get-unique-elements.js";
 
 import * as ObjectEditorSvg from "./object-editor-svg.js";
 import * as ObjectEditorRefresh from "./object-editor-refresh.js";
+import * as Panner from "./object-editor-panner.js";
 import common from "./object-editor-common.js";
 
 //nodejs imports
@@ -24,6 +25,8 @@ function SetupCommonVariables(root)
         body: "object-editor--body",
         textTree: "object-editor--text-tree",
         textTreeList: "object-editor--text-tree--list",
+        main: "object-editor--main",
+        mainSvg: "object-editor--main--svg",
         propertyName: "object-editor--property--name",
         propertyNameInput: "object-editor--property--name-input",
         propertyTransformCommandList: "object-editor--property--transform-list",
@@ -107,6 +110,7 @@ export function Run(root)
     SetupCommonVariables(root);
     SetupEventListeners(root);
 
+    Panner.Init(common.elements.mainSvg);
 }
 
 /**

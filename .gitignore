@@ -9,3 +9,4 @@ html/documentation/js-doc-output/
 html/documentation/build/
 node_modules
 out/
+saved/
