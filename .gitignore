@@ -7,3 +7,4 @@ html/saved/
 html/documentation/js-doc-output/
 *.css
 html/documentation/build/
+node_modules

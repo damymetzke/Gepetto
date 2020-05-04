@@ -16,7 +16,7 @@ function createWindow()
         useContentSize: true
     });
 
-    window.loadFile('index.html');
+    window.loadFile('html/index.html');
     window.maximize();
 
     Init(window);

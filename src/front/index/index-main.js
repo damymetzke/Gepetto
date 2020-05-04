@@ -23,7 +23,7 @@ function ImportSvg()
         show: false
     });
 
-    win.loadFile("./svg-import.html");
+    win.loadFile("./html/svg-import.html");
     win.once("ready-to-show", () =>
     {
         win.show();

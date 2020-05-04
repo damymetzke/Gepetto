@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: front/object-editor/object-editor-main.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: front/object-editor/object-editor-main.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//ES6 imports
+import * as DropDown from "../global/dropdown.js";
+import GetUniqueElements from "../global/get-unique-elements.js";
+
+import * as ObjectEditorSvg from "./object-editor-svg.js";
+
+//nodejs imports
+const { ipcRenderer } = require("electron");
+
+const { TransformCommand } = require("electron").remote.require("../core/core");
+
+//utility functions//
+/////////////////////
+
+/**
+ * generate the inside of a TransformCommand black to be displayed in the editor.
+ * 
+ * generated based on the following template:
+ * ```html
+ * &lt;h5>{name}&lt;/h5>
+ * 
+ * &lt;p>x&lt;/p>
+ * &lt;input class="transform-command-number-input" data-transform-command-key="x" type="number" value="{x}">
+ * 
+ * &lt;p>y&lt;/p>
+ * &lt;input class="transform-command-number-input" data-transform-command-key="y" type="number" value="{y}">
+ * ```
+ * 
+ * @param {String} name name of the transform command.
+ * should be one of the following:
+ * 
+ * - TRANSLATE
+ * - SCALE
+ * - ROTATE
+ * - SHEARX
+ * - SHEARY
+ * @param {Number} x
+ * @param {Number} y 
+ */
+function TransformCommandTemplate(name, x, y)
+{
+    return `&lt;h5>${name}&lt;/h5>&lt;p>x&lt;/p>&lt;input class="transform-command-number-input" data-transform-command-key="x" type="number" value="${x}">&lt;p>y&lt;/p>&lt;input class="transform-command-number-input" data-transform-command-key="y" type="number" value="${y}">`;
+}
+
+//file variables//
+//////////////////
+let currentTransformCommands = [];
+let treeRoot = null;
+let elements = null;
+
+/**
+ * setup the file wide variables.
+ * 
+ * does the following:
+ * 
+ * - gets all unique elements.
+ * - creates a root for the text-tree.
+ * 
+ * @see GetUniqueElements
+ * 
+ * @param {HTMLElement} root root element for the object editor
+ */
+function SetupFileVariables(root)
+{
+    elements = GetUniqueElements(root, {
+        textTree: "object-editor--text-tree",
+        propertyName: "object-editor--property--name",
+        propertyNameInput: "object-editor--property--name-input",
+        propertyTransformCommandList: "object-editor--property--transform-list",
+        propertyTransformAddControls: "object-editor--property--transform-add-controls"
+    });
+
+    treeRoot = document.createElement("ol");
+    elements.textTree.appendChild(treeRoot);
+}
+
+//ipcRenderer//
+///////////////
+
+//todo: split up this chunky boi
+function OnRefreshObjects(_event, data)
+{
+    if ("objectTree" in data)
+    {
+        const objectTree = data.objectTree;
+        treeRoot.innerHTML = "";
+        for (let i = 0; i &lt; objectTree.rootObjects.length; ++i)
+        {
+            const name = objectTree.rootObjects[i].name;
+            let newElement = document.createElement("li");
+            newElement.innerText = name;
+            newElement.dataset.drawObjectName = name;
+            newElement.addEventListener("click", function ()
+            {
+                OnSelectObject(name);
+            });
+            treeRoot.appendChild(newElement);
+        }
+    }
+
+    if ("selectedObject" in data)
+    {
+        const object = data.selectedObject;
+        let treeElements = treeRoot.querySelectorAll("[data-draw-object-name]");
+        for (let i = 0; i &lt; treeElements.length; ++i)
+        {
+            if (treeElements[i].dataset.drawObjectName === object.name)
+            {
+                treeElements[i].classList.add("selected-element");
+            }
+            else
+            {
+                treeElements[i].classList.remove("selected-element");
+            }
+        }
+
+        elements.propertyName.innerText = object.name;
+        elements.propertyNameInput.value = object.name;
+
+        elements.propertyTransformCommandList.innerHTML = "";
+        for (let i = 0; i &lt; object.transformCommands.length; ++i)
+        {
+            const index = i;
+            let newElement = document.createElement("li");
+            newElement.innerHTML = TransformCommandTemplate(object.transformCommands[i].type, object.transformCommands[i].x, object.transformCommands[i].y);
+            elements.propertyTransformCommandList.appendChild(newElement);
+
+            newElement.addEventListener("click", function ()
+            {
+                OnSelectTransformCommand(index);
+            });
+
+            let inputFields = newElement.getElementsByClassName("transform-command-number-input");
+            for (let j = 0; j &lt; inputFields.length; ++j)
+            {
+                const index = i;
+                const key = inputFields[j].dataset.transformCommandKey;
+                const target = inputFields[j];
+                inputFields[j].addEventListener("keypress", function (keyEvent)
+                {
+                    if (keyEvent.key !== "Enter")
+                    {
+                        return;
+                    }
+                    let newObject = {};
+                    newObject[key] = target.value;
+                    OnChangeTransformCommand(index, newObject);
+                });
+            }
+        }
+
+        currentTransformCommands = object.transformCommands;
+    }
+
+    if ("transformCommandIndex" in data)
+    {
+        let children = elements.propertyTransformCommandList.children;
+        for (let i = 0; i &lt; children.length; ++i)
+        {
+            if (i == data.transformCommandIndex)
+            {
+                children[i].classList.add("selected-transform-command");
+            }
+            else
+            {
+                children[i].classList.remove("selected-transform-command");
+            }
+        }
+    }
+}
+
+/**
+ * setup listners for inter-process communication
+ * 
+ * @see module:ObjectEditor_Main#OnRefreshTree
+ * @see module:ObjectEditor_Main#OnRefreshSelectedContent
+ */
+function SetupIpcRenderer()
+{
+    ipcRenderer.on("refresh-objects", OnRefreshObjects);
+}
+
+//event listners//
+//////////////////
+
+/**
+ * called whenever a transform command changes.
+ * 
+ * will update the local copy based on the index and pass everything to the main process.
+ * 
+ * @param {Number} index integer value which is the offset in the array of transforms.
+ * @param {Object} values object containing all properties that should be updated in the given TransformCommand.
+ */
+function OnChangeTransformCommand(index, values)
+{
+    let transformCommandUpdates = {};
+    transformCommandUpdates[index] = values;
+    ipcRenderer.invoke("update-object", {
+        transformCommandUpdates: transformCommandUpdates
+    });
+}
+
+/**
+ * called whenever the name of the selected object should be changed.
+ * 
+ * this is directly passed to the main process.
+ */
+function OnChangeName()
+{
+    ipcRenderer.invoke("update-object", {
+        name: elements.propertyNameInput.value
+    });
+}
+
+/**
+ * called whenever an object has been selected.
+ * 
+ * the name is passed to the main process which will select the correct object.
+ * 
+ * @param {String} objectName unique name of the object
+ */
+function OnSelectObject(objectName)
+{
+    ipcRenderer.invoke("select-object", objectName);
+}
+
+function OnSelectTransformCommand(index)
+{
+    ipcRenderer.invoke("select-transform-command", {
+        index: index
+    });
+}
+
+/**
+ * called whenever a new TransformCommand object should be created.
+ * 
+ * the object is directly passed to the main process where it will be added to the active DrawObject.
+ * 
+ * @param {TransformCommand} command the commands that should be added
+ */
+function OnAddTransformCommand(command)
+{
+    ipcRenderer.invoke("add-transform-command", command);
+}
+
+/**
+ * setup listners based on user action
+ * 
+ * setup listners for:
+ * 
+ * - buttons to add TransformCommand objects.
+ * - enter on the name input field.
+ * 
+ * @param {HTMLElement} root root element for the object editor
+ */
+function SetupEventListeners(root)
+{
+    elements.propertyNameInput.addEventListener("keypress", function (keyEvent)
+    {
+        if (keyEvent.key !== "Enter")
+        {
+            return;
+        }
+        OnChangeName();
+    });
+
+    const transformCommandButtons = elements.propertyTransformAddControls.children;
+    for (let i = 0; i &lt; transformCommandButtons.length; ++i)
+    {
+        const type = transformCommandButtons[i].dataset.transformCommandType;
+        transformCommandButtons[i].addEventListener("click", function ()
+        {
+            OnAddTransformCommand(new TransformCommand(type, 0, 0));
+        });
+    }
+}
+
+/**
+ * run the initialization code for the object editor.
+ * 
+ * whenever an object editor tab is created this should be called.
+ * 
+ * @param {HTMLElement} root root element for the object editor
+ */
+export function Run(root)
+{
+    DropDown.OnScriptLoad(root);
+
+    ObjectEditorSvg.Init(root);
+
+    SetupFileVariables(root);
+    SetupIpcRenderer();
+    SetupEventListeners(root);
+
+}
+
+/**
+ * this module is in charge of the object editor
+ *
+ * @module ObjectEditor_Main
+ */</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Core.html">Core</a></li><li><a href="module-DrawObjectXmlhandler.html">DrawObjectXmlhandler</a></li><li><a href="module-ObjectEditor_Main.html">ObjectEditor_Main</a></li><li><a href="module-SvgManager.html">SvgManager</a></li></ul><h3>Classes</h3><ul><li><a href="DrawObject.html">DrawObject</a></li><li><a href="DrawObjectTree.html">DrawObjectTree</a></li><li><a href="Transform.html">Transform</a></li><li><a href="TransformCommand.html">TransformCommand</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Fri Apr 10 2020 12:04:30 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

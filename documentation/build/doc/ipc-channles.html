@@ -1,0 +1,100 @@
+<html lang="en"><head></head><body><h1>ipc channels</h1>
+<h2>overview</h2>
+<h3>front to back</h3>
+<p><table>
+    <tr>
+        <th>Channel Name</th>
+        <th>from</th>
+        <th>to</th>
+    <tr>
+    <tr>
+        <td>update-object</td>
+        <td>object-editor-main</td>
+        <td>draw-object-manager</td>
+    <tr>
+    <tr>
+        <td>select-object</td>
+        <td>object-editor-main, object-editor-svg</td>
+        <td>draw-object-manager</td>
+    <tr>
+    <tr>
+        <td>select-transform-command</td>
+        <td>object-editor-main</td>
+        <td>draw-object-manager</td>
+    <tr>
+    <tr>
+        <td>add-transform-command</td>
+        <td>object-editor-main</td>
+        <td>draw-object-manager</td>
+    <tr>
+    <tr>
+        <td>import-svg</td>
+        <td>import-svg-main</td>
+        <td>draw-object-manager</td>
+    <tr>
+</table></p>
+<h3>back to front</h3>
+<p><table>
+    <tr>
+        <th>Channel Name</th>
+        <th>from</th>
+        <th>to</th>
+    <tr>
+    <tr>
+        <td>refresh-objects</td>
+        <td>draw-object-manager</td>
+        <td>object-editor-main, object-editor-svg</td>
+    <tr>
+    <tr>
+        <td>add-svg-object</td>
+        <td>svg-manager</td>
+        <td>object-editor-svg</td>
+    <tr>
+    <tr>
+        <td>update-svg-object</td>
+        <td>svg-manager</td>
+        <td>object-editor-svg</td>
+    <tr>
+    <tr>
+        <td>remove-svg-object</td>
+        <td>svg-manager</td>
+        <td>object-editor-svg</td>
+    <tr>
+</table></p>
+<h2>channels - front to back</h2>
+<h3>update-object</h3>
+<p>keys:</p>
+<ul>
+<li>transformCommands</li>
+<li>name</li>
+</ul>
+<h3>select-transform-command</h3>
+<p>keys:</p>
+<ul>
+<li>index</li>
+</ul>
+<h2>channels - front to back</h2>
+<h3>refresh-objects</h3>
+<p>keys:</p>
+<ul>
+<li>objectTree</li>
+<li>selectedObject</li>
+<li>transformCommandIndex</li>
+</ul>
+<h3>add-svg-object</h3>
+<p>keys:</p>
+<ul>
+<li>name</li>
+<li>data</li>
+</ul>
+<h3>update-svg-object</h3>
+<p>keys:</p>
+<ul>
+<li>name</li>
+<li>data</li>
+</ul>
+<h3>remove-svg-object</h3>
+<p>keys:</p>
+<ul>
+<li>name</li>
+</ul></body></html>
