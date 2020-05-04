@@ -4,9 +4,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "npm compile sass",
+            "label": "npm compile all",
             "type": "npm",
-            "script": "compile:sass",
+            "script": "compile:all",
             "group": "build",
             "problemMatcher": []
         }

@@ -2,9 +2,9 @@
   "name": "gepetto",
   "version": "1.0.0",
   "description": "gepetto - SVG animation tool",
-  "main": "./src/back/main.js",
+  "main": "./out/src/back/main.js",
   "scripts": {
-    "prestart": "npm run compile:sass",
+    "prestart": "npm run compile:all",
     "start": "electron .",
     "test": "jest",
     "compile:html": "node ./node_scripts/compile-html.js",

@@ -1,6 +1,8 @@
 const { app, BrowserWindow } = require("electron");
 const { Init } = require("./draw-object-manager");
 
+const indexFilePath = `file://${__dirname}/../../index.html`;
+
 let window = null;
 
 function createWindow()
@@ -16,7 +18,7 @@ function createWindow()
         useContentSize: true
     });
 
-    window.loadFile('html/index.html');
+    window.loadURL(indexFilePath);
     window.maximize();
 
     Init(window);

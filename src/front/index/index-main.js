@@ -7,6 +7,8 @@ import * as ObjectEditorMain from "../object-editor/object-editor-main.js";
 const currentWindow = require('electron').remote.getCurrentWindow();
 const BrowserWindow = require("electron").remote.BrowserWindow;
 
+const svgImportFilePath = `file://${__dirname}/svg-import.html`;
+
 function ImportSvg()
 {
     let win = new BrowserWindow({
@@ -23,7 +25,8 @@ function ImportSvg()
         show: false
     });
 
-    win.loadFile("./html/svg-import.html");
+    console.log(svgImportFilePath);
+    win.loadURL(svgImportFilePath);
     win.once("ready-to-show", () =>
     {
         win.show();

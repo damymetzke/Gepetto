@@ -14,7 +14,7 @@
                 "."
             ],
             "outputCapture": "std",
-            "preLaunchTask": "npm compile sass"
+            "preLaunchTask": "npm compile all"
         }
     ]
 }

@@ -6,14 +6,33 @@ const { ConsoleColor } = require("./console-color");
 const outputColor = new ConsoleColor("LIGHT_MAGENTA", "BLACK");
 const fileColor = new ConsoleColor("LIGHT_YELLOW", "BLACK");
 
+const files = [
+    {
+        from: "./style/index/index.scss",
+        to: "./out/style/index.css"
+    },
+    {
+        from: "./style/svg-import/svg-import.scss",
+        to: "./out/style/svg-import.css"
+    }
+];
 
 outputColor.Log("Compiling Sass:");
-console.log(`*  ${fileColor.ApplyTo('"./style/style.scss"')} > ${fileColor.ApplyTo('"./out/style/style.css"')}`);
-Sass("./style/style.scss", (_error, result) =>
+
+if (!fs.existsSync("./out/style"))
 {
-    if (!fs.existsSync("./out/style"))
+    fs.mkdirSync("./out/style", { recursive: true });
+}
+
+files.forEach((file) =>
+{
+    console.log(`*  ${fileColor.ApplyTo(`"${file.from}"`)} > ${fileColor.ApplyTo(`"${file.to}"`)}`);
+});
+
+files.forEach((file) =>
+{
+    Sass(file.from, (_error, result) =>
     {
-        fs.mkdirSync("./out/style", { recursive: true });
-    }
-    fs.writeFileSync("./out/style/style.css", result.css);
+        fs.writeFileSync(file.to, result.css);
+    });
 });
