@@ -73,7 +73,7 @@ function MoveDragDisplay(transform, sizeX = 1, sizeY = 1)
     const lengthY = Math.sqrt(resultVectorY[0] * resultVectorY[0] + resultVectorY[1] * resultVectorY[1]);
     const adaptedTransform = new TransformCommand("SCALE", { x: 1 / lengthX, y: 1 / lengthY }).CreateMatrix().MultiplyMatrix(transform);
 
-    const transformString = `matrix(${adaptedTransform.matrix[0]} ${adaptedTransform.matrix[1]} ${adaptedTransform.matrix[2]} ${adaptedTransform.matrix[3]} ${adaptedTransform.matrix[4]} ${adaptedTransform.matrix[5]})`;
+    const transformString = `matrix(${transform.matrix[0]} ${transform.matrix[1]} ${transform.matrix[2]} ${transform.matrix[3]} ${transform.matrix[4]} ${transform.matrix[5]})`;
     dragDisplayElements.root.setAttribute("transform", transformString);
 }
 
@@ -94,6 +94,25 @@ function OnRefreshObjects(_event, data)
         {
             return;
         }
+
+        let beforeDrawObject = new DrawObject();
+        let afterDrawObject = new DrawObject();
+        {
+            beforeDrawObject.transformCommands = object.transformCommands.slice(0, currentTransformCommandIndex + 1);
+            afterDrawObject.transformCommands = object.transformCommands.slice(currentTransformCommandIndex + 1, object.transformCommands.length);
+
+            beforeDrawObject.OnTransformCommandsUpdate();
+            afterDrawObject.OnTransformCommandsUpdate();
+        }
+        const beforeMatrix = beforeDrawObject.relativeTransform;
+        const afterMatrix = afterDrawObject.relativeTransform;
+
+        const dragDisplayPositionMatrix = beforeMatrix.PositionMatrix();
+        const dragDisplayMatrix = dragDisplayPositionMatrix.Add(afterMatrix);
+
+        console.table(afterMatrix.matrix);
+
+        MoveDragDisplay(dragDisplayMatrix, 1, 1);
 
         MoveDragDisplay(currentTransform);
 
@@ -252,11 +271,16 @@ function SetupDragAndDrop()
             return;
         }
 
+        let beforeDrawObject = new DrawObject();
         let afterDrawObject = new DrawObject();
         {
+            beforeDrawObject.transformCommands = common.activeDrawObject.transformCommands.slice(0, common.transformCommandIndex + 1);
             afterDrawObject.transformCommands = common.activeDrawObject.transformCommands.slice(common.transformCommandIndex + 1, common.activeDrawObject.transformCommands.length);
+
+            beforeDrawObject.OnTransformCommandsUpdate();
             afterDrawObject.OnTransformCommandsUpdate();
         }
+        const beforeMatrix = beforeDrawObject.relativeTransform;
         const selectedMatrix = common.activeDrawObject.transformCommands[common.transformCommandIndex].CreateMatrix();
         const afterMatrix = afterDrawObject.relativeTransform;
 
@@ -272,7 +296,7 @@ function SetupDragAndDrop()
         const relativeTransformCommand = MouseUpdateCallback(relativeVector[0], relativeVector[1], selectedMatrix);
         const relativeTransform = relativeTransformCommand.CreateMatrix();
 
-        const dragDisplayPositionMatrix = common.activeDrawObject.relativeTransform.PositionMatrix();
+        const dragDisplayPositionMatrix = beforeMatrix.PositionMatrix();
         const dragDisplayMatrix = dragDisplayPositionMatrix.Add(relativeTransform).Add(afterMatrix);
 
         MoveDragDisplay(dragDisplayMatrix, 1, 1);
@@ -302,11 +326,16 @@ function SetupDragAndDrop()
     {
         if (MouseUpCallback !== null)
         {
+            let beforeDrawObject = new DrawObject();
             let afterDrawObject = new DrawObject();
             {
+                beforeDrawObject.transformCommands = common.activeDrawObject.transformCommands.slice(0, common.transformCommandIndex + 1);
                 afterDrawObject.transformCommands = common.activeDrawObject.transformCommands.slice(common.transformCommandIndex + 1, common.activeDrawObject.transformCommands.length);
+
+                beforeDrawObject.OnTransformCommandsUpdate();
                 afterDrawObject.OnTransformCommandsUpdate();
             }
+            const beforeMatrix = beforeDrawObject.relativeTransform;
             const afterMatrix = afterDrawObject.relativeTransform;
 
             const relativeScreenVector = [
