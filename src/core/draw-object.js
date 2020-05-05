@@ -123,10 +123,9 @@ class DrawObject
                     : this.parent.name
         );
 
-        this.transformCommands.forEach((command) =>
+        result.transformCommands = this.transformCommands.map((command, _index, _array) =>
         {
-            console.log("👌", result.transformCommands);
-            result.transformCommands.push(command.Clone());
+            return command.Clone();
         });
 
         return result;

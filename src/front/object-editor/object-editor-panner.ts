@@ -27,7 +27,6 @@ function OnZoom(root: SVGSVGElement, amount: number): void
     zoomLevel = Math.max(5, Math.min(20, zoomLevel));
     root.viewBox.baseVal.width = 2000.0 / zoomLevel;
     root.viewBox.baseVal.height = 2000.0 / zoomLevel;
-    console.log(zoomLevel);
 }
 
 export function Init(root: SVGSVGElement): void
