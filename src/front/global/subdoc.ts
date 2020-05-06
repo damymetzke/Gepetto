@@ -1,6 +1,6 @@
 const variableReplace = /<\$((.*)="(.*)"|[^="].*)\$>/g;
 const subdocTag = /^\s*<!subdoc([^]*?)>/g;
-const sidReplace = /<([^>\n]*)sid="(.*?)"([^<\n]*)>/g;
+const sidReplace = /<([^>]*)sid="(.*?)"([^<]*)>/g;
 
 const ParseSubdocError = "<p style='color:red'>oops, it seems something went wrong parsing a subdoc!</p>";
 

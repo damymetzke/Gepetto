@@ -1,6 +1,8 @@
 import * as DropDown from "../global/dropdown.js";
 import { SubDocHandler } from "../global/subdoc.js";
 
+import * as Refresh from "./object-editor-alt-refresh.js";
+
 const { TransformCommand } = require("electron").remote.require("../core/core");
 
 const { ipcRenderer } = require("electron");
@@ -48,7 +50,9 @@ function SetupEventListners(root: SubDocHandler)
 
 export function Init(root: SubDocHandler)
 {
-    DropDown.OnScriptLoad(root);
+    DropDown.OnScriptLoad(root.root);
 
     SetupEventListners(root);
+
+    Refresh.Init(root);
 }

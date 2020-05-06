@@ -4,6 +4,7 @@ import * as ContentLoader from "../global/content-loader.js";
 import { SubDocHandler } from "../global/subdoc.js";
 
 import * as ObjectEditorMain from "../object-editor/object-editor-main.js";
+import * as ObjectEditorAltMain from "../object-editor-alt/object-editor-alt-main.js";
 
 const currentWindow = require('electron').remote.getCurrentWindow();
 const BrowserWindow = require("electron").remote.BrowserWindow;
@@ -53,6 +54,7 @@ function Run()
         let raw = client.response;
         let subdoc = new SubDocHandler(raw);
         document.getElementById("main").children[1].appendChild(subdoc.root);
+        ObjectEditorAltMain.Init(subdoc);
 
     };
 
