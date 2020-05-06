@@ -35,3 +35,42 @@
         }
     }
 }
+
+//alt
+section[data-generated-sid="text-tree"]
+{
+    background-color: $light-object-editor;
+
+    grid-area: text;
+
+    border-right: 5px $divider-object-editor solid;
+
+    ol
+    {
+        list-style: none;
+        color: $dark;
+        > li
+        {
+            user-select: none;
+            margin: 0 0 0 15px;
+
+            &:before
+            {
+                content: "";
+                display: inline-block;
+                width: 2px;
+                height: 12px;
+                background-color: $dark;
+                margin-right: 10px;
+                margin: 0 10px 0 0;
+
+                transform: scaleY(1.5);
+            }
+
+            &.selected-element
+            {
+                color: red;
+            }
+        }
+    }
+}

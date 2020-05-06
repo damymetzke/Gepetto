@@ -39,3 +39,37 @@
     }
 
 }
+
+//alt
+
+section[data-generated-sid="main"]
+{
+    background-color: white;
+
+    grid-area: main;
+
+    .selected-svg-object
+    {
+        outline: solid 3px blue;
+        outline-offset: 5px;
+    }
+
+    .drag-display
+    {
+        > *
+        {
+            display: none;
+        }
+
+    }
+
+    
+}
+
+section[data-generated-sid="main--svg"]
+{
+    @include drag-display-active(translate);
+    @include drag-display-active(scale);
+    @include drag-display-active(rotate);
+    @include drag-display-active(shear);
+}
