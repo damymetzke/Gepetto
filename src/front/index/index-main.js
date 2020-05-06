@@ -1,6 +1,7 @@
 import * as Dropdown from "../global/dropdown.js";
 import * as Tabs from "../global/tabs.js";
 import * as ContentLoader from "../global/content-loader.js";
+import { SubDocHandler } from "../global/subdoc.js";
 
 import * as ObjectEditorMain from "../object-editor/object-editor-main.js";
 
@@ -44,6 +45,18 @@ function Run()
     ContentLoader.LoadContent(new ContentLoader.Content(ObjectEditorMain.Run, "./object-editor.html"), target);
 
     document.getElementById("toolbar--buttons--import-object").addEventListener("click", ImportSvg);
+
+    let client = new XMLHttpRequest();
+    client.open('GET', "./object-editor-alt.html");
+    client.onload = function ()
+    {
+        let raw = client.response;
+        let subdoc = new SubDocHandler(raw);
+        document.getElementById("main").children[1].appendChild(subdoc.root);
+
+    };
+
+    client.send();
 }
 
 Run();
