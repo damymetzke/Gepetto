@@ -17,6 +17,15 @@ function OnSelectObject(_event: MouseEvent, name: string)
     ipcRenderer.invoke("select-object", name);
 }
 
+function OnReparentObject(root: SubDocHandler, name: string)
+{
+    ipcRenderer.invoke("reparent-object", {
+        newParent: name
+    });
+
+    root.GetElementBySid("text-tree").dataset.callbackMode = "select";
+}
+
 const refreshFunctions: { [key: string]: RefreshFunctionType; } = {
     objectTree: (root: SubDocHandler, data: {}) =>
     {
@@ -34,6 +43,7 @@ const refreshFunctions: { [key: string]: RefreshFunctionType; } = {
             newElement.addEventListener("click", (event) =>
             {
                 EnableCallback(root.GetElementBySid("text-tree"), "select", () => { OnSelectObject(event, name); });
+                EnableCallback(root.GetElementBySid("text-tree"), "reparent", () => { OnReparentObject(root, name); });
             });
             treeList.appendChild(newElement);
         });
