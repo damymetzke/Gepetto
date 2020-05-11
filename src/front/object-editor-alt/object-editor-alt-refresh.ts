@@ -65,7 +65,7 @@ const refreshFunctions: { [key: string]: RefreshFunctionType; } = {
         (<HTMLInputElement>root.GetElementBySid("property--name-input")).value = data.name;
         (<HTMLOListElement>root.GetElementBySid("property--transform-list")).innerHTML = "";
 
-        Array.from(data.transformCommands).forEach((command) =>
+        Array.from(data.transformCommands).forEach((command, index) =>
         {
             console.log("🚁", command);
         });
