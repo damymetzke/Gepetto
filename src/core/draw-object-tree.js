@@ -60,7 +60,7 @@ class DrawObjectTree
 
         for (let i = 0; i < object.rootObjects.length; ++i)
         {
-            this.rootObjects.push(this.objects[object.rootObjects[i]]);
+            this.rootObjects.push(this.objects[object.rootObjects[i].name]);
         }
 
         //todo: change names into objects
