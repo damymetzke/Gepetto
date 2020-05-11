@@ -1,4 +1,5 @@
 import { SubDocHandler } from "../global/subdoc.js";
+import { EnableCallback } from "../global/callback-util.js";
 const { ipcRenderer } = require("electron");
 
 const { DrawObjectTree } = require("electron").remote.require("../core/draw-object-tree.js");
@@ -11,7 +12,7 @@ interface IpcRefreshObjects
 }
 type RefreshFunctionType = (root: SubDocHandler, data: any) => void;
 
-function OnSelectObject(event: MouseEvent, name: string)
+function OnSelectObject(_event: MouseEvent, name: string)
 {
     ipcRenderer.invoke("select-object", name);
 }
@@ -30,7 +31,10 @@ const refreshFunctions: { [key: string]: RefreshFunctionType; } = {
             let newElement = document.createElement("li");
             newElement.innerText = name;
             newElement.dataset.drawObjectName = name;
-            newElement.addEventListener("click", (event) => { OnSelectObject(event, name); });
+            newElement.addEventListener("click", (event) =>
+            {
+                EnableCallback(root.GetElementBySid("text-tree"), "select", () => { OnSelectObject(event, name); });
+            });
             treeList.appendChild(newElement);
         });
     },

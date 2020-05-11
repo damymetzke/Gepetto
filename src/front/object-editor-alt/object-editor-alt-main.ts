@@ -35,6 +35,10 @@ const eventListners = {
         ipcRenderer.invoke("add-transform-command-alt", <IpcAddTransformCommand>{
             command: template.ToPureObject()
         });
+    },
+    Reparent: (root: SubDocHandler) =>
+    {
+        root.GetElementBySid("text-tree").dataset.callbackMode = "reparent";
     }
 };
 
@@ -46,6 +50,8 @@ function SetupEventListners(root: SubDocHandler)
         const type = child.dataset.transformCommandType;
         child.addEventListener("click", (event: MouseEvent) => { eventListners.OnAddTransformCommand(event, new TransformCommand(type)); });
     });
+
+    root.GetElementBySid("property--reparent").addEventListener("click", () => { eventListners.Reparent(root); });
 }
 
 export function Init(root: SubDocHandler)

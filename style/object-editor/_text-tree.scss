@@ -45,8 +45,39 @@ section[data-generated-sid="text-tree"]
 
     border-right: 5px $divider-object-editor solid;
 
+    &[data-callback-mode="reparent"] p[data-generated-sid="text-tree--header--reparent"]
+    {
+        display: block;
+    }
+
+    &[data-callback-mode="select"] p[data-generated-sid="text-tree--header--select"]
+    {
+        display: block;
+    }
+    
+    div[data-generated-sid="text-tree--header"]
+    {
+        height: 50px;
+        font-size: 1.5rem;
+        font-weight: bold;
+
+        border-bottom: 5px $divider-object-editor solid;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+    }
+
+    p[data-generated-sid="text-tree--header--select"],
+    p[data-generated-sid="text-tree--header--reparent"]
+    {
+        display: none;
+    }
+
     ol
     {
+
         list-style: none;
         color: $dark;
         > li
