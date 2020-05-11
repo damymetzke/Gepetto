@@ -268,7 +268,7 @@ function OnAddTransformCommand(_event, command)
     }
     if (!("type" in command))
     {
-
+        return;
     }
     activeObject.AddTransformCommand(new TransformCommand(command.type));
     activeObject.OnTransformCommandsUpdate();
@@ -282,6 +282,11 @@ function OnAddTransformCommand(_event, command)
     svgManager.UpdateSvgObject(activeObject.name, {
         transform: activeObject.WorldTransform()
     });
+}
+
+function OnAddTransformCommandAlt(event, data)
+{
+    OnAddTransformCommand(event, data.command);
 }
 
 function OnRetrieveGhost()
@@ -301,6 +306,7 @@ function SetupIpcMain()
     ipcMain.handle("update-object", OnUpdateObject);
     ipcMain.handle("update-transform-command", OnUpdateTransformCommand);
     ipcMain.handle("add-transform-command", OnAddTransformCommand);
+    ipcMain.handle("add-transform-command-alt", OnAddTransformCommandAlt);
     ipcMain.handle("retrieve-ghost", OnRetrieveGhost);
 }
 
