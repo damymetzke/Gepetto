@@ -13,7 +13,7 @@ type RefreshFunctionType = (root: SubDocHandler, data: any) => void;
 
 function OnSelectObject(event: MouseEvent, name: string)
 {
-
+    ipcRenderer.invoke("select-object", name);
 }
 
 const refreshFunctions: { [key: string]: RefreshFunctionType; } = {
@@ -34,8 +34,41 @@ const refreshFunctions: { [key: string]: RefreshFunctionType; } = {
             treeList.appendChild(newElement);
         });
     },
-    selectedObject: (root: SubDocHandler, data: {}) =>
+    selectedObject: (root: SubDocHandler, data: any) =>
     {
+        if (data === null)
+        {
+            root.GetElementBySid("body").classList.add("hide-property");
+            return;
+        }
+        root.GetElementBySid("body").classList.remove("hide-property");
+
+        function RemoveSelectedExceptFor(element: Element, name: string)
+        {
+            Array.from(element.children).forEach((child: HTMLElement | SVGElement) =>
+            {
+                if (child.dataset.drawObjectName === name)
+                {
+                    child.classList.add("selected-element");
+                }
+                else
+                {
+                    child.classList.remove("selected-element");
+                }
+
+                RemoveSelectedExceptFor(child, name);
+            });
+        }
+        RemoveSelectedExceptFor(root.GetElementBySid("text-tree--list"), data.name);
+
+        (<HTMLHeadingElement>root.GetElementBySid("property--name")).innerText = data.name;
+        (<HTMLInputElement>root.GetElementBySid("property--name-input")).value = data.name;
+        (<HTMLOListElement>root.GetElementBySid("property--transform-list")).innerHTML = "";
+
+        Array.from(data.transformCommands).forEach((command) =>
+        {
+            console.log("🚁", command);
+        });
 
     },
     transformCommandIndex: (root: SubDocHandler, data: number) =>
