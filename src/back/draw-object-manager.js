@@ -141,6 +141,46 @@ function OnSelectObject(_event, data)
     }
 }
 
+function OnReparentObject(_event, data)
+{
+    if (!("newParent" in data))
+    {
+        return;
+    }
+
+    function FindCircle(object, expected)
+    {
+        if (object.name === expected)
+        {
+            return true;
+        }
+
+        if (object.parent === null)
+        {
+            return false;
+        }
+
+        return FindCircle(object.parent);
+    }
+
+    if (FindCircle(objectTree.objects[data.newParent], activeObject.name))
+    {
+        return;
+    }
+
+    if (activeObject.parent === null)
+    {
+        objectTree.rootObjects.splice(objectTree.rootObjects.indexOf(activeObject), 1);
+    }
+
+    activeObject.parent = objectTree.objects[data.newParent];
+
+    window.webContents.send("refresh-objects", {
+        activeObject: activeObject.ToPureObject(),
+        objectTree: objectTree.ToPureObject()
+    });
+}
+
 function OnSelectTransformCommand(_event, data)
 {
     if (!("index" in data))
@@ -302,6 +342,7 @@ function SetupIpcMain()
 {
     ipcMain.handle("import-svg", OnImportSvg);
     ipcMain.handle("select-object", OnSelectObject);
+    ipcMain.handle("reparent-object", OnReparentObject);
     ipcMain.handle("select-transform-command", OnSelectTransformCommand);
     ipcMain.handle("update-object", OnUpdateObject);
     ipcMain.handle("update-transform-command", OnUpdateTransformCommand);

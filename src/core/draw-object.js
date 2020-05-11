@@ -87,7 +87,7 @@ class DrawObject
     {
         let result = {
             name: this.name,
-            parent: this.parent === null ? null : parent.name,
+            parent: this.parent === null ? null : this.parent.name,
             transformCommands: []
         };
 
