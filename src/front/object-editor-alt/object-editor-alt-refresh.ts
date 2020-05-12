@@ -34,6 +34,31 @@ const refreshFunctions: { [key: string]: RefreshFunctionType; } = {
 
         const treeList = root.GetElementBySid("text-tree--list");
         treeList.innerHTML = "";
+        function DrawChildren(child: any)
+        {
+            if (child.children.length === 0)
+            {
+                return;
+            }
+
+            let newList = document.createElement("ol");
+            child.AppendChild(newList);
+
+            child.children.forEach((subObject) =>
+            {
+                const name: string = subObject.name;
+                let newElement = document.createElement("li");
+                newElement.innerText = name;
+                newElement.dataset.drawObjectName = name;
+                newElement.addEventListener("click", (event) =>
+                {
+                    EnableCallback(root.GetElementBySid("text-tree"), "select", () => { OnSelectObject(event, name); });
+                    EnableCallback(root.GetElementBySid("text-tree"), "reparent", () => { OnReparentObject(root, name); });
+                });
+                newList.appendChild(newElement);
+                DrawChildren(subObject);
+            });
+        }
         tree.rootObjects.forEach((subObject: any /*todo: set type to drawobject*/) =>
         {
             const name: string = subObject.name;
@@ -46,6 +71,7 @@ const refreshFunctions: { [key: string]: RefreshFunctionType; } = {
                 EnableCallback(root.GetElementBySid("text-tree"), "reparent", () => { OnReparentObject(root, name); });
             });
             treeList.appendChild(newElement);
+            DrawChildren(subObject);
         });
     },
     selectedObject: (root: SubDocHandler, data: any) =>

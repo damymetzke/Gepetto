@@ -60,10 +60,22 @@ class DrawObjectTree
 
         for (let i = 0; i < object.rootObjects.length; ++i)
         {
+            console.log(this);
             this.rootObjects.push(this.objects[object.rootObjects[i].name]);
         }
 
         //todo: change names into objects
+        for (let key in this.objects)
+        {
+            if (this.objects[key].parent === null)
+            {
+                continue;
+            }
+
+            const parentName = this.objects[key].parent;
+            this.objects[key].parent = this.objects[parentName];
+            this.objects[key].parent.children.push(this.objects[key]);
+        }
     }
 
     constructor(rootObjects = [])

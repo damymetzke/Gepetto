@@ -10,7 +10,8 @@ const { TransformCommand } = require("./transform-command");
 class DrawObject
 {
     name;
-    parent;
+    _parent = null;
+    children = [];
     _relativeTransform = new Transform([1, 0, 0, 1, 0, 0]);
     _dirty = false;
     transformCommands = [];
@@ -21,6 +22,36 @@ class DrawObject
     //         this.dirty = true;
     //     }
     // });
+
+    set parent(value)
+    {
+        if (this._parent !== null)
+        {
+            if (typeof this._parent === "string")
+            {
+                console.warn("⚠ setter for 'DrawObject.parent' was called, however 'DrawObject._parent' is of type string");
+            }
+            else
+            {
+                this.parent.children.splice(this.parent.indexOf(this), 1);
+            }
+        }
+
+        if (value !== null)
+        {
+            if (typeof value === "object")
+            {
+                value.children.push(this);
+            }
+        }
+
+        this._parent = value;
+    }
+
+    get parent()
+    {
+        return this._parent;
+    }
 
     AddTransformCommand(command)
     {
@@ -79,6 +110,12 @@ class DrawObject
         if (this.parent === null)
         {
             return this.relativeTransform;
+        }
+        if (typeof this.parent === "string")
+        {
+            console.warn("⚠ tried to call 'DrawObject.WorldTransform' with the parent set as a string");
+            return this.relativeTransform;
+
         }
         return this.parent.relativeTransform.MultiplyMatrix(this.relativeTransform);
     }

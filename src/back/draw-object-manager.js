@@ -143,6 +143,7 @@ function OnSelectObject(_event, data)
 
 function OnReparentObject(_event, data)
 {
+    console.log(data);
     if (!("newParent" in data))
     {
         return;
@@ -176,7 +177,7 @@ function OnReparentObject(_event, data)
     activeObject.parent = objectTree.objects[data.newParent];
 
     window.webContents.send("refresh-objects", {
-        activeObject: activeObject.ToPureObject(),
+        selectedObject: activeObject.ToPureObject(),
         objectTree: objectTree.ToPureObject()
     });
 }
