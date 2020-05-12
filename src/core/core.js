@@ -1,4 +1,4 @@
-const Transform = require("./transform");
+const { Transform } = require("./transform");
 const { TransformCommand } = require("./transform-command");
 const { DrawObject } = require("./draw-object");
 const { DrawObjectTree } = require("./draw-object-tree");

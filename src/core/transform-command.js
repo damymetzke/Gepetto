@@ -1,4 +1,4 @@
-const Transform = require("./transform");
+const { Transform } = require("./transform");
 
 /**
  * a single command that is able to build a transformation matrix.

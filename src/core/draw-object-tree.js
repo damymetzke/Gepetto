@@ -85,4 +85,3 @@ class DrawObjectTree
 }
 
 module.exports.DrawObjectTree = DrawObjectTree;
-module.exports.DrawObject = DrawObject;

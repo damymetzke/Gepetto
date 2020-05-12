@@ -1,4 +1,4 @@
-const Transform = require("./transform");
+const { Transform } = require("./transform");
 const { TransformCommand } = require("./transform-command");
 
 /**
@@ -175,5 +175,4 @@ class DrawObject
     }
 }
 
-module.exports.Transform = Transform;
 module.exports.DrawObject = DrawObject;
