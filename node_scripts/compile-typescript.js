@@ -1,5 +1,6 @@
 const typescript = require("typescript");
 const fs = require("fs");
+const Color = require("./color.js");
 
 const ROOT = "./src/";
 
@@ -75,10 +76,13 @@ function Run()
         {
             let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
             let message = typescript.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
-            console.log(`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
+            Color.Log(`(file){${diagnostic.file.fileName}} (L:${line + 1}, C:${character + 1}): (message){${message}}`, [], {
+                file: Color.FILE,
+                message: Color.WARN
+            });
         } else
         {
-            console.log(typescript.flattenDiagnosticMessageText(diagnostic.messageText, "\n"));
+            Color.Log(typescript.flattenDiagnosticMessageText(diagnostic.messageText, "\n"), Color.WARN);
         }
     });
 }

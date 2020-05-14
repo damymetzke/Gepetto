@@ -3,6 +3,8 @@ const fs = require("fs");
 
 const { ConsoleColor } = require("./console-color");
 
+const Color = require("./color");
+
 const outputColor = new ConsoleColor("LIGHT_MAGENTA", "BLACK");
 const fileColor = new ConsoleColor("LIGHT_YELLOW", "BLACK");
 
@@ -17,7 +19,10 @@ const files = [
     }
 ];
 
-outputColor.Log("Compiling Sass:");
+Color.Log(`(header){Compiling Sass:}${files.reduce((accumelator, file) => { return `${accumelator}\n*  (file){"${file.from}"} > (file){"${file.to}"}`; }, "")}`, [], {
+    header: Color.HEADER,
+    file: Color.FILE
+});
 
 if (!fs.existsSync("./out/style"))
 {
@@ -26,13 +31,8 @@ if (!fs.existsSync("./out/style"))
 
 files.forEach((file) =>
 {
-    console.log(`*  ${fileColor.ApplyTo(`"${file.from}"`)} > ${fileColor.ApplyTo(`"${file.to}"`)}`);
-});
-
-files.forEach((file) =>
-{
     Sass(file.from, (_error, result) =>
     {
-        fs.writeFileSync(file.to, result.css);
+        fs.writeFile(file.to, result.css, () => { });
     });
 });

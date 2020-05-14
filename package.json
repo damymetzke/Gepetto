@@ -9,7 +9,7 @@
     "test": "jest",
     "compile:html": "node ./node_scripts/compile-html.js",
     "compile:sass": "node ./node_scripts/compile-sass.js",
-    "compile:typescript": "./node_modules/.bin/tsc -p ./",
+    "compile:typescript": "node ./node_scripts/compile-typescript.js",
     "compile:all": "node ./node_scripts/compile-all.js",
     "build:docs": "python ./documentation/build_docs.py"
   },
