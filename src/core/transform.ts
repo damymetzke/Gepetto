@@ -1,7 +1,7 @@
 type Matrix = [number, number, number, number, number, number];
 type Vector = [number, number];
 
-class Transform
+export class Transform
 {
     matrix: Matrix = [1, 0, 0, 1, 0, 0];
 
@@ -105,5 +105,3 @@ class Transform
         this.matrix = matrix;
     }
 }
-
-module.exports.Transform = Transform;
