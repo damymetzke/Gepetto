@@ -15,7 +15,7 @@ interface TransformCommandField
     y?: number;
     rotation?: number;
 }
-interface TransformCommandPureObject
+export interface TransformCommandPureObject
 {
     type: number,
     fields: TransformCommandField;
@@ -122,10 +122,11 @@ export class TransformCommand
         };
     }
 
-    FromPureObject(object: TransformCommandPureObject): void
+    FromPureObject(object: TransformCommandPureObject): TransformCommand
     {
         this.typeIndex = object.type;
         this.fields = { ...object.fields };
+        return this;
     }
 
     Clone(): TransformCommand
@@ -187,7 +188,7 @@ export class TransformCommand
         this.fields = { ...addRelativeMap[TransformCommandType[this.typeIndex]](this.fields, other.fields) };
     }
 
-    constructor(type: string | TransformCommandType, fields: TransformCommandField)
+    constructor(type: string | TransformCommandType = "TRANSLATE", fields: TransformCommandField = {})
     {
         const typeIndex = (typeof type === "string") ? TransformCommandType[type] : type;
         this.typeIndex = typeIndex;
