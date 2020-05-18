@@ -6,12 +6,13 @@ const COLOR_OUTPUT_HEADER = [Color.EFFECTS["BG_BRIGHT_MAGENTA"], Color.EFFECTS["
 function RunNpmScript(script)
 {
     const scriptName = script.toUpperCase().replace(":", "_");
-    exec(`npm run ${script}`, (_error, stdout, _stderr) =>
+    return new Promise((resolve, reject) =>
     {
-        Color.Log(`(head){${scriptName}_OUTPUT_START}
-${stdout}
-(head){${scriptName}_OUTPUT_END}`, [], {
-            head: COLOR_OUTPUT_HEADER
+        exec(`npm run ${script}`, (_error, stdout, _stderr) =>
+        {
+            resolve(`(head){${scriptName}_OUTPUT_START}` +
+                `${stdout}` +
+                `(head){${scriptName}_OUTPUT_END}`);
         });
     });
 }
@@ -31,7 +32,14 @@ function Run()
         script: Color.FILE
     });
 
-    scriptArguments.forEach(script => RunNpmScript(script));
+    const promises = scriptArguments.reduce((accumenlator, script) => [...accumenlator, RunNpmScript(script)], []);
+
+    Promise.all(promises).then(values =>
+    {
+        Color.Log(values.reduce((accumelator, out) => `${accumelator}${out}\n\n`, ""), [], {
+            head: COLOR_OUTPUT_HEADER
+        });
+    });
 }
 
 Run();
