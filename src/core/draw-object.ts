@@ -1,7 +1,7 @@
 import { Transform } from "./transform";
 import { TransformCommand, TransformCommandPureObject } from "./transform-command";
 
-interface DrawObjectPure
+export interface DrawObjectPure
 {
     name: string;
     parent: string | null;
@@ -96,12 +96,14 @@ export class DrawObject
         };
     }
 
-    FromPureObject(object: DrawObjectPure)
+    FromPureObject(object: DrawObjectPure): DrawObject
     {
         this.name = object.name;
         this.parent = object.parent;
         this._transformDirty = true;
         this.transformCommands = object.transformCommands.map(command => new TransformCommand().FromPureObject(command));
+
+        return this;
     }
 
     Clone(recursive: boolean = false): DrawObject
@@ -127,7 +129,7 @@ export class DrawObject
         );
     }
 
-    constructor(name: string, parent: string | DrawObject = null, transformCommands: TransformCommand[] = [])
+    constructor(name: string = "", parent: string | DrawObject = null, transformCommands: TransformCommand[] = [])
     {
         this.name = name;
         this.parent = parent;
