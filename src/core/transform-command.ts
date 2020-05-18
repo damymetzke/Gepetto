@@ -15,7 +15,7 @@ interface TransformCommandField
     y?: number;
     rotation?: number;
 }
-export interface TransformCommandPureObject
+export interface TransformCommandPure
 {
     type: number,
     fields: TransformCommandField;
@@ -114,7 +114,7 @@ export class TransformCommand
         return this.matrixFunctions[TransformCommandType[this.typeIndex]];
     }
 
-    ToPureObject(): TransformCommandPureObject
+    ToPureObject(): TransformCommandPure
     {
         return {
             type: this.typeIndex,
@@ -122,7 +122,7 @@ export class TransformCommand
         };
     }
 
-    FromPureObject(object: TransformCommandPureObject): TransformCommand
+    FromPureObject(object: TransformCommandPure): TransformCommand
     {
         this.typeIndex = object.type;
         this.fields = { ...object.fields };

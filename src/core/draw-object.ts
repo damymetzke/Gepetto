@@ -1,11 +1,11 @@
 import { Transform } from "./transform";
-import { TransformCommand, TransformCommandPureObject } from "./transform-command";
+import { TransformCommand, TransformCommandPure } from "./transform-command";
 
 export interface DrawObjectPure
 {
     name: string;
     parent: string | null;
-    transformCommands: TransformCommandPureObject[];
+    transformCommands: TransformCommandPure[];
 }
 
 export class DrawObject
