@@ -1,5 +1,6 @@
 import { SubDocHandler } from "../global/subdoc.js";
 import { EnableCallback } from "../global/callback-util.js";
+import { IpcRendererEvent } from "electron";
 const { ipcRenderer } = require("electron");
 
 const { DrawObjectTree } = require("electron").remote.require("../core/draw-object-tree.js");
@@ -117,7 +118,7 @@ const refreshFunctions: { [key: string]: RefreshFunctionType; } = {
     }
 };
 
-function OnRefreshObjects(root: SubDocHandler, event: Electron.IpcRendererEvent, data: IpcRefreshObjects)
+function OnRefreshObjects(root: SubDocHandler, event: IpcRendererEvent, data: IpcRefreshObjects)
 {
     console.log(data);
     for (let key in refreshFunctions)

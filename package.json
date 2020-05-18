@@ -13,7 +13,7 @@
     "compile:all": "node ./node_scripts/compile-all.js",
     "build:docs": "python ./documentation/build_docs.py",
     "build:docs:jsdoc": "./node_modules/.bin/jsdoc -c ./jsdoc.config.js",
-    "build:docs:typedoc": "./node_modules/.bin/typedoc --out ./documentation/build/typedoc-output/ ./src/",
+    "build:docs:typedoc": "./node_modules/.bin/typedoc ./src/ --out ./documentation/build/typedoc-output/ --tsconfig ./config/typedoc.ts.json",
     "clean": "node ./node_scripts/clean.js"
   },
   "repository": {
