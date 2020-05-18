@@ -11,7 +11,9 @@
     "compile:sass": "node ./node_scripts/compile-sass.js",
     "compile:typescript": "node ./node_scripts/compile-typescript.js",
     "compile:all": "node ./node_scripts/compile-all.js",
-    "build:docs": "python ./documentation/build_docs.py"
+    "build:docs": "python ./documentation/build_docs.py",
+    "build:docs:jsdoc": "./node_modules/.bin/jsdoc -c ./jsdoc.config.js",
+    "build:docs:typedoc": "./node_modules/.bin/typedoc --out ./documentation/build/typedoc-output/ ./src/"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
     "jest": "^25.2.7",
     "jsdoc": "^3.6.3",
     "npm-sass": "^2.3.0",
+    "typedoc": "^0.17.7",
     "typescript": "^3.8.3"
   },
   "dependencies": {

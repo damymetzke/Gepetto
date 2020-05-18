@@ -5,9 +5,9 @@ module.exports = {
     recurseDepth: 10,
     source: {
         include: [
-            "./scripts/"
+            "./src/"
         ],
-        includePattern: "^.+.js(doc|x)?$"
+        includePattern: "^.+\\.(js|ts)$"
     },
     sourceType: "module",
     opts: {
