@@ -53,7 +53,7 @@ const ERROR = [EFFECTS["FG_BRIGHT_RED"]];
 const FILE = [EFFECTS["FG_BRIGHT_CYAN"], EFFECTS["UNDERLINE"]];
 const HEADER = [EFFECTS["FG_BRIGHT_MAGENTA"], EFFECTS["BOLD"], EFFECTS["UNDERLINE"]];
 
-function Log(text, globalColor = [], inlineColors = {})
+function Format(text, globalColor = [], inlineColors = {})
 {
     const before = globalColor.reduce((accumelator, effect) =>
     {
@@ -75,10 +75,17 @@ function Log(text, globalColor = [], inlineColors = {})
         return `${inlineBefore}${inlineText}\x1b[${EFFECTS["RESET"]}m${before}`;
     });
 
-    console.log(`${before}${converted}\x1b[${EFFECTS["RESET"]}m`);
+    return `${before}${converted}\x1b[${EFFECTS["RESET"]}m`;
 }
 
+function Log(text, globalColor = [], inlineColors = {})
+{
+    console.log(Format(text, globalColor, inlineColors));
+}
+
+module.exports.Format = Format;
 module.exports.Log = Log;
+
 module.exports.EFFECTS = EFFECTS;
 
 module.exports.WARN = WARN;
