@@ -18,7 +18,10 @@ const GLOBAL_OPTIONS = {
     "outDir": "./out/src/",
     "target": typescript.ScriptTarget.ES2019,
     "allowJs": true,
-    "moduleResolution": typescript.ModuleResolutionKind.NodeJs
+    "moduleResolution": typescript.ModuleResolutionKind.NodeJs,
+    "sourceMap": true,
+    "tsBuildInfoFile": "./saved/typescript-build-info.json",
+    "incremental": true
 };
 
 const TARGET_OPTIONS = {
@@ -40,7 +43,6 @@ function WalkFiles(relative)
         {
             return [...accumelator, ...WalkFiles(relative + file + "/")];
         }
-
         return [...accumelator, relative + file];
     }, []);
 }
@@ -60,8 +62,8 @@ function Run()
     const es6Input = GetInput(ES6_SOURCES);
     const nodeInput = GetInput(NODE_SOURCES);
 
-    let nodeProgram = typescript.createProgram(nodeInput, { ...GLOBAL_OPTIONS, ...TARGET_OPTIONS["NODE"] });
-    let es6Program = typescript.createProgram(es6Input, { ...GLOBAL_OPTIONS, ...TARGET_OPTIONS["ES6"] });
+    let nodeProgram = typescript.createIncrementalProgram({ rootNames: nodeInput, options: { ...GLOBAL_OPTIONS, ...TARGET_OPTIONS["NODE"] } });
+    let es6Program = typescript.createIncrementalProgram({ rootNames: es6Input, options: { ...GLOBAL_OPTIONS, ...TARGET_OPTIONS["ES6"] } });
 
     let allDiagnostics = [
         ...typescript.getPreEmitDiagnostics(nodeProgram),
@@ -85,6 +87,7 @@ function Run()
             Color.Log(typescript.flattenDiagnosticMessageText(diagnostic.messageText, "\n"), Color.WARN);
         }
     });
+
 }
 
 Run();
