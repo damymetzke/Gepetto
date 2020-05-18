@@ -13,7 +13,8 @@
     "compile:all": "node ./node_scripts/compile-all.js",
     "build:docs": "python ./documentation/build_docs.py",
     "build:docs:jsdoc": "./node_modules/.bin/jsdoc -c ./jsdoc.config.js",
-    "build:docs:typedoc": "./node_modules/.bin/typedoc --out ./documentation/build/typedoc-output/ ./src/"
+    "build:docs:typedoc": "./node_modules/.bin/typedoc --out ./documentation/build/typedoc-output/ ./src/",
+    "clean": "node ./node_scripts/clean.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/types": "^7.9.6",
+    "del": "^5.1.0",
     "jest": "^25.2.7",
     "jsdoc": "^3.6.3",
     "npm-sass": "^2.3.0",
