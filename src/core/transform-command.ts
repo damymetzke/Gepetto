@@ -157,7 +157,7 @@ export class TransformCommand
             },
             "ROTATE": (first, second) =>
             {
-                let result = this.fields.rotation + other.fields.rotation;
+                let result = first.rotation + second.rotation;
                 while (result < 0)
                 {
                     result += 360;

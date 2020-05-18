@@ -15,7 +15,6 @@ const NODE_SOURCES = [
 ];
 
 const GLOBAL_OPTIONS = {
-    "outDir": "./out/src/",
     "target": typescript.ScriptTarget.ES2019,
     "allowJs": true,
     "moduleResolution": typescript.ModuleResolutionKind.NodeJs,
@@ -26,9 +25,11 @@ const GLOBAL_OPTIONS = {
 
 const TARGET_OPTIONS = {
     "ES6": {
+        "outDir": "./out/src/front",
         "module": typescript.ModuleKind.ES2019
     },
     "NODE": {
+        "outDir": "./out/src/",
         "module": typescript.ModuleKind.CommonJS
     }
 };
