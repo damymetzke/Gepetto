@@ -6,7 +6,7 @@ const COLOR_OUTPUT_HEADER = [Color.EFFECTS["BG_BRIGHT_MAGENTA"], Color.EFFECTS["
 function RunNpmScript(script)
 {
     const scriptName = script.toUpperCase().replace(":", "_");
-    return new Promise((resolve, reject) =>
+    return new Promise((resolve, _reject) =>
     {
         exec(`npm run ${script}`, (_error, stdout, _stderr) =>
         {
@@ -27,14 +27,54 @@ function Run()
 
     const scriptArguments = process.argv.slice(2);
 
-    Color.Log(`(head){Running npm scripts:}${scriptArguments.reduce((accumelator, script) => { return `${accumelator}\n*  (script){${script}}`; }, "")}`, [], {
+    Color.Log(`(head){Running npm scripts:}${scriptArguments.reduce((accumelator, script) =>
+    {
+        if (script === "then")
+        {
+            return `${accumelator}\nthen:\n`;
+        }
+        return `${accumelator}\n*  (script){${script}}`;
+    }, "")}`, [], {
         head: Color.HEADER,
         script: Color.FILE
     });
 
-    const promises = scriptArguments.reduce((accumenlator, script) => [...accumenlator, RunNpmScript(script)], []);
+    const scriptStack = scriptArguments.reduceRight((accumelator, script) =>
+    {
+        if (script === "then")
+        {
+            return [...accumelator, []];
+        }
 
-    Promise.all(promises).then(values =>
+        let result = accumelator;
+        result[result.length - 1].push(script);
+        return result;
+    }, [[]]);
+
+
+    function BuildScriptStack(stack)
+    {
+        return new Promise((resolve, _reject) =>
+        {
+            const promises = stack[stack.length - 1].reduce((accumelator, script) => [...accumelator, RunNpmScript(script)], []);
+
+            Promise.all(promises).then(values =>
+            {
+                if (stack.length === 1)
+                {
+                    resolve(values);
+                    return;
+                }
+
+                BuildScriptStack(stack.slice(0, stack.length - 1)).then((recursedValues =>
+                {
+                    resolve([...values, ...recursedValues]);
+                }));
+            });
+        });
+    }
+
+    BuildScriptStack(scriptStack).then(values =>
     {
         Color.Log(values.reduce((accumelator, out) => `${accumelator}${out}\n\n`, ""), [], {
             head: COLOR_OUTPUT_HEADER

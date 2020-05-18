@@ -13,7 +13,7 @@
     "compile:all": "node ./node_scripts/run-scripts.js compile:html compile:sass compile:typescript",
     "build:docs": "python ./documentation/build_docs.py",
     "build:docs:typedoc": "./node_modules/.bin/typedoc ./src/ --out ./documentation/build/typedoc-output/ --tsconfig ./config/typedoc.ts.json",
-    "build:all": "node ./node_scripts/run-scripts.js compile:html compile:sass compile:typescript build:docs:typedoc",
+    "build:all": "node ./node_scripts/run-scripts.js compile:html compile:sass compile:typescript then build:docs:typedoc",
     "clean": "node ./node_scripts/clean.js"
   },
   "repository": {
