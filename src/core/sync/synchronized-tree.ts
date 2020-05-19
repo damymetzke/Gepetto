@@ -64,10 +64,23 @@ export class SynchronizedTree
     _tree: DrawObjectTree = new DrawObjectTree();
 
     _followedSynchronizedObjects: { [name: string]: SynchronizedObject[]; } = {};
+    _followedFocuses: SynchronizedTransformCommand[] = [];
+
+    _focusObject: string = "";
+    _focusTransformCommand: number = -1;
 
     SendAction(_data: SyncData): void
     {
         console.error("❗ SynchronizedTree.SendAction was called, but it is expected to be overridden. Make sure to only instance child classes.");
+    }
+
+    Focus(): SynchronizedTransformCommand
+    {
+        let result = new SynchronizedTransformCommand(this, this._focusObject, this._focusTransformCommand);
+
+        this._followedFocuses.push(result);
+
+        return result;
     }
 
     AddObject(name: string): SynchronizedObject
@@ -92,6 +105,7 @@ export class SynchronizedTree
 
     ChangeName(object: SynchronizedObject, newName: string): void
     {
+        console.log("🚀 ", object.objectName);
         this._tree.objects[newName] = this._tree.objects[object.objectName];
         delete this._tree.objects[object.objectName];
         this._tree.objects[newName].name = newName;
@@ -104,6 +118,8 @@ export class SynchronizedTree
             }
         });
 
+        var isFocused: boolean = (this._focusObject === object.objectName);
+
         if (object.objectName in this._followedSynchronizedObjects)
         {
             this._followedSynchronizedObjects[newName] = this._followedSynchronizedObjects[object.objectName];
@@ -111,6 +127,11 @@ export class SynchronizedTree
             {
                 followed.objectName = newName;
             });
+        }
+
+        if (isFocused)
+        {
+            this.SelectObject(new SynchronizedObject(this, newName));
         }
     }
 
@@ -132,6 +153,16 @@ export class SynchronizedTree
             data: {
                 object: object.objectName,
             }
+        });
+
+        this._focusObject = object.objectName;
+        this._focusTransformCommand = -1;
+
+        this._followedFocuses.forEach(focussedObject =>
+        {
+            focussedObject.objectName = this._focusObject;
+            focussedObject.transformCommandIndex = this._focusTransformCommand;
+
         });
     }
 

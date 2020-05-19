@@ -30,9 +30,15 @@ app.whenReady().then(createWindow);
 
 let tmpTree = new SynchronizedTreeLog();
 let tmp = tmpTree.AddObject("hello world");
+let tmp2 = tmpTree.AddObject("bye world");
+let focus = tmpTree.Focus();
 
-tmp.ChangeName("some other name");
-tmp.ChangeName("the last name");
+tmp.Select();
+focus.ChangeName("the first change");
+focus.ChangeName("the first change again");
+
+tmp2.Select();
+focus.ChangeName("the second change");
 
 tmpTree.WriteToFile("./saved/test.json");
 console.log(tmpTree);
