@@ -29,21 +29,11 @@ function createWindow()
 app.whenReady().then(createWindow);
 
 let tmpTree = new SynchronizedTreeLog();
-let tmp = new SynchronizedObject(tmpTree, "hello world");
-let tmp2 = new SynchronizedObject(tmpTree, "this is the parent");
-let comm = new SynchronizedTransformCommand(tmpTree, "hello world", 3);
+let tmp = tmpTree.AddObject("hello world");
 
 tmp.ChangeName("some other name");
-tmp.AddTransformCommand(TransformCommandType.TRANSLATE);
-setTimeout(() =>
-{
-    tmp.ChangeName("the last name");
-    tmp.Reparent(tmp2);
-    tmp.Select();
+tmp.ChangeName("the last name");
 
-    comm.SelectCommand();
-    comm.Remove();
-    console.log(tmpTree.GetString());
-    tmpTree.WriteToFile("./saved/test.json");
-}, 5000);
+tmpTree.WriteToFile("./saved/test.json");
+console.log(tmpTree);
 

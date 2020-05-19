@@ -1,5 +1,6 @@
 import { DrawObjectTree } from "../draw-object-tree";
 import { TransformCommandType } from "../transform-command";
+import { DrawObject } from "../draw-object";
 
 export interface SyncData
 {
@@ -62,13 +63,39 @@ export class SynchronizedTree
 {
     _tree: DrawObjectTree = new DrawObjectTree();
 
+    _followedSynchronizedObjects: { [name: string]: SynchronizedObject[]; } = {};
+
     SendAction(_data: SyncData): void
     {
         console.error("❗ SynchronizedTree.SendAction was called, but it is expected to be overridden. Make sure to only instance child classes.");
     }
 
+    AddObject(name: string): SynchronizedObject
+    {
+        this._tree.objects[name] = new DrawObject(name);
+        this._tree.rootObjects.push(this._tree.objects[name]);
+        this.SendAction({
+            action: "add-object",
+            data: {
+                name: name
+            }
+        });
+
+        let result = new SynchronizedObject(this, name);
+        if (!(name in this._followedSynchronizedObjects))
+        {
+            this._followedSynchronizedObjects[name] = [];
+        }
+        this._followedSynchronizedObjects[name].push(result);
+        return result;
+    }
+
     ChangeName(object: SynchronizedObject, newName: string): void
     {
+        this._tree.objects[newName] = this._tree.objects[object.objectName];
+        delete this._tree.objects[object.objectName];
+        this._tree.objects[newName].name = newName;
+
         this.SendAction({
             action: "change-name",
             data: {
@@ -76,6 +103,15 @@ export class SynchronizedTree
                 newName: newName
             }
         });
+
+        if (object.objectName in this._followedSynchronizedObjects)
+        {
+            this._followedSynchronizedObjects[newName] = this._followedSynchronizedObjects[object.objectName];
+            this._followedSynchronizedObjects[newName].forEach(followed =>
+            {
+                followed.objectName = newName;
+            });
+        }
     }
 
     Reparent(object: SynchronizedObject, newParent: SynchronizedObject): void
