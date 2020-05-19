@@ -1,7 +1,7 @@
 import { Transform } from "./transform";
 
 type MatrixFunction = () => Transform;
-enum TransformCommandType
+export enum TransformCommandType
 {
     TRANSLATE,
     SCALE,

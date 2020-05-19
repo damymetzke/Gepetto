@@ -3,7 +3,7 @@ const { Init } = require("./draw-object-manager");
 
 const indexFilePath = `file://${__dirname}/../../index.html`;
 
-const { SynchronizedTree, SynchronizedObject, SynchronizedTreeLog: SynchronizedTreeLog } = require("../core/core");
+const { SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand, SynchronizedTreeLog: SynchronizedTreeLog, TransformCommandType } = require("../core/core");
 
 let window = null;
 
@@ -30,15 +30,19 @@ app.whenReady().then(createWindow);
 
 let tmpTree = new SynchronizedTreeLog();
 let tmp = new SynchronizedObject(tmpTree, "hello world");
-tmp.ChangeName({
-    name: "bye world 😢"
-});
+let tmp2 = new SynchronizedObject(tmpTree, "this is the parent");
+let comm = new SynchronizedTransformCommand(tmpTree, "hello world", 3);
+
+tmp.ChangeName("some other name");
+tmp.AddTransformCommand(TransformCommandType.TRANSLATE);
 setTimeout(() =>
 {
-    tmp.ChangeName({
-        name: "what is happening",
-        wrong: false
-    });
+    tmp.ChangeName("the last name");
+    tmp.Reparent(tmp2);
+    tmp.Select();
+
+    comm.SelectCommand();
+    comm.Remove();
     console.log(tmpTree.GetString());
     tmpTree.WriteToFile("./saved/test.json");
 }, 5000);
