@@ -118,7 +118,15 @@ export class SynchronizedTree
             }
         });
 
-        var isFocused: boolean = (this._focusObject === object.objectName);
+        if (this._focusObject === object.objectName)
+        {
+            this._focusObject = newName;
+            this._followedFocuses.forEach(focussedObject =>
+            {
+                focussedObject.objectName = this._focusObject;
+                focussedObject.transformCommandIndex = this._focusTransformCommand;
+            });
+        }
 
         if (object.objectName in this._followedSynchronizedObjects)
         {
@@ -126,12 +134,8 @@ export class SynchronizedTree
             this._followedSynchronizedObjects[newName].forEach(followed =>
             {
                 followed.objectName = newName;
-            });
-        }
 
-        if (isFocused)
-        {
-            this.SelectObject(new SynchronizedObject(this, newName));
+            });
         }
     }
 
@@ -162,7 +166,6 @@ export class SynchronizedTree
         {
             focussedObject.objectName = this._focusObject;
             focussedObject.transformCommandIndex = this._focusTransformCommand;
-
         });
     }
 
