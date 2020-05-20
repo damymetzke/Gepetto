@@ -28,7 +28,8 @@ function createWindow()
 
 app.whenReady().then(createWindow);
 
-let tmpTree = new SynchronizedTreeLog();
+let tmpTreeUseless = new SynchronizedTreeLog();
+let tmpTree = new SynchronizedTreeLog(tmpTreeUseless);
 let tmp = tmpTree.AddObject("hello world");
 let tmp2 = tmpTree.AddObject("bye world");
 let focus = tmpTree.Focus();
@@ -41,5 +42,6 @@ tmp2.Select();
 focus.ChangeName("the second change");
 
 tmpTree.WriteToFile("./saved/test.json");
+tmpTreeUseless.WriteToFile("./saved/test_useless.json");
 console.log(tmpTree);
 

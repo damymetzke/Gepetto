@@ -11,6 +11,8 @@ export interface SyncLog
 
 export class SynchronizedTreeLog extends SynchronizedTree
 {
+    _under: SynchronizedTree = null;
+
     loggedActions: SyncLog[] = [];
 
     SendAction(action: string, data: SyncData)
@@ -21,6 +23,11 @@ export class SynchronizedTreeLog extends SynchronizedTree
             action: action,
             data: data
         });
+
+        if (this._under)
+        {
+            this._under.SendAction(action, data);
+        }
     }
 
     GetString(): string
@@ -41,5 +48,11 @@ export class SynchronizedTreeLog extends SynchronizedTree
         {
 
         });
+    }
+
+    constructor(under: SynchronizedTree = null)
+    {
+        super();
+        this._under = under;
     }
 }
