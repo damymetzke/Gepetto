@@ -3,7 +3,7 @@ import { TransformCommandType, TransformCommand } from "../transform-command";
 import { DrawObject } from "../draw-object";
 import { SynchronizedObject, SynchronizedTransformCommand } from "./synchronized-object";
 
-type SyncData = { [key: string]: any; };
+export type SyncData = { [key: string]: any; };
 
 export interface SyncMessage
 {
@@ -19,7 +19,7 @@ export class SynchronizedTree
 
     _focus: SynchronizedTransformCommand = new SynchronizedTransformCommand(this, "", -1);
 
-    SendAction(_data: SyncMessage): void
+    SendAction(_action: string, _data: SyncData): void
     {
         console.error("❗ SynchronizedTree.SendAction was called, but it is expected to be overridden. Make sure to only instance child classes.");
     }
@@ -51,12 +51,7 @@ export class SynchronizedTree
     {
         this._tree.objects[name] = new DrawObject(name);
         this._tree.rootObjects.push(this._tree.objects[name]);
-        this.SendAction({
-            action: "add-object",
-            data: {
-                name: name
-            }
-        });
+        this.SendAction("add-object", { name: name });
 
         let result = new SynchronizedObject(this, name);
         if (!(name in this._followedSynchronizedObjects))
@@ -69,17 +64,13 @@ export class SynchronizedTree
 
     ChangeName(object: SynchronizedObject, newName: string): void
     {
-        console.log("🚀 ", object.objectName);
         this._tree.objects[newName] = this._tree.objects[object.objectName];
         delete this._tree.objects[object.objectName];
         this._tree.objects[newName].name = newName;
 
-        this.SendAction({
-            action: "change-name",
-            data: {
-                originalObject: object.objectName,
-                newName: newName
-            }
+        this.SendAction("change-name", {
+            originalObject: object.objectName,
+            newName: newName
         });
 
         this.NotifyNameChange(object.objectName, newName);
@@ -87,23 +78,15 @@ export class SynchronizedTree
 
     Reparent(object: SynchronizedObject, newParent: SynchronizedObject): void
     {
-        this.SendAction({
-            action: "reparent",
-            data: {
-                child: object.objectName,
-                parent: newParent.objectName
-            }
+        this.SendAction("reparent", {
+            child: object.objectName,
+            parent: newParent.objectName
         });
     }
 
     SelectObject(object: SynchronizedObject): void
     {
-        this.SendAction({
-            action: "select-object",
-            data: {
-                object: object.objectName,
-            }
-        });
+        this.SendAction("select-object", { object: object.objectName });
 
         this._focus.objectName = object.objectName;
         this._focus.transformCommandIndex = -1;
@@ -111,12 +94,9 @@ export class SynchronizedTree
 
     AddTransformCommand(object: SynchronizedObject, type: TransformCommandType): void
     {
-        this.SendAction({
-            action: "add-transform-command",
-            data: {
-                object: object.objectName,
-                type: type
-            }
+        this.SendAction("add-transform-command", {
+            object: object.objectName,
+            type: type
         });
 
         this._tree.objects[object.objectName].transformCommands.push(new TransformCommand(type));
@@ -124,23 +104,17 @@ export class SynchronizedTree
 
     RemoveTransformCommand(command: SynchronizedTransformCommand): void
     {
-        this.SendAction({
-            action: "remove-transform-command",
-            data: {
-                object: command.objectName,
-                command: command.transformCommandIndex
-            }
+        this.SendAction("remove-transform-command", {
+            object: command.objectName,
+            command: command.transformCommandIndex
         });
     }
 
     SelectTransformCommand(command: SynchronizedTransformCommand): void
     {
-        this.SendAction({
-            action: "select-transform-command",
-            data: {
-                object: command.objectName,
-                command: command.transformCommandIndex
-            }
+        this.SendAction("select-transform-command", {
+            object: command.objectName,
+            command: command.transformCommandIndex
         });
     }
 }

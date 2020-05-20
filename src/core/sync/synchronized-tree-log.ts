@@ -1,9 +1,10 @@
 import * as fs from "fs";
-import { SyncMessage, SynchronizedTree } from "./synchronized-tree";
+import { SyncData, SynchronizedTree } from "./synchronized-tree";
 
 export interface SyncLog
 {
     time: Date;
+    type: "send" | "recieve";
     action: string;
     data: { [key: string]: any; };
 }
@@ -12,12 +13,13 @@ export class SynchronizedTreeLog extends SynchronizedTree
 {
     loggedActions: SyncLog[] = [];
 
-    SendAction(data: SyncMessage)
+    SendAction(action: string, data: SyncData)
     {
         this.loggedActions.push({
             time: new Date(Date.now()),
-            action: data.action,
-            data: data.data
+            type: "send",
+            action: action,
+            data: data
         });
     }
 
