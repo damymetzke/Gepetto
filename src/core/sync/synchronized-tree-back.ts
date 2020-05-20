@@ -1,6 +1,6 @@
 import { SynchronizedTree, SyncData, SyncMessage } from "./synchronized-tree";
 
-import { BrowserWindow } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
 
 export class SynchronizedTreeBack extends SynchronizedTree
 {
@@ -15,10 +15,7 @@ export class SynchronizedTreeBack extends SynchronizedTree
             return;
         }
 
-        this._window.webContents.send(this._channel, {
-            action: action,
-            data: data
-        });
+        this._window.webContents.send(this._channel, action, data);
     }
 
     constructor(window: BrowserWindow, channel: string)
@@ -27,5 +24,10 @@ export class SynchronizedTreeBack extends SynchronizedTree
 
         this._window = window;
         this._channel = channel;
+
+        ipcMain.handle(channel, (_event, action: string, data: SyncData) =>
+        {
+            this.RecieveAction(action, data);
+        });
     }
 }

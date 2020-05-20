@@ -4,6 +4,28 @@ import { DrawObject } from "../draw-object";
 import { SynchronizedObject, SynchronizedTransformCommand } from "./synchronized-object";
 
 export type SyncData = { [key: string]: any; };
+type RecieveActionListner = (action: string, data: SyncData) => void;
+type ActionListner = (data: SyncData, result: any) => void;
+
+//action data interfaces
+interface ChangeNameData
+{
+    originalObject: string,
+    newName: string;
+}
+
+const ACTION_EFFECTS: { [action: string]: (syncTree: SynchronizedTree, data: SyncData) => any; } = {
+    "change-name": (syncTree: SynchronizedTree, data: ChangeNameData) =>
+    {
+        syncTree._tree.objects[data.newName] = syncTree._tree.objects[data.originalObject];
+        delete syncTree._tree.objects[data.originalObject];
+        syncTree._tree.objects[data.newName].name = data.newName;
+
+        syncTree.NotifyNameChange(data.originalObject, data.newName);
+
+        return syncTree._tree.objects[data.newName];
+    }
+};
 
 export interface SyncMessage
 {
@@ -16,12 +38,52 @@ export class SynchronizedTree
     _tree: DrawObjectTree = new DrawObjectTree();
 
     _followedSynchronizedObjects: { [name: string]: SynchronizedObject[]; } = {};
-
     _focus: SynchronizedTransformCommand = new SynchronizedTransformCommand(this, "", -1);
+
+    _recieveActionListners: RecieveActionListner[] = [];
+    _actionListners: { [action: string]: ActionListner[]; } = {};
 
     SendAction(_action: string, _data: SyncData): void
     {
         console.error("❗ SynchronizedTree.SendAction was called, but it is expected to be overridden. Make sure to only instance child classes.");
+    }
+
+    RecieveAction(action: string, data: SyncData): void
+    {
+        this._recieveActionListners.forEach(listner =>
+        {
+            listner(action, data);
+        });
+
+        if (!(action in ACTION_EFFECTS))
+        {
+            return;
+        }
+
+        const result = ACTION_EFFECTS[action](this, data);
+
+        if (!(action in this._actionListners))
+        {
+            return;
+        }
+
+        this._actionListners[action].forEach(listner => listner(data, result));
+    }
+
+    AddRecieveActionListner(listner: RecieveActionListner)
+    {
+        this._recieveActionListners.push(listner);
+    }
+
+    AddActionListner(action: string, listner: ActionListner)
+    {
+        if (!(action in this._actionListners))
+        {
+            this._actionListners[action] = [listner];
+            return;
+        }
+
+        this._actionListners[action].push(listner);
     }
 
     NotifyNameChange(name: string, newName: string)
