@@ -3,7 +3,8 @@ import { TransformCommandType, TransformCommand, TransformCommandPure } from "./
 import { DrawObject, DrawObjectPure } from "./draw-object";
 import { DrawObjectTree, DrawObjectTreePure } from "./draw-object-tree";
 
-import { SyncData, SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand } from "./sync/synchronized-tree";
+import { SynchronizedObject, SynchronizedTransformCommand } from "./sync/synchronized-object";
+import { SyncMessage, SynchronizedTree } from "./sync/synchronized-tree";
 import { SyncLog, SynchronizedTreeLog } from "./sync/synchronized-tree-log";
 
 export
@@ -13,6 +14,6 @@ export
     DrawObject, DrawObjectPure,
     DrawObjectTree, DrawObjectTreePure,
 
-    SyncData, SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand,
+    SyncMessage as SyncData, SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand,
     SyncLog, SynchronizedTreeLog
 };

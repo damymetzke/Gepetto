@@ -1,62 +1,14 @@
 import { DrawObjectTree } from "../draw-object-tree";
-import { TransformCommandType } from "../transform-command";
+import { TransformCommandType, TransformCommand } from "../transform-command";
 import { DrawObject } from "../draw-object";
+import { SynchronizedObject, SynchronizedTransformCommand } from "./synchronized-object";
 
-export interface SyncData
+type SyncData = { [key: string]: any; };
+
+export interface SyncMessage
 {
     action: string;
-    data: { [key: string]: any; };
-}
-
-export class SynchronizedObject
-{
-    objectName: string;
-
-    owner: SynchronizedTree;
-
-    ChangeName(newName: string): void
-    {
-        this.owner.ChangeName(this, newName);
-    }
-    Reparent(newParent: SynchronizedObject): void
-    {
-        this.owner.Reparent(this, newParent);
-    }
-    Select(): void
-    {
-        this.owner.SelectObject(this);
-    }
-    AddTransformCommand(type: TransformCommandType): void
-    {
-        this.owner.AddTransformCommand(this, type);
-    }
-
-    constructor(owner: SynchronizedTree, objectName: string)
-    {
-        this.objectName = objectName;
-        this.owner = owner;
-    }
-}
-
-export class SynchronizedTransformCommand extends SynchronizedObject
-{
-    transformCommandIndex: number;
-
-    Remove(): void
-    {
-        this.owner.RemoveTransformCommand(this);
-    }
-
-    SelectCommand(): void
-    {
-        this.owner.SelectTransformCommand(this);
-    }
-
-    constructor(owner: SynchronizedTree, objectName: string, transformCommandIndex: number)
-    {
-        super(owner, objectName);
-        this.transformCommandIndex = transformCommandIndex;
-    }
+    data: SyncData;
 }
 
 export class SynchronizedTree
@@ -64,23 +16,35 @@ export class SynchronizedTree
     _tree: DrawObjectTree = new DrawObjectTree();
 
     _followedSynchronizedObjects: { [name: string]: SynchronizedObject[]; } = {};
-    _followedFocuses: SynchronizedTransformCommand[] = [];
 
-    _focusObject: string = "";
-    _focusTransformCommand: number = -1;
+    _focus: SynchronizedTransformCommand = new SynchronizedTransformCommand(this, "", -1);
 
-    SendAction(_data: SyncData): void
+    SendAction(_data: SyncMessage): void
     {
         console.error("❗ SynchronizedTree.SendAction was called, but it is expected to be overridden. Make sure to only instance child classes.");
     }
 
+    NotifyNameChange(name: string, newName: string)
+    {
+        if (name in this._followedSynchronizedObjects)
+        {
+            this._followedSynchronizedObjects[newName] = this._followedSynchronizedObjects[name];
+            delete this._followedSynchronizedObjects[name];
+            this._followedSynchronizedObjects[newName].forEach(followed =>
+            {
+                followed.objectName = newName;
+            });
+        }
+
+        if (this._focus.objectName === name)
+        {
+            this._focus.objectName = newName;
+        }
+    }
+
     Focus(): SynchronizedTransformCommand
     {
-        let result = new SynchronizedTransformCommand(this, this._focusObject, this._focusTransformCommand);
-
-        this._followedFocuses.push(result);
-
-        return result;
+        return this._focus;
     }
 
     AddObject(name: string): SynchronizedObject
@@ -118,25 +82,7 @@ export class SynchronizedTree
             }
         });
 
-        if (this._focusObject === object.objectName)
-        {
-            this._focusObject = newName;
-            this._followedFocuses.forEach(focussedObject =>
-            {
-                focussedObject.objectName = this._focusObject;
-                focussedObject.transformCommandIndex = this._focusTransformCommand;
-            });
-        }
-
-        if (object.objectName in this._followedSynchronizedObjects)
-        {
-            this._followedSynchronizedObjects[newName] = this._followedSynchronizedObjects[object.objectName];
-            this._followedSynchronizedObjects[newName].forEach(followed =>
-            {
-                followed.objectName = newName;
-
-            });
-        }
+        this.NotifyNameChange(object.objectName, newName);
     }
 
     Reparent(object: SynchronizedObject, newParent: SynchronizedObject): void
@@ -159,14 +105,8 @@ export class SynchronizedTree
             }
         });
 
-        this._focusObject = object.objectName;
-        this._focusTransformCommand = -1;
-
-        this._followedFocuses.forEach(focussedObject =>
-        {
-            focussedObject.objectName = this._focusObject;
-            focussedObject.transformCommandIndex = this._focusTransformCommand;
-        });
+        this._focus.objectName = object.objectName;
+        this._focus.transformCommandIndex = -1;
     }
 
     AddTransformCommand(object: SynchronizedObject, type: TransformCommandType): void
@@ -178,6 +118,8 @@ export class SynchronizedTree
                 type: type
             }
         });
+
+        this._tree.objects[object.objectName].transformCommands.push(new TransformCommand(type));
     }
 
     RemoveTransformCommand(command: SynchronizedTransformCommand): void
