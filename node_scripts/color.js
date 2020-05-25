@@ -53,6 +53,13 @@ const ERROR = [EFFECTS["FG_BRIGHT_RED"]];
 const FILE = [EFFECTS["FG_BRIGHT_CYAN"], EFFECTS["UNDERLINE"]];
 const HEADER = [EFFECTS["FG_BRIGHT_MAGENTA"], EFFECTS["BOLD"], EFFECTS["UNDERLINE"]];
 
+const DEFAULT_INLINE_COLORS = {
+    warn: WARN,
+    error: ERROR,
+    file: FILE,
+    header: HEADER
+};
+
 function Format(text, globalColor = [], inlineColors = {})
 {
     const before = globalColor.reduce((accumelator, effect) =>
@@ -60,14 +67,19 @@ function Format(text, globalColor = [], inlineColors = {})
         return `${accumelator}\x1b[${effect.toString()}m`;
     }, "");
 
+    const resultingInlineColors = {
+        ...DEFAULT_INLINE_COLORS,
+        ...inlineColors
+    };
+
     const converted = text.replace(inlineColorReplace, (match, inlineColor, inlineText) =>
     {
-        if (!(inlineColor in inlineColors))
+        if (!(inlineColor in resultingInlineColors))
         {
             return inlineText;
         }
 
-        const inlineBefore = inlineColors[inlineColor].reduce((accumelator, effect) =>
+        const inlineBefore = resultingInlineColors[inlineColor].reduce((accumelator, effect) =>
         {
             return `${accumelator}\x1b[${effect.toString()}m`;
         }, "");
@@ -83,12 +95,18 @@ function Log(text, globalColor = [], inlineColors = {})
     console.log(Format(text, globalColor, inlineColors));
 }
 
-module.exports.Format = Format;
-module.exports.Log = Log;
+function Error(text, globalColor = ERROR, inlineColors = {})
+{
+    console.error(Format(text, globalColor, inlineColors));
+}
 
-module.exports.EFFECTS = EFFECTS;
-
-module.exports.WARN = WARN;
-module.exports.ERROR = ERROR;
-module.exports.FILE = FILE;
-module.exports.HEADER = HEADER;
+module.exports = {
+    EFFECTS,
+    Format,
+    Log,
+    Error,
+    WARN,
+    ERROR,
+    FILE,
+    HEADER
+};

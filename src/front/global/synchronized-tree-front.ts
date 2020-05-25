@@ -1,5 +1,6 @@
-const { SynchronizedTree } = require("electron").remote.require("../core/sync/synchronized-tree");
 const { ipcRenderer } = require("electron");
+
+import { SynchronizedTree, SyncData } from "../core/sync/synchronized-tree";
 
 export class SynchronizedTreeFront extends SynchronizedTree
 {

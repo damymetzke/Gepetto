@@ -11,3 +11,5 @@ node_modules
 out/
 saved/
 documentation/build/
+user_config/
+src/front/core/

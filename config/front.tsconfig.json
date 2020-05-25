@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "target": "ES6",
+        "outDir": "../out/src/front",
+        "moduleResolution": "node",
+        "preserveSymlinks": true
+    },
+    "include": [
+        "../src/front/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

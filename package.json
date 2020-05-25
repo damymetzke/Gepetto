@@ -10,6 +10,8 @@
     "compile:html": "node ./node_scripts/compile-html.js",
     "compile:sass": "node ./node_scripts/compile-sass.js",
     "compile:typescript": "node ./node_scripts/compile-typescript.js",
+    "precompile:typescript:front": "node ./node_scripts/move-files.js ./src/core ./src/front/core",
+    "compile:typescript:front": "./node_modules/.bin/tsc -p ./config/front.tsconfig.json",
     "compile:all": "node ./node_scripts/run-scripts.js compile:html compile:sass compile:typescript",
     "build:docs": "python ./documentation/build_docs.py",
     "build:docs:typedoc": "./node_modules/.bin/typedoc ./src/ --out ./documentation/build/typedoc-output/ --tsconfig ./config/typedoc.ts.json",
