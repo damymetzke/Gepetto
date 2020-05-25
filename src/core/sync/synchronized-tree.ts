@@ -4,7 +4,24 @@ import { DrawObject } from "../draw-object";
 import { SynchronizedObject, SynchronizedTransformCommand } from "./synchronized-object";
 
 export type SyncData = { [key: string]: any; };
+/**
+ * function that will be called whenever an action is recieved
+ * 
+ * @param action string identifying the action taken
+ * @param data data recieved
+ * 
+ * @see SynchronizedTree.AddRecieveActionListner
+ */
 type RecieveActionListner = (action: string, data: SyncData) => void;
+
+/**
+ * function that will be called when a specific action is called
+ * 
+ * @param data data send with the action
+ * @param result the resulting data, this is fully defined by each specific action
+ * 
+ * @see SynchronizedTree.AddActionListner
+ */
 type ActionListner = (data: SyncData, result: any) => void;
 
 //action data interfaces
@@ -33,6 +50,19 @@ export interface SyncMessage
     data: SyncData;
 }
 
+/**
+ * class used to synchronize 2 independent DrawObjectTree instances
+ * 
+ * this class is meant as a base class and should *never* be instanced without extending it.
+ * Any extending class has 2 purposes:
+ * * override SynchronizedTree.SendAction:
+ * this function should send the action taken to the other object using whatever means nescesary.
+ * * call RecieveAction whenever the other object has send an action to this object
+ * 
+ * @see SynchronizedTreeLog
+ * @see SynchronizedTreeBack
+ * @see SynchronizedTreeFront
+ */
 export class SynchronizedTree
 {
     _tree: DrawObjectTree = new DrawObjectTree();
@@ -43,11 +73,30 @@ export class SynchronizedTree
     _recieveActionListners: RecieveActionListner[] = [];
     _actionListners: { [action: string]: ActionListner[]; } = {};
 
-    SendAction(_action: string, _data: SyncData): void
+    /**
+     * called when an action is taken on this class.
+     * 
+     * any implementation should override this and provide a way to communicate to the other synchronized class.
+     * an exception is SynchronizedTreeLog, which will only log the changes.
+     * 
+     * @param action a string used to identify the type of action
+     * @param data data send to the other synchronized tree
+     */
+    SendAction(action: string, data: SyncData): void
     {
         console.error("❗ SynchronizedTree.SendAction was called, but it is expected to be overridden. Make sure to only instance child classes.");
+        console.groupCollapsed("SendActionErrorData");
+        console.log(`Action send: '${action}'`);
+        console.table(data);
+        console.groupEnd();
     }
 
+    /**
+     * should be called, by a class that overrides this class, whenever the other sycnhronized class sends an action.
+     * 
+     * @param action a string used to identify the type of action
+     * @param data data recieved from the other synchronized tree
+     */
     RecieveAction(action: string, data: SyncData): void
     {
         this._recieveActionListners.forEach(listner =>
@@ -70,11 +119,25 @@ export class SynchronizedTree
         this._actionListners[action].forEach(listner => listner(data, result));
     }
 
+    /**
+     * add a new listner to be directly called whenever an action is recieved.
+     * 
+     * @param listner callback function
+     * 
+     * @see RecieveActionListner
+     */
     AddRecieveActionListner(listner: RecieveActionListner)
     {
         this._recieveActionListners.push(listner);
     }
 
+    /**
+     * 
+     * @param action string representing the action that should be taken
+     * @param listner callback function
+     * 
+     * @see ActionListner
+     */
     AddActionListner(action: string, listner: ActionListner)
     {
         if (!(action in this._actionListners))
@@ -86,6 +149,14 @@ export class SynchronizedTree
         this._actionListners[action].push(listner);
     }
 
+    /**
+     * updates all followed synchronized objects whenever a name changes.
+     * 
+     * the name needs to be updated, or the system stops working.
+     * 
+     * @param name original name
+     * @param newName updated name
+     */
     NotifyNameChange(name: string, newName: string)
     {
         if (name in this._followedSynchronizedObjects)
@@ -104,6 +175,9 @@ export class SynchronizedTree
         }
     }
 
+    /** 
+     * @returns the actively focused object. (this will be automatically updated as the focus changes)
+     */
     Focus(): SynchronizedTransformCommand
     {
         return this._focus;
