@@ -2,7 +2,7 @@
 const { ipcMain } = require("electron");
 const fs = require("fs");
 
-const { DrawObjectTree, DrawObject, TransformCommand } = require("../core/core");
+const { DrawObjectTree, DrawObject, TransformCommand } = require("./core/core");
 
 const { SvgToObjectXml, ReadObjectXml } = require("./draw-object-xmlhandler");
 

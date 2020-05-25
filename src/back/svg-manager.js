@@ -1,4 +1,4 @@
-const { Transform } = require("../core/core");
+const { Transform } = require("./core/core");
 
 let window = null;
 let svgObjects = new Set();

@@ -3,7 +3,7 @@ const { Init } = require("./draw-object-manager");
 
 const indexFilePath = `file://${__dirname}/../../index.html`;
 
-const { SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand, SynchronizedTreeLog: SynchronizedTreeLog, TransformCommandType } = require("../core/core");
+const { SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand, SynchronizedTreeLog: SynchronizedTreeLog, TransformCommandType } = require("./core/core");
 
 let window = null;
 
