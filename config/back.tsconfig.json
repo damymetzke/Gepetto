@@ -5,7 +5,9 @@
         "module": "CommonJS",
         "outDir": "../out/src/back",
         "moduleResolution": "node",
-        "preserveSymlinks": true
+        "preserveSymlinks": true,
+        "tsBuildInfoFile": "../saved/typescript-build-info.json",
+        "incremental": true
     },
     "include": [
         "../src/back/**/*"
