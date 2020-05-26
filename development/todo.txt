@@ -1,0 +1,34 @@
+To check:
+-Core modules
+-Front modules
+-Back modules
+-Test modules
+-Node Scripts
+
+todo:
+-Get rid of the following in front:
+  -element-generators (use html templates instead)
+  -get-unique-elements (use subdoc-like system instead)
+  -content-loader (use html template loader instead)
+  -callback-util (use reimagined system instead)
+
+-rewrite subdoc
+-add new object-editor code
+-rewrite the entire back, except for the svg loader, that works fine
+-make jest work again
+-run test(fix problems as required)
+-write tests for:
+  -synchronized tree and the log version (any others cannot be properly unit tested due to requirement of IPC)
+  -draw object tree
+
+-add the following properties to a user-config file:
+  -clean directories[clean.js]
+  -default console colors (DEFAULT|WARN|ERROR|FILE|HEADER) [color.js]
+  -input and output for:
+    -moving files [move-files.js]
+	-compiling sass [compile-sass.js]
+	-compiling typescript [compile-typescript.js]
+-get rid of compile-html and use move-files instead
+-add notation to move-files to allow for reading from user-config-file
+-remove now obsolete default inline colors from all scripts
+-add part to readme.md explaining the project structure
