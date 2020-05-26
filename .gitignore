@@ -13,3 +13,4 @@ saved/
 documentation/build/
 user_config/
 src/*/core/
+dev_out/

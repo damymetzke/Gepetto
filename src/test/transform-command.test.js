@@ -1,7 +1,7 @@
-require("./array-is-close-to-matcher");
+//import "./array-is-close-to-matcher";
 
-const { TransformCommand } = require("../core/transform-command");
-const Transform = require("../core/transform");
+import { TransformCommand } from "./core/transform-command";
+import { Transform } from "./core/transform";
 
 
 let translateCommand = new TransformCommand("TRANSLATE", {

@@ -1,6 +1,6 @@
 require("./array-is-close-to-matcher");
 
-const Transform = require("../core/transform");
+import Transform from "./core/transform";
 
 const base = new Transform([0, 1, 2, 3, 4, 5]);
 const target = new Transform([5, 4, 3, 2, 1, 0]);

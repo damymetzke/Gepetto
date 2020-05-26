@@ -1,5 +1,5 @@
-const { DrawObject, Transform } = require("../core/draw-object");
-const { TransformCommand } = require("../core/transform-command");
+import { DrawObject, Transform } from "./core/draw-object";
+import { TransformCommand } from "./core/transform-command";
 
 const base = new DrawObject("Base");
 const child = new DrawObject("Child", base);

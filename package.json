@@ -14,6 +14,8 @@
     "compile:typescript:front": "./node_modules/.bin/tsc -p ./config/front.tsconfig.json",
     "precompile:typescript:back": "node ./node_scripts/move-files.js ./src/core ./src/back/core",
     "compile:typescript:back": "./node_modules/.bin/tsc -p ./config/back.tsconfig.json",
+    "precompile:typescript:test": "node ./node_scripts/move-files.js ./src/core ./src/test/core",
+    "compile:typescript:test": "./node_modules/.bin/tsc -p ./config/test.tsconfig.json",
     "compile:all": "node ./node_scripts/run-scripts.js compile:html compile:sass compile:typescript:front compile:typescript:back",
     "build:docs": "python ./documentation/build_docs.py",
     "build:docs:typedoc": "./node_modules/.bin/typedoc ./src/ --out ./documentation/build/typedoc-output/ --tsconfig ./config/typedoc.ts.json",

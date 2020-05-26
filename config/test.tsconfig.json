@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "target": "ES6",
+        "module": "CommonJS",
+        "outDir": "../dev_out/test",
+        "moduleResolution": "Node",
+        "preserveSymlinks": true,
+        "tsBuildInfoFile": "../saved/typescript-build-info.json",
+        "incremental": true
+    },
+    "include": [
+        "../src/test/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
