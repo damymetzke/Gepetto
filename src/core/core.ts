@@ -1,4 +1,4 @@
-import { Transform } from "./transform";
+import { Matrix, Vector, Transform } from "./transform";
 import { TransformCommandType, TransformCommand, TransformCommandPure } from "./transform-command";
 import { DrawObject, DrawObjectPure } from "./draw-object";
 import { DrawObjectTree, DrawObjectTreePure } from "./draw-object-tree";
@@ -9,7 +9,7 @@ import { SyncLog, SynchronizedTreeLog } from "./sync/synchronized-tree-log";
 
 export
 {
-    Transform,
+    Matrix, Vector, Transform,
     TransformCommandType, TransformCommand, TransformCommandPure as TransformCommandPureObject,
     DrawObject, DrawObjectPure,
     DrawObjectTree, DrawObjectTreePure,

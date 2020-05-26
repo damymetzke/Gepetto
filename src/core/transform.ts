@@ -1,5 +1,5 @@
-type Matrix = [number, number, number, number, number, number];
-type Vector = [number, number];
+export type Matrix = [number, number, number, number, number, number];
+export type Vector = [number, number];
 
 /**
  * class that holds a transformation matrix.

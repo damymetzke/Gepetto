@@ -6,6 +6,7 @@
   "scripts": {
     "prestart": "npm run compile:all",
     "start": "electron .",
+    "pretest": "npm run compile:typescript:test",
     "test": "jest",
     "compile:html": "node ./node_scripts/compile-html.js",
     "compile:sass": "node ./node_scripts/compile-sass.js",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/types": "^7.9.6",
+    "@types/jest": "^25.2.3",
     "del": "^5.1.0",
     "jest": "^25.2.7",
     "jsdoc": "^3.6.3",

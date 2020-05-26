@@ -4,10 +4,7 @@
         "target": "ES6",
         "module": "CommonJS",
         "outDir": "../dev_out/test",
-        "moduleResolution": "Node",
-        "preserveSymlinks": true,
-        "tsBuildInfoFile": "../saved/typescript-build-info.json",
-        "incremental": true
+        "moduleResolution": "Node"
     },
     "include": [
         "../src/test/**/*"
