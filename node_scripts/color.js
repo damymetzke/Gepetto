@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const inlineColorReplace = /\(([a-zA-Z]+)\){([^{]*?)}/g;
 
 const EFFECTS = {
@@ -48,17 +50,32 @@ const EFFECTS = {
     "BG_BRIGHT_WHITE": 107,
 };
 
+const CONFIG_PATH = "./config/build.config.json";
+const CONFIG_DATA = JSON.parse(fs.readFileSync(CONFIG_PATH));
+
+if (!("consoleColors" in CONFIG_DATA))
+{
+    Color.Error(
+        `key 'consoleColors' not found in config file (file){'${CONFIG_PATH}'}\n`
+        + `read config data:\n\t${
+        JSON.stringify(CONFIG_DATA, null, 2).replace(/\n/g, "\n\t")
+        }`);
+}
+
 const WARN = [EFFECTS["FG_BRIGHT_YELLOW"]];
 const ERROR = [EFFECTS["FG_BRIGHT_RED"]];
 const FILE = [EFFECTS["FG_BRIGHT_CYAN"], EFFECTS["UNDERLINE"]];
 const HEADER = [EFFECTS["FG_BRIGHT_MAGENTA"], EFFECTS["BOLD"], EFFECTS["UNDERLINE"]];
 
-const DEFAULT_INLINE_COLORS = {
-    warn: WARN,
-    error: ERROR,
-    file: FILE,
-    header: HEADER
-};
+const DEFAULT_INLINE_COLORS = (() =>
+{
+    result = {};
+    for (let key in CONFIG_DATA.consoleColors)
+    {
+        result[key] = CONFIG_DATA.consoleColors[key].map(style => EFFECTS[style]);
+    }
+    return result;
+})();
 
 function Format(text, globalColor = [], inlineColors = {})
 {
