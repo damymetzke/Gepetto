@@ -1,0 +1,74 @@
+{
+    "cleanDirectories": [
+        "./out",
+        "./dev_out",
+        "./documentation/build"
+    ],
+    "consoleColors": {
+        "warn": [
+            "FG_BRIGHT_YELLOW"
+        ],
+        "error": [
+            "FG_BRIGHT_RED"
+        ],
+        "file": [
+            "FG_BRIGHT_CYAN",
+            "UNDERLINE"
+        ],
+        "header": [
+            "FG_BRIGHT_MAGENTA",
+            "BOLD",
+            "UNDERLINE"
+        ]
+    },
+    "fileMaps": {
+        "custom": {
+            "html": [
+                {
+                    "from": "./html",
+                    "to": "./out"
+                }
+            ],
+            "core": [
+                {
+                    "from": "./src/core",
+                    "to": "./src/front/core"
+                },
+                {
+                    "from": "./src/core",
+                    "to": "./src/front/core"
+                }
+            ],
+            "core_test": [
+                {
+                    "from": "./src/core",
+                    "to": "./src/test/core"
+                }
+            ]
+        },
+        "sass": [
+            {
+                "from": "./style",
+                "to": "./out/style",
+                "test": "^[a-zA-Z][^]*\\.scss$"
+            }
+        ],
+        "typescript": [
+            {
+                "from": "./src/front",
+                "to": "./out/src/front",
+                "config": "./config/front.tsconfig.json"
+            },
+            {
+                "from": "./src/back",
+                "to": "./out/src/back",
+                "config": "./config/back.tsconfig.json"
+            },
+            {
+                "from": "./src/test",
+                "to": "./dev_out/test",
+                "config": "./config/test.tsconfig.json"
+            }
+        ]
+    }
+}
