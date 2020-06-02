@@ -1,38 +1,117 @@
-const Sass = require("npm-sass");
+const sass = require("node-sass");
 const fs = require("fs");
-
-const { ConsoleColor } = require("./console-color");
+const path = require("path");
 
 const Color = require("./color");
+const Walk = require("./walk-directories");
 
-const outputColor = new ConsoleColor("LIGHT_MAGENTA", "BLACK");
-const fileColor = new ConsoleColor("LIGHT_YELLOW", "BLACK");
+const REGEX_ALL = /[^]*/;
+const REGEX_SCSS_TO_CSS = /([^]+)\.scss$/i;
 
-const files = [
-    {
-        from: "./style/index/index.scss",
-        to: "./out/style/index.css"
-    },
-    {
-        from: "./style/svg-import/svg-import.scss",
-        to: "./out/style/svg-import.css"
-    }
-];
+const CONFIG_PATH = "./config/build.config.json";
+const CONFIG = JSON.parse(fs.readFileSync(CONFIG_PATH));
 
-Color.Log(`(header){Compiling Sass:}${files.reduce((accumelator, file) => { return `${accumelator}\n*  (file){"${file.from}"} > (file){"${file.to}"}`; }, "")}`, [], {
-    header: Color.HEADER,
-    file: Color.FILE
-});
-
-if (!fs.existsSync("./out/style"))
+if (!("directoryMaps" in CONFIG))
 {
-    fs.mkdirSync("./out/style", { recursive: true });
+    Color.Error(`No key 'directoryMaps' in config file (file){'${CONFIG_PATH}'}`);
+    return;
 }
 
-files.forEach((file) =>
+if (!("sass" in CONFIG.directoryMaps))
 {
-    Sass(file.from, (_error, result) =>
+    Color.Error(`No key 'directoryMaps.sass' in config file (file){'${CONFIG_PATH}'}`);
+    return;
+}
+
+CONFIG.directoryMaps.sass.forEach(directoryMap =>
+{
+    if (!("from" in directoryMap) || !("to" in directoryMap))
     {
-        fs.writeFile(file.to, result.css, () => { });
+        Color.Warn(
+            "No 'from' and/or 'to' key found in sass directory map, this will be ignored\n"
+            + `Each directory map in (file){'${CONFIG_PATH}'} should have a 'from' and 'to' key\n`
+            + JSON.stringify(directoryMap, null, 2)
+        );
+        return;
+    }
+
+    const test = ("test" in directoryMap) ? new RegExp(directoryMap.test, "i") : REGEX_ALL;
+    const ignoreRelative = ("ignoreRelative" in directoryMap) ? directoryMap.ignoreRelative : false;
+
+    Walk(directoryMap.from, "", test, (data, relative, file) =>
+    {
+        sass.render({
+            data: data.toString(),
+            includePaths: [path.join(directoryMap.from, relative)]
+        }, (error, compiled) =>
+        {
+            if (error)
+            {
+                Color.Warn(`Could not compile sass:\n${error}`);
+                return;
+            }
+
+            const cssFile = file.replace(REGEX_SCSS_TO_CSS, (_match, name) => `${name}.css`);
+            const outputPath = ignoreRelative ? path.join(directoryMap.to, cssFile) : path.join(directoryMap.to, relative, file);
+
+            function WriteCss(error)
+            {
+                if (error)
+                {
+                    Color.Warn(`Could not write to file (file){'${outputPath}'}\n${error}`);
+                }
+            }
+
+            fs.exists(path.dirname(outputPath), (exists) =>
+            {
+                if (!exists)
+                {
+                    fs.mkdir(path.dirname(outputPath), { recursive: true }, error =>
+                    {
+                        if (error)
+                        {
+                            Color.Warn(
+                                `Could not create directory (file){'${path.dirname(outputPath)}\n`
+                                + "file write will be attempted anyway, if this succeeds this warning can be ignored'}\n"
+                                + error);
+                        }
+                        fs.writeFile(outputPath, compiled.css, WriteCss);
+                    });
+                    return;
+                }
+                fs.writeFile(outputPath, compiled.css, WriteCss);
+            });
+
+        });
     });
 });
+
+// const files = [
+//     {
+//         from: "./style/index/index.scss",
+//         to: "./out/style/index.css"
+//     },
+//     {
+//         from: "./style/svg-import/svg-import.scss",
+//         to: "./out/style/svg-import.css"
+//     }
+// ];
+
+// Color.Log(`(header){Compiling Sass:}${files.reduce((accumelator, file) => { return `${accumelator}\n*  (file){"${file.from}"} > (file){"${file.to}"}`; }, "")}`, [], {
+//     header: Color.HEADER,
+//     file: Color.FILE
+// });
+
+// if (!fs.existsSync("./out/style"))
+// {
+//     fs.mkdirSync("./out/style", { recursive: true });
+// }
+
+
+// files.forEach((file) =>
+// {
+//     Sass(file.from, (_error, result) =>
+//     {
+//         fs.writeFile(file.to, result.css, () => { });
+//     });
+// });

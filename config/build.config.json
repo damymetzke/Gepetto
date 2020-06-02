@@ -50,25 +50,26 @@
             {
                 "from": "./style",
                 "to": "./out/style",
-                "test": "^[a-zA-Z][^]*\\.scss$"
+                "test": "^[a-zA-Z][^]*\\.scss$",
+                "ignoreRelative": true
             }
         ],
-        "typescript": [
-            {
+        "typescript": {
+            "front": {
                 "from": "./src/front",
                 "to": "./out/src/front",
                 "config": "./config/front.tsconfig.json"
             },
-            {
+            "back": {
                 "from": "./src/back",
                 "to": "./out/src/back",
                 "config": "./config/back.tsconfig.json"
             },
-            {
+            "test": {
                 "from": "./src/test",
                 "to": "./dev_out/test",
                 "config": "./config/test.tsconfig.json"
             }
-        ]
+        }
     }
 }

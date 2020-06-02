@@ -117,11 +117,17 @@ function Error(text, globalColor = ERROR, inlineColors = {})
     console.error(Format(text, globalColor, inlineColors));
 }
 
+function Warn(text, globalColor = WARN, inlineColors = {})
+{
+    console.warn(Format(text, globalColor, inlineColors));
+}
+
 module.exports = {
     EFFECTS,
     Format,
     Log,
     Error,
+    Warn,
     WARN,
     ERROR,
     FILE,
