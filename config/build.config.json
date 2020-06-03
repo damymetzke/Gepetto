@@ -70,6 +70,13 @@
                 "to": "./dev_out/test",
                 "config": "./config/test.tsconfig.json"
             }
-        }
+        },
+        "markdown": [
+            {
+                "from": "./documentation/doc",
+                "to": "./documentation/build/doc",
+                "test": "\\.md$"
+            }
+        ]
     }
 }
