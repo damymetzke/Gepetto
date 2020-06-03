@@ -12,5 +12,7 @@ out/
 saved/
 documentation/build/
 user_config/
-src/*/core/
+src/front/core/
+src/back/core/
+src/test/core/
 dev_out/

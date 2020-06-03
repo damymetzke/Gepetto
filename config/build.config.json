@@ -39,7 +39,7 @@
                     "to": "./src/front/core"
                 }
             ],
-            "core_test": [
+            "coreTest": [
                 {
                     "from": "./src/core",
                     "to": "./src/test/core"

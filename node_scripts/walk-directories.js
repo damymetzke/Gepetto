@@ -39,7 +39,6 @@ function Walk(root, relative = "", test = EMPTY_REGEX, fileCallback = null)
                         if (stat && stat.isDirectory())
                         {
                             const result = Walk(root, nextRelative, test, fileCallback);
-                            console.log("result", result);
                             result.then((fileList) =>
                             {
                                 resolve(fileList);
