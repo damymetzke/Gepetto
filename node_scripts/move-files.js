@@ -1,10 +1,18 @@
 const fs = require("fs");
-const Color = require("./color");
 const path = require("path");
+const Color = require("./color");
 const { Parse } = require("./parse-arguments");
+
+const Walk = require("./walk-directories");
+
+const REGEX_CONFIG_FILE_REFERENCE = /^\*([a-z]+)$/i;
+const REGEX_ALL = /[^]*/;
 
 const COLOR_COMMAND = [Color.EFFECTS["FG_RED"], Color.EFFECTS["BOLD"]];
 const COLOR_ARGUMENT = [Color.EFFECTS['FG_YELLOW'], Color.EFFECTS["UNDERLINE"]];
+
+const CONFIG_PATH = "./config/build.config.json";
+const CONFIG = JSON.parse(fs.readFileSync(CONFIG_PATH));
 
 EXPECTED_ARGUMENTS = {
     "watch": 0
@@ -14,75 +22,97 @@ function Run()
 {
     const arguments = Parse(process.argv.slice(2), EXPECTED_ARGUMENTS);
 
-    if (arguments.positional.length < 2)
+    let mappings = [];
+
+    try
     {
-        Color.Log(
-            "(file){'move-files.js'} called with less than 2 positional arguments. Expected form:\n"
-            + "(command){node} (file){'*/move-files.js'} (argument){[input path]} (argument){[output path]} (argument){[test](optional)}",
+        if (arguments.positional.length === 0)
+        {
+            throw ("no positional arguments");
+        }
+
+        const match = arguments.positional[0].match(REGEX_CONFIG_FILE_REFERENCE);
+
+        mappings = match ?
+            (() =>
+            {
+                if (!("directoryMaps" in CONFIG))
+                {
+                    throw (`config file reference passed in as arguments, but config file '${CONFIG_PATH}' does not have a key 'directoryMaps'`);
+                }
+
+                if (!("custom" in CONFIG.directoryMaps))
+                {
+                    throw (`config file reference passed in as arguments, but config file '${CONFIG_PATH}' does not have a key 'directoryMaps.custom'`);
+                }
+
+                if (!(match[1] in CONFIG.directoryMaps.custom))
+                {
+                    throw (`config file reference '${match[1]}' was not found in config file '${CONFIG_PATH}' under the key 'directoryMaps.custom'`);
+                }
+
+                const configMappings = CONFIG.directoryMaps.custom[match[1]];
+                return configMappings.map(mapping =>
+                {
+                    return {
+                        from: ("from" in mapping) ? mapping.from : null,
+                        to: ("to" in mapping) ? mapping.to : null,
+                        test: ("test" in mapping) ? new RegExp(mapping.test) : REGEX_ALL
+                    };
+                });
+            })() :
+            (() =>
+            {
+                if (arguments.positional.length < 2)
+                {
+                    throw ("expected 2 arguments if no config file reference was provided");
+                }
+
+                return [{
+                    from: arguments.positional[0],
+                    to: arguments.positional[1],
+                    test: arguments.positional.length >= 3 ? new RegExp(arguments.positional[2]) : REGEX_ALL
+                }];
+            })();
+    }
+    catch (error)
+    {
+        Color.Error(
+            "error in (file){'move-files.js'} while parsing arguments:\n"
+            + `${error}\n`
+            + "expected:\n"
+            + "(command){node} (file){'*/move-files.js'} (argument){[input path]} (argument){[output path]} (argument){[test](optional)}\n"
+            + "or\n"
+            + "(command){node} (file){'*/move-files.js'} (argument){*[config file reference]}",
             Color.ERROR,
             {
-                file: Color.FILE,
                 command: COLOR_COMMAND,
                 argument: COLOR_ARGUMENT
             });
         return;
     }
 
-    const inputPath = arguments.positional[0];
-    const outputPath = arguments.positional[1];
-
-    Color.Log(`Moving all files from (file){'${inputPath}'} to (file){'${outputPath}'}`, [],
-        {
-            file: Color.FILE
-        });
-
-    function ConvertFiles(relativePath)
+    mappings.forEach(mapping =>
     {
-        const dir = path.join(inputPath, relativePath);
-        const files = fs.readdirSync(dir);
-        return files.map(file =>
+        const { from, to, test } = mappings[0];
+        Color.Log(`Moving all files from (file){'${from}'} to (file){'${to}'}`);
+
+        Walk(from, "", test, (data, relative, file) =>
         {
-            return new Promise((resolve, reject) =>
+            const outPath = path.join(to, relative, file);
+            const outDir = path.join(to, relative);
+            if (!fs.existsSync(outDir))
             {
-                let fullPath = path.join(dir, file);
-                const stat = fs.statSync(fullPath);
-
-                if (stat && stat.isDirectory())
+                fs.mkdirSync(outDir, { recursive: true });
+            }
+            fs.writeFile(outPath, data, (error) =>
+            {
+                if (error)
                 {
-                    const promises = ConvertFiles(path.join(relativePath + file));
-                    Promise.all(promises).then(values =>
-                    {
-                        resolve(values.reduce((accumelator, value) =>
-                        {
-                            return [...accumelator, ...value];
-                        }, []));
-                    });
-                } else
-                {
-                    fs.readFile(path.join(inputPath, relativePath, file), (_err, data) =>
-                    {
-                        if (!fs.existsSync(path.join(outputPath, relativePath)))
-                        {
-                            fs.mkdirSync(path.join(outputPath, relativePath), { recursive: true });
-                        }
-
-                        fs.writeFile(path.join(outputPath, relativePath, file), data, () =>
-                        {
-                            resolve([{
-                                source: path.join(inputPath, relativePath, file),
-                                target: path.join(outputPath, relativePath, file),
-                                error: null
-                            }]);
-                        });
-                    });
+                    Color.Warn(`error writing to file (file){'${outPath}'}:\n${error}`);
                 }
             });
-
         });
-    }
-    Promise.all(ConvertFiles("")).then(values =>
-    {
-        const results = values.reduce((accumelator, value) => [...accumelator, ...value], []);
     });
 }
 
