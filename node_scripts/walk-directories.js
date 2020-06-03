@@ -43,6 +43,7 @@ function Walk(root, relative = "", test = EMPTY_REGEX, fileCallback = null)
                             {
                                 resolve(fileList);
                             });
+                            return;
                         }
 
                         if (!test.test(file))
