@@ -1,18 +1,11 @@
 {
+    "extends": "./tsconfig.json",
     "compilerOptions": {
-        "allowJs": true,
-        "target": "ES6",
         "module": "CommonJS",
-        "outDir": "../out/src/back",
-        "moduleResolution": "node",
-        "preserveSymlinks": true,
-        "tsBuildInfoFile": "../saved/typescript-build-info.json",
-        "incremental": true
+        "outDir": "../out/src/back"
     },
-    "include": [
-        "../src/back/**/*"
-    ],
     "exclude": [
-        "node_modules"
+        "../src/back/",
+        "../src/test/"
     ]
 }

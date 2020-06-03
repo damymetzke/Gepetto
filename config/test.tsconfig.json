@@ -1,15 +1,11 @@
 {
+    "extends": "./tsconfig.json",
     "compilerOptions": {
-        "allowJs": true,
-        "target": "ES6",
         "module": "CommonJS",
-        "outDir": "../dev_out/test",
-        "moduleResolution": "Node"
+        "outDir": "../dev_out/test"
     },
-    "include": [
-        "../src/test/**/*"
-    ],
     "exclude": [
-        "node_modules"
+        "../src/front/",
+        "../src/back/"
     ]
 }

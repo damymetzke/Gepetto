@@ -1,18 +1,11 @@
 {
+    "extends": "./tsconfig.json",
     "compilerOptions": {
-        "allowJs": true,
-        "target": "ES6",
         "module": "ES6",
-        "outDir": "../out/src/front",
-        "moduleResolution": "node",
-        "preserveSymlinks": true,
-        "tsBuildInfoFile": "../saved/typescript-build-info.json",
-        "incremental": true
+        "outDir": "../out/src/front"
     },
-    "include": [
-        "../src/front/**/*"
-    ],
     "exclude": [
-        "node_modules"
+        "../src/front/",
+        "../src/test/"
     ]
 }
