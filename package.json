@@ -12,7 +12,7 @@
     "setup:test": "node ./node_scripts/move-files.js *coreTest",
     "precompile:app": "npm run setup:app",
     "compile:app": "node ./node_scripts/run-scripts.js compile:app#html compile:app#sass compile:app#typescript.front compile:app#typescript.back",
-    "compile:app#html": "node ./node_scripts/compile-html.js",
+    "compile:app#html": "node ./node_scripts/move-files.js *html",
     "compile:app#sass": "node ./node_scripts/compile-sass.js",
     "compile:app#typescript.front": "./node_modules/.bin/tsc -p ./config/front.tsconfig.json",
     "compile:app#typescript.back": "./node_modules/.bin/tsc -p ./config/back.tsconfig.json",
@@ -20,8 +20,9 @@
     "compile:test": "node ./node_scripts/run-scripts.js compile:test#typescript",
     "compile:test#typescript": "./node_modules/.bin/tsc -p ./config/test.tsconfig.json",
     "prebuild:docs": "node ./node_scripts/run-scripts.js setup:app setup:test",
-    "build:docs": "node ./node_scripts/run-scripts.js build:docs#typedoc",
+    "build:docs": "node ./node_scripts/run-scripts.js build:docs#typedoc build:docs#markdown",
     "build:docs#typedoc": "./node_modules/.bin/typedoc ./src/ --out ./documentation/build/typedoc-output/ --tsconfig ./config/tsconfig.json --exclude ./src/front/core --exclude ./src/back/core --exclude ./src/test/core",
+    "build:docs#markdown": "node ./node_scripts/build_markdown.js",
     "clean": "node ./node_scripts/clean.js"
   },
   "repository": {

@@ -54,28 +54,16 @@
                 "ignoreRelative": true
             }
         ],
-        "typescript": {
-            "front": {
-                "from": "./src/front",
-                "to": "./out/src/front",
-                "config": "./config/front.tsconfig.json"
-            },
-            "back": {
-                "from": "./src/back",
-                "to": "./out/src/back",
-                "config": "./config/back.tsconfig.json"
-            },
-            "test": {
-                "from": "./src/test",
-                "to": "./dev_out/test",
-                "config": "./config/test.tsconfig.json"
-            }
-        },
         "markdown": [
             {
-                "from": "./documentation/doc",
-                "to": "./documentation/build/doc",
+                "from": "./documentation/md",
+                "to": "./documentation/build/md",
                 "test": "\\.md$"
+            }
+        ],
+        "typedoc": [
+            {
+                "to": "./documentation/build/typedoc"
             }
         ]
     }
