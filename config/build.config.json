@@ -61,10 +61,8 @@
                 "test": "\\.md$"
             }
         ],
-        "typedoc": [
-            {
-                "to": "./documentation/build/typedoc"
-            }
-        ]
+        "typedoc": {
+            "to": "./documentation/build/typedoc-output"
+        }
     }
 }
