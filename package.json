@@ -23,7 +23,9 @@
     "build:docs": "node ./node_scripts/run-scripts.js build:docs#typedoc build:docs#markdown",
     "build:docs#typedoc": "node ./node_scripts/wrap_command.js \".\\node_modules\\.bin\\typedoc ./src/ --out {build_config:directoryMaps.typedoc.to} --tsconfig ./config/tsconfig.json --exclude ./src/front/core --exclude ./src/back/core --exclude ./src/test/core\"",
     "build:docs#markdown": "node ./node_scripts/build_markdown.js",
-    "clean": "node ./node_scripts/clean.js"
+    "clean": "node ./node_scripts/clean.js",
+    "pack": "./node_modules/.bin/electron-builder --dir",
+    "dist": "./node_modules/.bin/electron-builder"
   },
   "repository": {
     "type": "git",
@@ -36,6 +38,8 @@
     "@babel/types": "^7.9.6",
     "@types/jest": "^25.2.3",
     "del": "^5.1.0",
+    "electron": "^8.2.0",
+    "electron-builder": "^22.7.0",
     "jest": "^25.2.7",
     "jsdoc": "^3.6.3",
     "markdown": "^0.5.0",
@@ -45,7 +49,6 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "electron": "^8.2.0",
     "node-sass": "^4.14.1",
     "xml2js": "^0.4.23"
   },
@@ -53,5 +56,15 @@
     "plugins": [
       "@babel/plugin-proposal-class-properties"
     ]
+  },
+  "build": {
+    "appId": "com.damymetzke.gepetto",
+    "productName": "Gepetto",
+    "copyright": "Copyright © 2020 Damy Metzke",
+    "directories": {
+      "buildResources": "./out",
+      "output": "./distribution",
+      "app": "./"
+    }
   }
 }
