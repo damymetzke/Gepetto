@@ -14,7 +14,7 @@
                 "."
             ],
             "outputCapture": "std",
-            "preLaunchTask": "npm compile all"
+            "preLaunchTask": "npm compile:app"
         }
     ]
 }

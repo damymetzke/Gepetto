@@ -2,7 +2,8 @@
     "cleanDirectories": [
         "./out",
         "./dev_out",
-        "./documentation/build"
+        "./documentation/build",
+        "./distribution"
     ],
     "consoleColors": {
         "warn": [
@@ -36,7 +37,7 @@
                 },
                 {
                     "from": "./src/core",
-                    "to": "./src/front/core"
+                    "to": "./src/back/core"
                 }
             ],
             "coreTest": [

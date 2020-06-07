@@ -4,9 +4,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "npm compile all",
+            "label": "npm compile:app",
             "type": "npm",
-            "script": "compile:all",
+            "script": "compile:app",
             "group": "build",
             "problemMatcher": []
         }

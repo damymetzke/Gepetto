@@ -94,7 +94,7 @@ function Run()
 
     mappings.forEach(mapping =>
     {
-        const { from, to, test } = mappings[0];
+        const { from, to, test } = mapping;
         Color.Log(`Moving all files from (file){'${from}'} to (file){'${to}'}`);
 
         Walk(from, "", test, (data, relative, file) =>

@@ -6,6 +6,7 @@
     },
     "exclude": [
         "../src/front/",
-        "../src/back/"
+        "../src/back/",
+        "../src/core/"
     ]
 }

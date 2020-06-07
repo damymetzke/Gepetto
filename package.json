@@ -24,7 +24,9 @@
     "build:docs#typedoc": "node ./node_scripts/wrap_command.js \".\\node_modules\\.bin\\typedoc ./src/ --out {build_config:directoryMaps.typedoc.to} --tsconfig ./config/tsconfig.json --exclude ./src/front/core --exclude ./src/back/core --exclude ./src/test/core\"",
     "build:docs#markdown": "node ./node_scripts/build_markdown.js",
     "clean": "node ./node_scripts/clean.js",
+    "prepack": "node ./node_scripts/run-scripts.js clean then compile:app compile:test then test",
     "pack": "./node_modules/.bin/electron-builder --dir",
+    "predist": "node ./node_scripts/run-scripts.js clean then compile:app compile:test then test",
     "dist": "./node_modules/.bin/electron-builder"
   },
   "repository": {
@@ -62,9 +64,11 @@
     "productName": "Gepetto",
     "copyright": "Copyright © 2020 Damy Metzke",
     "directories": {
-      "buildResources": "./out",
-      "output": "./distribution",
-      "app": "./"
-    }
+      "buildResources": "./",
+      "output": "./distribution"
+    },
+    "files": [
+      "./out/**/*"
+    ]
   }
 }
