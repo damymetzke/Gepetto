@@ -1,0 +1,149 @@
+{
+    "scripts": {
+        "clean": {
+            "external": false,
+            "subscripts": [
+                {
+                    "type": "node",
+                    "file": "./node_scripts/clean.js"
+                }
+            ]
+        },
+        "prepare:app": {
+            "external": false,
+            "subscripts": [
+                {
+                    "type": "node",
+                    "file": "./node_scripts/move-files.js",
+                    "arguments": [
+                        "*core"
+                    ]
+                }
+            ]
+        },
+        "prepare:test": {
+            "external": false,
+            "subscripts": [
+                {
+                    "type": "node",
+                    "file": "./node_scripts/move-files.js",
+                    "arguments": [
+                        "*test"
+                    ]
+                }
+            ]
+        },
+        "compile:app": {
+            "external": true,
+            "dependencies": [
+                "prepare:app"
+            ],
+            "subscripts:": [
+                {
+                    "type": "node",
+                    "file": "./node_scripts/move-files.js",
+                    "arguments": [
+                        "*html"
+                    ]
+                },
+                {
+                    "type": "node",
+                    "file": "./node_scripts/compile-sass.js"
+                },
+                {
+                    "type": "shell",
+                    "program": "./node_modules/.bin/tsc",
+                    "arguments": [
+                        "-p",
+                        "./config/front.tsconfig.json"
+                    ]
+                },
+                {
+                    "type": "shell",
+                    "program": "./node_modules/.bin/tsc",
+                    "arguments": [
+                        "-p",
+                        "./config/back.tsconfig.json"
+                    ]
+                }
+            ]
+        },
+        "compile:test": {
+            "external": false,
+            "dependencies": [
+                "prepare:test"
+            ],
+            "subscripts": [
+                {
+                    "type": "shell",
+                    "program": "./node_modules/.bin/tsc",
+                    "arguments": [
+                        "-p",
+                        "./config/test.tsconfig.json"
+                    ]
+                }
+            ]
+        },
+        "test": {
+            "external": true,
+            "dependencies": [
+                "compile:test"
+            ],
+            "subscripts": [
+                {
+                    "type": "shell",
+                    "program": "./node_modules/.bin/jest"
+                }
+            ]
+        },
+        "build:documentation": {
+            "external": true,
+            "dependencies": [
+                "prepare:app",
+                "prepare:test"
+            ],
+            "subscripts": [
+                {
+                    "type": "shell",
+                    "program": "./node_modules/.bin/typedoc",
+                    "arguments": [
+                        "./src/",
+                        "--out",
+                        "{build_config:directoryMaps.typedoc.to}",
+                        "--tsconfig",
+                        "./config/tsconfig.json",
+                        "--exclude",
+                        "./src/front/core",
+                        "--exclude",
+                        "./src/back/core",
+                        "--exclude",
+                        "./src/test/core"
+                    ]
+                }
+            ]
+        },
+        "build": {
+            "external": true,
+            "dependencies": [
+                "compile:app",
+                "build:documentation",
+                "test"
+            ]
+        },
+        "start": {
+            "external": true,
+            "dependencies": [
+                "compile:app"
+            ],
+            "subscripts": [
+                {
+                    "type": "shell",
+                    "program": "./node_modules/.bin/electron",
+                    "arguments": [
+                        "./"
+                    ]
+                }
+            ]
+        }
+    }
+}
