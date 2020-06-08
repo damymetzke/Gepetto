@@ -1,11 +1,6 @@
 import { Matrix, Transform, Vector } from "./core/core";
 
-/**
- * all numbers are randomly generated using random.org
- * @see https://www.random.org
- */
-
-const TARGET_FILE = "core/transform.js";
+const TARGET_FILE = "core/transform.ts";
 
 expect.extend({
     toEqualTransform(recieved: Transform, expected: Transform): jest.CustomMatcherResult
@@ -52,7 +47,7 @@ expect.extend({
     }
 });
 
-test(`CLASS_CONSTRUCTOR Transfor @ '${TARGET_FILE}'`, () =>
+test(`CLASS_CONSTRUCTOR Transform @ '${TARGET_FILE}'`, () =>
 {
     const transform = new Transform([2232, 3474, 5322, 6506, 8831, 1363]);
 

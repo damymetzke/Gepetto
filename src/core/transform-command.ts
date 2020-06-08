@@ -190,10 +190,10 @@ export class TransformCommand
 
     constructor(type: string | TransformCommandType = "TRANSLATE", fields: TransformCommandField = {})
     {
-        const typeIndex = (typeof type === "string") ? TransformCommandType[type] : type;
+        const typeIndex: TransformCommandType = (typeof type === "string") ? TransformCommandType[type] : type;
         this.typeIndex = typeIndex;
         this.fields = {
-            ...FIELD_DEFAULTS,
+            ...FIELD_DEFAULTS[TransformCommandType[typeIndex]],
             ...fields
         };
     }
