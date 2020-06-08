@@ -21,7 +21,7 @@ function Run()
 {
     if (process.argv.length < 3)
     {
-        Color.Log("⚠ run-scripts.js called with no arguments,\nterminating program with no actions taken.", Color.WARN);
+        Color.Error("⚠ run-scripts.js called with no arguments,\nterminating program with no actions taken.");
         return;
     }
 
@@ -34,10 +34,7 @@ function Run()
             return `${accumelator}\nthen:\n`;
         }
         return `${accumelator}\n*  (script){${script}}`;
-    }, "")}`, [], {
-        head: Color.HEADER,
-        script: Color.FILE
-    });
+    }, "")}`);
 
     const scriptStack = scriptArguments.reduceRight((accumelator, script) =>
     {

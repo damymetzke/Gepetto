@@ -15,18 +15,13 @@ if (!("cleanDirectories" in CONFIG_DATA))
 }
 
 Color.Log(`(head){Cleaning Directories:}
-${CONFIG_DATA.cleanDirectories.reduce((accumelator, directory) => `${accumelator}* (file){"${directory}"}\n`, "")}`, [], {
-    head: Color.HEADER,
-    file: Color.FILE
-});
+${CONFIG_DATA.cleanDirectories.reduce((accumelator, directory) => `${accumelator}* (file){"${directory}"}\n`, "")}`
+);
 
 CONFIG_DATA.cleanDirectories.forEach(directory =>
 {
     del(directory).catch((error) =>
     {
-        Color.Log(`error loading directory: (file){"${directory}"}\n(error){${error}}`, [], {
-            file: Color.FILE,
-            error: Color.ERROR
-        });
+        Color.Warn(`could not delete directory: (file){"${directory}"}\n(error){${error}}`);
     });
 });
