@@ -1,4 +1,4 @@
-import { Transform, TransformCommand } from "./core/core";
+import { Transform, TransformCommand, TransformCommandType, TransformCommandPureObject } from "./core/core";
 
 import "./shared";
 
@@ -41,4 +41,29 @@ test(`CLASS_FUNCTION TransformCommand.GetTransform @ '${TARGET_FILE}'`, () =>
     (<any>expect(scaleTransform)).toEqualTransform(new Transform([7384, 0, 0, 8285, 0, 0]));
     (<any>expect(rotateTransform)).toEqualTransform(new Transform([-0.139, 0.990, -0.990, -0.139, 0, 0]));
     (<any>expect(shearTransform)).toEqualTransform(new Transform([1, 0, 4887, 1, 0, 0]));
+});
+
+test(`CLASS_FUNCTION TransformCommand.ToPureObject @ '${TARGET_FILE}'`, () =>
+{
+    const commandA = new TransformCommand(TransformCommandType.TRANSLATE, { x: 5647, y: 4698 });
+    const commandB = new TransformCommand(TransformCommandType.SCALE, { x: 9464 });
+
+    const pureA = commandA.ToPureObject();
+    const pureB = commandB.ToPureObject();
+
+    expect(pureA).toStrictEqual(<TransformCommandPureObject>{
+        type: TransformCommandType.TRANSLATE,
+        fields: {
+            x: 5647,
+            y: 4698
+        }
+    });
+
+    expect(pureB).toStrictEqual(<TransformCommandPureObject>{
+        type: TransformCommandType.SCALE,
+        fields: {
+            x: 9464,
+            y: 1
+        }
+    });
 });
