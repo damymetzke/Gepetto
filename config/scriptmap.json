@@ -1,7 +1,14 @@
 {
+    "export": [
+        "clean",
+        "start",
+        "test",
+        "build",
+        "rebuild",
+        "package"
+    ],
     "scripts": {
         "clean": {
-            "external": false,
             "subscripts": [
                 {
                     "type": "node",
@@ -10,7 +17,6 @@
             ]
         },
         "prepare:app": {
-            "external": false,
             "subscripts": [
                 {
                     "type": "node",
@@ -22,7 +28,6 @@
             ]
         },
         "prepare:test": {
-            "external": false,
             "subscripts": [
                 {
                     "type": "node",
@@ -34,7 +39,6 @@
             ]
         },
         "compile:app": {
-            "external": true,
             "dependencies": [
                 "prepare:app"
             ],
@@ -69,7 +73,6 @@
             ]
         },
         "compile:test": {
-            "external": false,
             "dependencies": [
                 "prepare:test"
             ],
@@ -85,7 +88,6 @@
             ]
         },
         "test": {
-            "external": true,
             "dependencies": [
                 "compile:test"
             ],
@@ -97,7 +99,6 @@
             ]
         },
         "build:documentation": {
-            "external": true,
             "dependencies": [
                 "prepare:app",
                 "prepare:test"
@@ -123,15 +124,25 @@
             ]
         },
         "build": {
-            "external": true,
             "dependencies": [
-                "compile:app",
-                "build:documentation",
-                "test"
+                "clean"
+            ],
+            "subscripts": [
+                {
+                    "type": "script",
+                    "script": "compile:app"
+                },
+                {
+                    "type": "script",
+                    "script": "build:documentation"
+                },
+                {
+                    "type": "script",
+                    "script": "test"
+                }
             ]
         },
         "start": {
-            "external": true,
             "dependencies": [
                 "compile:app"
             ],
@@ -142,6 +153,28 @@
                     "arguments": [
                         "./"
                     ]
+                }
+            ]
+        },
+        "rebuild": {
+            "dependencies": [
+                "clean"
+            ],
+            "subscripts": [
+                {
+                    "type": "script",
+                    "script": "build"
+                }
+            ]
+        },
+        "package": {
+            "dependencies": [
+                "rebuild"
+            ],
+            "subscripts": [
+                {
+                    "type": "shell",
+                    "program": "./node_modules/.bin/electron-builder"
                 }
             ]
         }
