@@ -178,14 +178,17 @@ export class TransformCommand
         return new TransformCommand(this.typeIndex, this.fields);
     }
 
-    AddRelative(other: TransformCommand): void
+    AddRelative(other: TransformCommand): TransformCommand
     {
         if (this.typeIndex !== other.typeIndex)
         {
+            //todo: throw exception
             return;
         }
 
         this.fields = { ...RELATIVE_ADDITION_MAP[TransformCommandType[this.typeIndex]](this.fields, other.fields) };
+
+        return this;
     }
 
     constructor(type: string | TransformCommandType = "TRANSLATE", fields: TransformCommandField = {})
