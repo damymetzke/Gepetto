@@ -67,3 +67,27 @@ test(`CLASS_FUNCTION TransformCommand.ToPureObject @ '${TARGET_FILE}'`, () =>
         }
     });
 });
+
+test(`CLASS_FUNCTION TransformCommand.FromPureObject @ '${TARGET_FILE}'`, () =>
+{
+    const pureA: TransformCommandPureObject = {
+        type: TransformCommandType.ROTATE,
+        fields: {
+            rotation: 99
+        }
+    };
+    const pureB: TransformCommandPureObject = {
+        type: TransformCommandType.SHEARX,
+        fields: {
+            x: 3482
+        }
+    };
+
+    const commandA = new TransformCommand().FromPureObject(pureA);
+    const commandB = new TransformCommand().FromPureObject(pureB);
+
+    expect(commandA.typeIndex).toStrictEqual(TransformCommandType.ROTATE);
+    expect(commandB.typeIndex).toStrictEqual(TransformCommandType.SHEARX);
+    expect(commandA.fields).toStrictEqual({ rotation: 99 });
+    expect(commandB.fields).toStrictEqual({ x: 3482 });
+});
