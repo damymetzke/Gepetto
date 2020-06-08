@@ -91,3 +91,12 @@ test(`CLASS_FUNCTION TransformCommand.FromPureObject @ '${TARGET_FILE}'`, () =>
     expect(commandA.fields).toStrictEqual({ rotation: 99 });
     expect(commandB.fields).toStrictEqual({ x: 3482 });
 });
+
+test(`CLASS_FUNCTION TransformCommand.Clone @ '${TARGET_FILE}'`, () =>
+{
+    const command = new TransformCommand(TransformCommandType.SCALE, { x: 541, y: 9394 });
+
+    const cloned = command.Clone();
+
+    expect(cloned).toStrictEqual(command);
+});
