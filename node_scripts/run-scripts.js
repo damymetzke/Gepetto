@@ -27,13 +27,13 @@ function Run()
 
     const scriptArguments = process.argv.slice(2);
 
-    Color.Log(`(head){Running npm scripts:}${scriptArguments.reduce((accumelator, script) =>
+    Color.Log(`(header){Running npm scripts:}${scriptArguments.reduce((accumelator, script) =>
     {
         if (script === "then")
         {
             return `${accumelator}\nthen:\n`;
         }
-        return `${accumelator}\n*  (script){${script}}`;
+        return `${accumelator}\n*  (file){${script}}`;
     }, "")}`);
 
     const scriptStack = scriptArguments.reduceRight((accumelator, script) =>
