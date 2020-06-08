@@ -197,6 +197,15 @@ export class TransformCommand
     constructor(type: string | TransformCommandType = "TRANSLATE", fields: TransformCommandField = {})
     {
         const typeIndex: TransformCommandType = (typeof type === "string") ? TransformCommandType[type] : type;
+
+        if (!(typeIndex in TransformCommandType))
+        {
+            throw new GepettoException(
+                GepettoExceptionType.TRANSFORM_COMMAND_TYPE_ERROR,
+                `enum value '${typeIndex.toString()}' is not a valid transform command type`
+            );
+        }
+
         this.typeIndex = typeIndex;
         this.fields = {
             ...FIELD_DEFAULTS[TransformCommandType[typeIndex]],

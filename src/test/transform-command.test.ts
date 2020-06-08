@@ -23,6 +23,8 @@ test(`CLASS_CONSTRUCTROR TransformCommand @ '${TARGET_FILE}' (type only)`, () =>
 
     expect(specificTranslate.fields).toStrictEqual({ x: 5465, y: 0 });
     expect(specificScale.fields).toStrictEqual({ x: 4492, y: 1095 });
+
+    expect(() => { new TransformCommand(<TransformCommandType>(9999)); }).toThrow();
 });
 
 test(`CLASS_FUNCTION TransformCommand.GetTransform @ '${TARGET_FILE}'`, () =>
