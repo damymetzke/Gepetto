@@ -121,4 +121,6 @@ test(`CLASS_FUNCTION TransformCommand.AddRelative @ '${TARGET_FILE}'`, () =>
     expect(scaleResult).toStrictEqual(new TransformCommand(TransformCommandType.SCALE, { x: 1474, y: 1558 }));
     expect(rotateResult).toStrictEqual(new TransformCommand(TransformCommandType.ROTATE, { rotation: 16 }));
     expect(shearResult).toStrictEqual(new TransformCommand(TransformCommandType.SHEARX, { x: 8340 }));
+
+    expect(() => { translateA.AddRelative(scaleB); }).toThrow();
 });

@@ -1,3 +1,5 @@
+import { GepettoExceptionType, GepettoException } from "./gepetto-exception";
+
 import { Matrix, Vector, Transform } from "./transform";
 import { TransformCommandType, TransformCommand, TransformCommandPure } from "./transform-command";
 import { DrawObject, DrawObjectPure } from "./draw-object";
@@ -9,6 +11,7 @@ import { SyncLog, SynchronizedTreeLog } from "./sync/synchronized-tree-log";
 
 export
 {
+    GepettoExceptionType, GepettoException,
     Matrix, Vector, Transform,
     TransformCommandType, TransformCommand, TransformCommandPure as TransformCommandPureObject,
     DrawObject, DrawObjectPure,

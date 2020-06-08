@@ -1,4 +1,5 @@
 import { Transform } from "./transform";
+import { GepettoExceptionType, GepettoException } from "./gepetto-exception";
 
 type MatrixFunction = (fields: TransformCommandField) => Transform;
 export enum TransformCommandType
@@ -182,8 +183,10 @@ export class TransformCommand
     {
         if (this.typeIndex !== other.typeIndex)
         {
-            //todo: throw exception
-            return;
+            throw new GepettoException(
+                GepettoExceptionType.TRANSFORM_COMMAND_TYPE_ERROR,
+                `types '${TransformCommandType[this.typeIndex]}' and '${TransformCommandType[other.typeIndex]}' do not match\n`
+            );
         }
 
         this.fields = { ...RELATIVE_ADDITION_MAP[TransformCommandType[this.typeIndex]](this.fields, other.fields) };
