@@ -1,6 +1,6 @@
 import { Transform } from "./transform";
 
-type MatrixFunction = () => Transform;
+type MatrixFunction = (fields: TransformCommandField) => Transform;
 export enum TransformCommandType
 {
     TRANSLATE,
@@ -22,43 +22,43 @@ export interface TransformCommandPure
 }
 
 const MATRIX_FUNCTIONS: { [type in keyof typeof TransformCommandType]: MatrixFunction; } = {
-    "TRANSLATE": () =>
+    "TRANSLATE": (fields) =>
     {
         return new Transform([
             1, 0,
             0, 1,
-            this.fields.x, this.fields.y
+            fields.x, fields.y
         ]);
     },
-    "SCALE": () =>
+    "SCALE": (fields) =>
     {
         return new Transform([
-            this.fields.x, 0,
-            0, this.fields.y,
+            fields.x, 0,
+            0, fields.y,
             0, 0
         ]);
     },
-    "ROTATE": () =>
+    "ROTATE": (fields) =>
     {
-        const rotation = (Number(this.fields.rotation) * Math.PI) / 180;
+        const rotation = (Number(fields.rotation) * Math.PI) / 180;
         return new Transform([
             Math.cos(rotation), Math.sin(rotation),
             -Math.sin(rotation), Math.cos(rotation),
             0, 0
         ]);
     },
-    "SHEARX": () =>
+    "SHEARX": (fields) =>
     {
         return new Transform([
             1, 0,
-            Number(this.fields.x), 1,
+            Number(fields.x), 1,
             0, 0
         ]);
     },
-    "SHEARY": () =>
+    "SHEARY": (fields) =>
     {
         return new Transform([
-            1, Number(this.fields.y),
+            1, Number(fields.y),
             0, 1,
             0, 0
         ]);
@@ -155,7 +155,7 @@ export class TransformCommand
 
     GetTransform(): Transform
     {
-        return MATRIX_FUNCTIONS[TransformCommandType[this.typeIndex]];
+        return MATRIX_FUNCTIONS[TransformCommandType[this.typeIndex]](this.fields);
     }
 
     ToPureObject(): TransformCommandPure
