@@ -8,6 +8,20 @@
         "package"
     ],
     "scripts": {
+        "problem": {
+            "dependencies": [
+                "clean"
+            ],
+            "subscripts": [
+                {},
+                {
+                    "type": "node"
+                },
+                {
+                    "type": "false"
+                }
+            ]
+        },
         "clean": {
             "subscripts": [
                 {
