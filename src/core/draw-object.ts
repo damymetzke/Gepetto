@@ -115,7 +115,7 @@ export class DrawObject
         }
         else if (recursive)
         {
-            parent = this.parent.Clone(true);
+            parent = this.parent === null ? null : this.parent.Clone(true);
         }
         else
         {
@@ -134,5 +134,9 @@ export class DrawObject
         this.name = name;
         this.parent = parent;
         this.transformCommands = transformCommands;
+        if (transformCommands.length > 0)
+        {
+            this._transformDirty = true;
+        }
     }
 }
