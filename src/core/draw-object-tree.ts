@@ -54,7 +54,7 @@ export class DrawObjectTree
         };
     }
 
-    FromPureObject(object: DrawObjectTreePure): void
+    FromPureObject(object: DrawObjectTreePure): DrawObjectTree
     {
         for (let name in object.objects)
         {
@@ -72,10 +72,15 @@ export class DrawObjectTree
         }
 
         this.rootObjects = object.rootObjects.map(name => this.objects[name]);
+        return this;
     }
 
     constructor(rootObject: DrawObject[] = [])
     {
         this.rootObjects = rootObject;
+        rootObject.forEach(rootObject =>
+        {
+            this.objects[rootObject.name] = rootObject;
+        });
     }
 }

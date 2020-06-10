@@ -59,5 +59,26 @@ expect.extend({
                 );
             }
         };
+    },
+    toBeTrueForAny(recieved: any[], test: ((recieved: any) => boolean)): jest.CustomMatcherResult
+    {
+        const success = recieved.some(element => test(element));
+        return {
+            pass: success,
+            message: success ?
+                () =>
+                {
+                    return "Recieved:\n"
+                        + `[\n${recieved.reduce(element => `${element}\n`)}]\n`
+                        + "At least 1 recieved elements passes the test";
+                }
+                :
+                () =>
+                {
+                    return "Recieved:\n"
+                        + `[\n${recieved.reduce(element => `${element}\n`)}]\n`
+                        + "None of the recieved elements pass the test";
+                }
+        };
     }
 });
