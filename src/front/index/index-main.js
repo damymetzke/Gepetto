@@ -42,25 +42,16 @@ function Run()
 
     document.getElementById("toolbar--buttons--import-object").addEventListener("click", ImportSvg);
 
-    let client = new XMLHttpRequest();
-    client.open('GET', "./object-editor-alt.html");
-    client.onload = function ()
+
+    const objectEditor = new SubDoc("./object-editor.subdoc.html", document.getElementById("main").children[ 1 ], () =>
     {
-        let raw = client.response;
-        let subdoc = new SubDocHandler(raw);
-        //document.getElementById("main").children[ 1 ].appendChild(subdoc.root);
-        const tmp = new SubDoc("./object-editor.subdoc.html", document.getElementById("main").children[ 1 ], () =>
-        {
-            console.log(tmp.getElementBySid("header"));
-            console.log(tmp.getElementBySid("text-tree"));
-            console.log(tmp.getElementBySid("text-tree--list"));
-            console.log(tmp.getElementBySid("property--transform-add-controls"));
-        });
-
-    };
+        console.log(objectEditor.getElementBySid("header"));
+        console.log(objectEditor.getElementBySid("text-tree"));
+        console.log(objectEditor.getElementBySid("text-tree--list"));
+        console.log(objectEditor.getElementBySid("property--transform-add-controls"));
+    });
 
 
-    client.send();
 }
 
 Run();
