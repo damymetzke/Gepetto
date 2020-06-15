@@ -1,0 +1,42 @@
+<div sid="body" class="hide-property">
+    <section sid="header">
+        <h1>Object Tree</h1>
+    </section>
+    <section sid="text-tree" data-callback-mode="select">
+        <div sid="text-tree--header">
+            <p sid="text-tree--header--select">
+                Object Tree
+            </p>
+            <p sid="text-tree--header--reparent">
+                Reparent Mode
+            </p>
+        </div>
+        <ol sid="text-tree--list">
+        </ol>
+    </section>
+    <section sid="main">
+        <svg sid="main--svg" xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 200 200">
+        </svg>
+    </section>
+    <section sid="property">
+        <h2 sid="property--name"></h2>
+        <h3>Properties</h3>
+
+        <h4>name <input sid="property--name-input" type="text"></h4>
+        <h4 sid="property--reparent" class="button">reparent</h4>
+
+        <h4>transforms</h4>
+        <ol sid="property--transform-list">
+
+        </ol>
+        <img src="./images/dropdown.svg" class="dropdown--icon" data-dropdown-identifier="property-transform-add">
+        <ul sid="property--transform-add-controls" class="dropdown--box"
+            data-dropdown-identifier="property-transform-add">
+            <button class="button" data-transform-command-type="TRANSLATE">translate</button>
+            <button class="button" data-transform-command-type="SCALE">scale</button>
+            <button class="button" data-transform-command-type="ROTATE">rotate</button>
+            <button class="button" data-transform-command-type="SHEARX">shearX</button>
+            <button class="button" data-transform-command-type="SHEARY">shearY</button>
+        </ul>
+    </section>
+</div>

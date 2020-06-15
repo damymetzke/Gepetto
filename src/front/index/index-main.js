@@ -2,6 +2,7 @@ import * as Dropdown from "../global/dropdown.js";
 import * as Tabs from "../global/tabs.js";
 import * as ContentLoader from "../global/content-loader.js";
 import { SubDocHandler } from "../global/subdoc.js";
+import { SubDoc } from "../global/subdoc_alt.js";
 
 const currentWindow = require('electron').remote.getCurrentWindow();
 const BrowserWindow = require("electron").remote.BrowserWindow;
@@ -47,9 +48,17 @@ function Run()
     {
         let raw = client.response;
         let subdoc = new SubDocHandler(raw);
-        document.getElementById("main").children[1].appendChild(subdoc.root);
+        //document.getElementById("main").children[ 1 ].appendChild(subdoc.root);
+        const tmp = new SubDoc("./object-editor.subdoc.html", document.getElementById("main").children[ 1 ], () =>
+        {
+            console.log(tmp.getElementBySid("header"));
+            console.log(tmp.getElementBySid("text-tree"));
+            console.log(tmp.getElementBySid("text-tree--list"));
+            console.log(tmp.getElementBySid("property--transform-add-controls"));
+        });
 
     };
+
 
     client.send();
 }
