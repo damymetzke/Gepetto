@@ -3,7 +3,7 @@ import { TransformCommandType, TransformCommand } from "../transform-command";
 import { DrawObject } from "../draw-object";
 import { SynchronizedObject, SynchronizedTransformCommand } from "./synchronized-object";
 
-export type SyncData = { [key: string]: any; };
+export type SyncData = { [ key: string ]: any; };
 /**
  * function that will be called whenever an action is recieved
  * 
@@ -31,16 +31,16 @@ interface ChangeNameData
     newName: string;
 }
 
-const ACTION_EFFECTS: { [action: string]: (syncTree: SynchronizedTree, data: SyncData) => any; } = {
+const ACTION_EFFECTS: { [ action: string ]: (syncTree: SynchronizedTree, data: SyncData) => any; } = {
     "change-name": (syncTree: SynchronizedTree, data: ChangeNameData) =>
     {
-        syncTree._tree.objects[data.newName] = syncTree._tree.objects[data.originalObject];
-        delete syncTree._tree.objects[data.originalObject];
-        syncTree._tree.objects[data.newName].name = data.newName;
+        syncTree._tree.objects[ data.newName ] = syncTree._tree.objects[ data.originalObject ];
+        delete syncTree._tree.objects[ data.originalObject ];
+        syncTree._tree.objects[ data.newName ].name = data.newName;
 
         syncTree.NotifyNameChange(data.originalObject, data.newName);
 
-        return syncTree._tree.objects[data.newName];
+        return syncTree._tree.objects[ data.newName ];
     }
 };
 
@@ -67,11 +67,11 @@ export class SynchronizedTree
 {
     _tree: DrawObjectTree = new DrawObjectTree();
 
-    _followedSynchronizedObjects: { [name: string]: SynchronizedObject[]; } = {};
+    _followedSynchronizedObjects: { [ name: string ]: SynchronizedObject[]; } = {};
     _focus: SynchronizedTransformCommand = new SynchronizedTransformCommand(this, "", -1);
 
     _recieveActionListners: RecieveActionListner[] = [];
-    _actionListners: { [action: string]: ActionListner[]; } = {};
+    _actionListners: { [ action: string ]: ActionListner[]; } = {};
 
     /**
      * called when an action is taken on this class.
@@ -109,14 +109,14 @@ export class SynchronizedTree
             return;
         }
 
-        const result = ACTION_EFFECTS[action](this, data);
+        const result = ACTION_EFFECTS[ action ](this, data);
 
         if (!(action in this._actionListners))
         {
             return;
         }
 
-        this._actionListners[action].forEach(listner => listner(data, result));
+        this._actionListners[ action ].forEach(listner => listner(data, result));
     }
 
     /**
@@ -142,11 +142,11 @@ export class SynchronizedTree
     {
         if (!(action in this._actionListners))
         {
-            this._actionListners[action] = [listner];
+            this._actionListners[ action ] = [ listner ];
             return;
         }
 
-        this._actionListners[action].push(listner);
+        this._actionListners[ action ].push(listner);
     }
 
     /**
@@ -161,9 +161,9 @@ export class SynchronizedTree
     {
         if (name in this._followedSynchronizedObjects)
         {
-            this._followedSynchronizedObjects[newName] = this._followedSynchronizedObjects[name];
-            delete this._followedSynchronizedObjects[name];
-            this._followedSynchronizedObjects[newName].forEach(followed =>
+            this._followedSynchronizedObjects[ newName ] = this._followedSynchronizedObjects[ name ];
+            delete this._followedSynchronizedObjects[ name ];
+            this._followedSynchronizedObjects[ newName ].forEach(followed =>
             {
                 followed.objectName = newName;
             });
@@ -185,24 +185,24 @@ export class SynchronizedTree
 
     AddObject(name: string): SynchronizedObject
     {
-        this._tree.objects[name] = new DrawObject(name);
-        this._tree.rootObjects.push(this._tree.objects[name]);
+        this._tree.objects[ name ] = new DrawObject(name);
+        this._tree.rootObjects.push(this._tree.objects[ name ]);
         this.SendAction("add-object", { name: name });
 
         let result = new SynchronizedObject(this, name);
         if (!(name in this._followedSynchronizedObjects))
         {
-            this._followedSynchronizedObjects[name] = [];
+            this._followedSynchronizedObjects[ name ] = [];
         }
-        this._followedSynchronizedObjects[name].push(result);
+        this._followedSynchronizedObjects[ name ].push(result);
         return result;
     }
 
     ChangeName(object: SynchronizedObject, newName: string): void
     {
-        this._tree.objects[newName] = this._tree.objects[object.objectName];
-        delete this._tree.objects[object.objectName];
-        this._tree.objects[newName].name = newName;
+        this._tree.objects[ newName ] = this._tree.objects[ object.objectName ];
+        delete this._tree.objects[ object.objectName ];
+        this._tree.objects[ newName ].name = newName;
 
         this.SendAction("change-name", {
             originalObject: object.objectName,
@@ -228,14 +228,21 @@ export class SynchronizedTree
         this._focus.transformCommandIndex = -1;
     }
 
-    AddTransformCommand(object: SynchronizedObject, type: TransformCommandType): void
+    AddTransformCommand(object: SynchronizedObject, type: TransformCommandType): SynchronizedTransformCommand
     {
         this.SendAction("add-transform-command", {
             object: object.objectName,
             type: type
         });
 
-        this._tree.objects[object.objectName].transformCommands.push(new TransformCommand(type));
+        this._tree.objects[ object.objectName ].transformCommands.push(new TransformCommand(type));
+
+        const result = new SynchronizedTransformCommand(this, object.objectName, this._tree.objects[ object.objectName ].transformCommands.length - 1);
+
+        this._followedSynchronizedObjects[ object.objectName ].push(result);
+        //todo: implement this proprly such that it is followed properly and such
+
+        return result;
     }
 
     RemoveTransformCommand(command: SynchronizedTransformCommand): void

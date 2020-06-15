@@ -19,12 +19,12 @@ export class SynchronizedObject
     {
         this.owner.SelectObject(this);
     }
-    AddTransformCommand(type: TransformCommandType): void
+    AddTransformCommand(type: TransformCommandType): SynchronizedTransformCommand
     {
-        this.owner.AddTransformCommand(this, type);
+        return this.owner.AddTransformCommand(this, type);
     }
 
-    constructor(owner: SynchronizedTree, objectName: string)
+    constructor (owner: SynchronizedTree, objectName: string)
     {
         this.objectName = objectName;
         this.owner = owner;
@@ -45,7 +45,7 @@ export class SynchronizedTransformCommand extends SynchronizedObject
         this.owner.SelectTransformCommand(this);
     }
 
-    constructor(owner: SynchronizedTree, objectName: string, transformCommandIndex: number)
+    constructor (owner: SynchronizedTree, objectName: string, transformCommandIndex: number)
     {
         super(owner, objectName);
         this.transformCommandIndex = transformCommandIndex;
