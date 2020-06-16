@@ -5,6 +5,7 @@ export class SubDoc
 {
     ready: boolean;
     sidMap: { [ sid: string ]: HTMLElement | SVGElement; } = {};
+    root: HTMLElement | SVGElement;
 
     getElementBySid(sid: string): (HTMLElement | SVGElement)
     {
@@ -35,6 +36,7 @@ export class SubDoc
             });
 
             root.innerHTML = converted;
+            this.root = root;
             root.querySelectorAll("[data-generated-sid]").forEach((sidElement: HTMLElement | SVGElement) =>
             {
                 this.sidMap[ sidElement.dataset.generatedSid ] = sidElement;
