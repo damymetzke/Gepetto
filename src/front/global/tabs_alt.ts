@@ -1,4 +1,4 @@
-import { SubDoc } from "./subdoc_alt";
+import { SubDoc } from "./subdoc_alt.js";
 
 export class Tab
 {
@@ -10,7 +10,7 @@ export class Tab
         [ this.tabElement, this.content.root ].forEach(element => value ? element.classList.add("selected") : element.classList.remove("selected"));
     }
 
-    constructor (tabParent: HTMLUListElement, contentParent: HTMLUListElement, name: string, subdocPath: string)
+    constructor (tabParent: HTMLUListElement, contentParent: HTMLUListElement, name: string, subdocPath: string, onReady: () => void = () => { })
     {
         this.name = name;
 
@@ -21,7 +21,7 @@ export class Tab
         const contentElement = document.createElement("li");
         contentParent.appendChild(contentElement);
 
-        this.content = new SubDoc(subdocPath, contentElement);
+        this.content = new SubDoc(subdocPath, contentElement, onReady);
     }
 }
 
@@ -40,15 +40,17 @@ export class TabCollection
             return null;
         }
 
-        const tab = new Tab(this.tabParent, this.contentParent, name, subdocPath);
-        this.tabs[ name ] = tab;
-
-        if (autoSelect)
+        const tab = new Tab(this.tabParent, this.contentParent, name, subdocPath, () =>
         {
-            this.selectTab(tab);
-        }
+            this.tabs[ name ] = tab;
 
-        return tab;
+            if (autoSelect)
+            {
+                this.selectTab(tab);
+            }
+
+            return tab;
+        });
     }
 
     selectTab(tab: Tab | string)

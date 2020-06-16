@@ -31,7 +31,7 @@ $selected-tab: mix($highlight-color, $s1-color, 50%);
 
         user-select: none;
 
-        &#selected-tab
+        &.selected
         {
             background-color: $selected-tab;
             
