@@ -33,6 +33,9 @@ export class TabCollection
 
     selectedTab: Tab;
 
+    mouseUp: () => void;
+    mouseMove: (x: number, y: number) => void;
+
     createTab(name: string, subdocPath: string, autoSelect: boolean = true): Tab
     {
         if (name in this.tabs)
@@ -40,9 +43,20 @@ export class TabCollection
             return null;
         }
 
-        const tab = new Tab(this.tabParent, this.contentParent, name, subdocPath, () =>
+        const tab: Tab = new Tab(this.tabParent, this.contentParent, name, subdocPath, () =>
         {
             this.tabs[ name ] = tab;
+            tab.tabElement.addEventListener("mousedown", (event: MouseEvent) =>
+            {
+                if (event.button === 0)
+                {
+                    this.mouseUp = () =>
+                    {
+                        this.selectTab(tab);
+                        this.mouseUp = null;
+                    };
+                }
+            });
 
             if (autoSelect)
             {
@@ -82,5 +96,23 @@ export class TabCollection
         this.tabParent = tabParent;
         this.contentParent = contentParent;
         this.selectedTab = null;
+        this.mouseUp = null;
+        this.mouseMove = null;
+
+        document.addEventListener("mouseup", (event: MouseEvent) =>
+        {
+            if (event.button === 0 && this.mouseUp !== null)
+            {
+                this.mouseUp();
+            }
+        });
+
+        document.addEventListener("mousemove", (event: MouseEvent) =>
+        {
+            if (this.mouseMove !== null)
+            {
+                this.mouseMove(event.pageX, event.pageY);
+            }
+        });
     }
 }
