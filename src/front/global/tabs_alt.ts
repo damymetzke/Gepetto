@@ -1,4 +1,7 @@
 import { SubDoc } from "./subdoc_alt.js";
+import { Menu as menuType, MenuItem as MenuItemType } from "electron";
+
+const { Menu, MenuItem } = require("electron").remote;
 
 const DISTANCE_FOR_DRAG = 18;
 const DISTANCE_FOR_DRAG_SQUARED = DISTANCE_FOR_DRAG * DISTANCE_FOR_DRAG;
@@ -45,6 +48,8 @@ export class Tab
     content: SubDoc;
     name: string;
     implementation: TabContentImplementation;
+
+    contextMenu: menuType;
     setActive(value: boolean): void
     {
         [ this.tabElement, this.content.root ].forEach(element => value ? element.classList.add("selected") : element.classList.remove("selected"));
@@ -55,6 +60,25 @@ export class Tab
     {
         this.owner = owner;
         this.name = name;
+
+        this.contextMenu = new Menu();
+        this.contextMenu.append(new MenuItem({
+            label: "Close",
+            click: () =>
+            {
+                this.implementation.onDestroy(this.content, this.name);
+                this.content.destroy(true);
+                this.tabElement.parentElement.removeChild(this.tabElement);
+                this.owner.destroyTabImplementation(this);
+            }
+        }));
+        this.contextMenu.append(new MenuItem({
+            label: "Save",
+            click: () =>
+            {
+                this.implementation.onSave(this.content, this.name);
+            }
+        }));
 
         this.implementation = implementation;
 
@@ -76,6 +100,12 @@ export class Tab
             this.content.destroy(true);
             this.tabElement.parentElement.removeChild(this.tabElement);
             this.owner.destroyTabImplementation(this);
+        });
+
+        this.tabElement.addEventListener("contextmenu", (event: MouseEvent) =>
+        {
+            this.contextMenu.popup();
+
         });
 
         tabParent.appendChild(this.tabElement);
