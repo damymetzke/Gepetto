@@ -7,6 +7,15 @@ export class SubDoc
     sidMap: { [ sid: string ]: HTMLElement | SVGElement; } = {};
     root: HTMLElement | SVGElement;
 
+    destroy(destroyRoot: boolean = false)
+    {
+        this.ready = false;
+        this.sidMap = {};
+        destroyRoot
+            ? this.root.parentElement.removeChild(this.root)
+            : this.root.innerHTML = "";
+    }
+
     getElementBySid(sid: string): (HTMLElement | SVGElement)
     {
         if (!(sid in this.sidMap) || !this.ready)

@@ -40,6 +40,7 @@ export interface TabContentImplementation
 
 export class Tab
 {
+    owner: TabCollection;
     tabElement: HTMLLIElement;
     content: SubDoc;
     name: string;
@@ -49,8 +50,10 @@ export class Tab
         [ this.tabElement, this.content.root ].forEach(element => value ? element.classList.add("selected") : element.classList.remove("selected"));
     }
 
-    constructor (tabParent: HTMLUListElement, contentParent: HTMLUListElement, name: string, subdocPath: string, implementation: TabContentImplementation, onReady: () => void = () => { })
+
+    constructor (owner: TabCollection, tabParent: HTMLUListElement, contentParent: HTMLUListElement, name: string, subdocPath: string, implementation: TabContentImplementation, onReady: () => void = () => { })
     {
+        this.owner = owner;
         this.name = name;
 
         this.implementation = implementation;
@@ -70,6 +73,9 @@ export class Tab
             }
 
             this.implementation.onDestroy(this.content, this.name);
+            this.content.destroy(true);
+            this.tabElement.parentElement.removeChild(this.tabElement);
+            this.owner.destroyTabImplementation(this);
         });
 
         tabParent.appendChild(this.tabElement);
@@ -113,7 +119,7 @@ export class TabCollection
             return null;
         }
 
-        const tab: Tab = new Tab(this.tabParent, this.contentParent, name, subdocPath, implementation, () =>
+        const tab: Tab = new Tab(this, this.tabParent, this.contentParent, name, subdocPath, implementation, () =>
         {
             this.tabs[ name ] = tab;
             tab.tabElement.addEventListener("mousedown", (event: MouseEvent) =>
@@ -171,6 +177,22 @@ export class TabCollection
 
             return tab;
         });
+    }
+
+    destroyTabImplementation(tab: Tab)
+    {
+        if (!(tab.name in this.tabs))
+        {
+            return;
+        }
+        delete this.tabs[ tab.name ];
+        this.selectedTab = null;
+        //todo: use a more logical method to select next tab (eg. use tab history)
+        for (const name in this.tabs)
+        {
+            this.selectTab(this.tabs[ name ]);
+            break;
+        }
     }
 
     selectTab(tab: Tab | string)
