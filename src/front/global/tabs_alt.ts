@@ -1,5 +1,7 @@
 import { SubDoc } from "./subdoc_alt.js";
 
+const DISTANCE_FOR_DRAG = 18;
+const DISTANCE_FOR_DRAG_SQUARED = DISTANCE_FOR_DRAG * DISTANCE_FOR_DRAG;
 export class Tab
 {
     tabElement: HTMLLIElement;
@@ -34,7 +36,16 @@ export class TabCollection
     selectedTab: Tab;
 
     mouseUp: () => void;
-    mouseMove: (x: number, y: number) => void;
+    mouseMove: () => void;
+
+    dragStart: {
+        x: number;
+        y: number;
+    };
+    dragCurrent: {
+        x: number;
+        y: number;
+    };
 
     createTab(name: string, subdocPath: string, autoSelect: boolean = true): Tab
     {
@@ -50,10 +61,32 @@ export class TabCollection
             {
                 if (event.button === 0)
                 {
+                    this.dragStart = { x: event.clientX, y: event.clientY };
                     this.mouseUp = () =>
                     {
                         this.selectTab(tab);
                         this.mouseUp = null;
+                        this.mouseMove = null;
+                    };
+
+                    this.mouseMove = () =>
+                    {
+                        const dragRelative = { x: this.dragCurrent.x - this.dragStart.x, y: this.dragCurrent.y - this.dragStart.y };
+                        const distanceSquared = dragRelative.x * dragRelative.x + dragRelative.y * dragRelative.y;
+
+                        if (distanceSquared >= DISTANCE_FOR_DRAG_SQUARED)
+                        {
+                            this.mouseUp = () =>
+                            {
+                                this.mouseUp = null;
+                                this.mouseMove = null;
+                            };
+
+                            this.mouseMove = () =>
+                            {
+
+                            };
+                        }
                     };
                 }
             });
@@ -98,6 +131,8 @@ export class TabCollection
         this.selectedTab = null;
         this.mouseUp = null;
         this.mouseMove = null;
+        this.dragStart = { x: 0, y: 0 };
+        this.dragCurrent = { x: 0, y: 0 };
 
         document.addEventListener("mouseup", (event: MouseEvent) =>
         {
@@ -111,7 +146,8 @@ export class TabCollection
         {
             if (this.mouseMove !== null)
             {
-                this.mouseMove(event.pageX, event.pageY);
+                this.dragCurrent = { x: event.clientX, y: event.clientY };
+                this.mouseMove();
             }
         });
     }
