@@ -10,6 +10,22 @@ const svgImportFilePath = `file://${__dirname}/svg-import.html`;
 
 const TAB_COLLECTION = new TabCollection(document.getElementById("tabs"), document.getElementById("main"));
 
+class EmptyImplementation
+{
+    onInit(root, name)
+    {
+        console.log("init", name);
+    }
+    onDestroy(root, name)
+    {
+        console.log("destroy", name);
+    }
+    onSave(root, name)
+    {
+        console.log("save", name);
+    }
+}
+
 function ImportSvg()
 {
     let win = new BrowserWindow({
@@ -41,11 +57,11 @@ function Run()
     Dropdown.OnScriptLoad(root);
     // Tabs.OnScriptLoad(root);
 
-    TAB_COLLECTION.createTab("object editor 1", "./object-editor.subdoc.html");
-    TAB_COLLECTION.createTab("object editor 2", "./object-editor.subdoc.html");
-    TAB_COLLECTION.createTab("object editor 3", "./object-editor.subdoc.html");
-    TAB_COLLECTION.createTab("object editor 4", "./object-editor.subdoc.html");
-    TAB_COLLECTION.createTab("object editor 5", "./object-editor.subdoc.html");
+    TAB_COLLECTION.createTab("object editor 1", "./object-editor.subdoc.html", new EmptyImplementation());
+    TAB_COLLECTION.createTab("object editor 2", "./object-editor.subdoc.html", new EmptyImplementation());
+    TAB_COLLECTION.createTab("object editor 3", "./object-editor.subdoc.html", new EmptyImplementation());
+    TAB_COLLECTION.createTab("object editor 4", "./object-editor.subdoc.html", new EmptyImplementation());
+    TAB_COLLECTION.createTab("object editor 5", "./object-editor.subdoc.html", new EmptyImplementation());
 
     document.getElementById("toolbar--buttons--import-object").addEventListener("click", ImportSvg);
 

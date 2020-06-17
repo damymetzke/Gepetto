@@ -30,19 +30,30 @@ function moveTab(tabParent: HTMLUListElement, position: { x: number; y: number; 
 
     tabParent.insertBefore(pointer, result);
 }
+
+export interface TabContentImplementation
+{
+    onInit: (root: SubDoc, name: string) => void;
+    onDestroy: (root: SubDoc, name: string) => void;
+    onSave: (root: SubDoc, name: string) => void;
+}
+
 export class Tab
 {
     tabElement: HTMLLIElement;
     content: SubDoc;
     name: string;
+    implementation: TabContentImplementation;
     setActive(value: boolean): void
     {
         [ this.tabElement, this.content.root ].forEach(element => value ? element.classList.add("selected") : element.classList.remove("selected"));
     }
 
-    constructor (tabParent: HTMLUListElement, contentParent: HTMLUListElement, name: string, subdocPath: string, onReady: () => void = () => { })
+    constructor (tabParent: HTMLUListElement, contentParent: HTMLUListElement, name: string, subdocPath: string, implementation: TabContentImplementation, onReady: () => void = () => { })
     {
         this.name = name;
+
+        this.implementation = implementation;
 
         this.tabElement = document.createElement("li");
         this.tabElement.innerHTML = `<h3>${name}</h3>`;
@@ -58,7 +69,7 @@ export class Tab
                 return;
             }
 
-            console.log("Close!");
+            this.implementation.onDestroy(this.content, this.name);
         });
 
         tabParent.appendChild(this.tabElement);
@@ -67,6 +78,8 @@ export class Tab
         contentParent.appendChild(contentElement);
 
         this.content = new SubDoc(subdocPath, contentElement, onReady);
+
+        implementation.onInit(this.content, name);
     }
 }
 
@@ -93,14 +106,14 @@ export class TabCollection
         y: number;
     };
 
-    createTab(name: string, subdocPath: string, autoSelect: boolean = true): Tab
+    createTab(name: string, subdocPath: string, implementation: TabContentImplementation, autoSelect: boolean = true): Tab
     {
         if (name in this.tabs)
         {
             return null;
         }
 
-        const tab: Tab = new Tab(this.tabParent, this.contentParent, name, subdocPath, () =>
+        const tab: Tab = new Tab(this.tabParent, this.contentParent, name, subdocPath, implementation, () =>
         {
             this.tabs[ name ] = tab;
             tab.tabElement.addEventListener("mousedown", (event: MouseEvent) =>
