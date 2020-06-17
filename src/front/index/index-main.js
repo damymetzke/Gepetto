@@ -50,6 +50,21 @@ function ImportSvg()
     });
 }
 
+function openObjectEditor()
+{
+
+    for (const name in TAB_COLLECTION.tabs)
+    {
+        if (name === "Object Editor")
+        {
+            TAB_COLLECTION.selectTab(name);
+            return;
+        }
+    }
+
+    TAB_COLLECTION.createTab("Object Editor", "./object-editor.subdoc.html", new EmptyImplementation());
+}
+
 function Run()
 {
     const root = document.getElementById("body");
@@ -57,24 +72,14 @@ function Run()
     Dropdown.OnScriptLoad(root);
     // Tabs.OnScriptLoad(root);
 
-    TAB_COLLECTION.createTab("object editor 1", "./object-editor.subdoc.html", new EmptyImplementation());
-    TAB_COLLECTION.createTab("object editor 2", "./object-editor.subdoc.html", new EmptyImplementation());
-    TAB_COLLECTION.createTab("object editor 3", "./object-editor.subdoc.html", new EmptyImplementation());
-    TAB_COLLECTION.createTab("object editor 4", "./object-editor.subdoc.html", new EmptyImplementation());
-    TAB_COLLECTION.createTab("object editor 5", "./object-editor.subdoc.html", new EmptyImplementation());
+    TAB_COLLECTION.createTab("Object Editor Fake 1", "./object-editor.subdoc.html", new EmptyImplementation());
+    TAB_COLLECTION.createTab("Object Editor Fake 2", "./object-editor.subdoc.html", new EmptyImplementation());
+    TAB_COLLECTION.createTab("Object Editor Fake 3", "./object-editor.subdoc.html", new EmptyImplementation());
+    TAB_COLLECTION.createTab("Object Editor Fake 4", "./object-editor.subdoc.html", new EmptyImplementation());
+    TAB_COLLECTION.createTab("Object Editor Fake 5", "./object-editor.subdoc.html", new EmptyImplementation());
 
     document.getElementById("toolbar--buttons--import-object").addEventListener("click", ImportSvg);
-
-
-    // const objectEditor = new SubDoc("./object-editor.subdoc.html", document.getElementById("main").children[ 1 ], () =>
-    // {
-    //     console.log(objectEditor.getElementBySid("header"));
-    //     console.log(objectEditor.getElementBySid("text-tree"));
-    //     console.log(objectEditor.getElementBySid("text-tree--list"));
-    //     console.log(objectEditor.getElementBySid("property--transform-add-controls"));
-    // });
-
-
+    document.getElementById("toolbar--buttons--edit-objects").addEventListener("click", openObjectEditor);
 }
 
 Run();
