@@ -2,6 +2,32 @@ import { SubDoc } from "./subdoc_alt.js";
 
 const DISTANCE_FOR_DRAG = 18;
 const DISTANCE_FOR_DRAG_SQUARED = DISTANCE_FOR_DRAG * DISTANCE_FOR_DRAG;
+
+function findTabPointerIndex(tabParent: HTMLUListElement, position: { x: number; y: number; }, pointer: HTMLLIElement): void
+{
+    let result: HTMLLIElement;
+    if (!Array.from(tabParent.children).some((element: HTMLLIElement) =>
+    {
+        if (element.classList.contains("dragging"))
+        {
+            return false;
+        }
+
+        const bounds = element.getBoundingClientRect();
+        if (position.x < bounds.left + (bounds.width / 2))
+        {
+            result = element;
+            return true;
+        }
+
+        return false;
+    }))
+    {
+        tabParent.appendChild(pointer);
+    }
+
+    tabParent.insertBefore(pointer, result);
+}
 export class Tab
 {
     tabElement: HTMLLIElement;
@@ -35,6 +61,8 @@ export class TabCollection
 
     selectedTab: Tab;
     dragging: Tab;
+
+    pointer: HTMLLIElement;
 
     mouseUp: () => void;
     mouseMove: () => void;
@@ -78,17 +106,26 @@ export class TabCollection
                         if (distanceSquared >= DISTANCE_FOR_DRAG_SQUARED)
                         {
                             tab.tabElement.classList.add("dragging");
+
+                            findTabPointerIndex(this.tabParent, this.dragCurrent, this.pointer);
+
                             this.mouseUp = () =>
                             {
                                 this.mouseUp = null;
                                 this.mouseMove = null;
                                 tab.tabElement.classList.remove("dragging");
+
+                                this.tabParent.removeChild(this.pointer);
                             };
 
                             this.mouseMove = () =>
                             {
                                 tab.tabElement.style.left = this.dragCurrent.x - (tab.tabElement.offsetWidth / 2) + "px";
                                 tab.tabElement.style.top = this.dragCurrent.y - (tab.tabElement.offsetHeight / 2) + "px";
+
+                                this.tabParent.removeChild(this.pointer);
+
+                                findTabPointerIndex(this.tabParent, this.dragCurrent, this.pointer);
                             };
                         }
                     };
@@ -134,10 +171,13 @@ export class TabCollection
         this.contentParent = contentParent;
         this.selectedTab = null;
         this.dragging = null;
+        this.pointer = document.createElement("li");
         this.mouseUp = null;
         this.mouseMove = null;
         this.dragStart = { x: 0, y: 0 };
         this.dragCurrent = { x: 0, y: 0 };
+
+        this.pointer.id = "tab-pointer";
 
         document.addEventListener("mouseup", (event: MouseEvent) =>
         {

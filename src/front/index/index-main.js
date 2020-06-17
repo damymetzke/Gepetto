@@ -41,8 +41,11 @@ function Run()
     Dropdown.OnScriptLoad(root);
     // Tabs.OnScriptLoad(root);
 
-    TAB_COLLECTION.createTab("object editor", "./object-editor.subdoc.html");
+    TAB_COLLECTION.createTab("object editor 1", "./object-editor.subdoc.html");
     TAB_COLLECTION.createTab("object editor 2", "./object-editor.subdoc.html");
+    TAB_COLLECTION.createTab("object editor 3", "./object-editor.subdoc.html");
+    TAB_COLLECTION.createTab("object editor 4", "./object-editor.subdoc.html");
+    TAB_COLLECTION.createTab("object editor 5", "./object-editor.subdoc.html");
 
     document.getElementById("toolbar--buttons--import-object").addEventListener("click", ImportSvg);
 
