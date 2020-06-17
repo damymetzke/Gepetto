@@ -3,6 +3,8 @@ import { SubDoc } from "./subdoc_alt.js";
 const DISTANCE_FOR_DRAG = 18;
 const DISTANCE_FOR_DRAG_SQUARED = DISTANCE_FOR_DRAG * DISTANCE_FOR_DRAG;
 
+const TAB_CROSS_IMG_PATH = "./images/cross.svg";
+
 function moveTab(tabParent: HTMLUListElement, position: { x: number; y: number; }, pointer: HTMLLIElement): void
 {
     let result: HTMLLIElement;
@@ -43,7 +45,12 @@ export class Tab
         this.name = name;
 
         this.tabElement = document.createElement("li");
-        this.tabElement.innerHTML = `<h3>${name}</h3><img src="./images/cross.svg">`;
+        this.tabElement.innerHTML = `<h3>${name}</h3>`;
+
+        const tabCross = document.createElement("img");
+        tabCross.src = TAB_CROSS_IMG_PATH;
+        this.tabElement.appendChild(tabCross);
+
         tabParent.appendChild(this.tabElement);
 
         const contentElement = document.createElement("li");
