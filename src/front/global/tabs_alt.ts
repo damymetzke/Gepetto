@@ -34,6 +34,7 @@ export class TabCollection
     contentParent: HTMLUListElement;
 
     selectedTab: Tab;
+    dragging: Tab;
 
     mouseUp: () => void;
     mouseMove: () => void;
@@ -76,15 +77,18 @@ export class TabCollection
 
                         if (distanceSquared >= DISTANCE_FOR_DRAG_SQUARED)
                         {
+                            tab.tabElement.classList.add("dragging");
                             this.mouseUp = () =>
                             {
                                 this.mouseUp = null;
                                 this.mouseMove = null;
+                                tab.tabElement.classList.remove("dragging");
                             };
 
                             this.mouseMove = () =>
                             {
-
+                                tab.tabElement.style.left = this.dragCurrent.x - (tab.tabElement.offsetWidth / 2) + "px";
+                                tab.tabElement.style.top = this.dragCurrent.y - (tab.tabElement.offsetHeight / 2) + "px";
                             };
                         }
                     };
@@ -129,6 +133,7 @@ export class TabCollection
         this.tabParent = tabParent;
         this.contentParent = contentParent;
         this.selectedTab = null;
+        this.dragging = null;
         this.mouseUp = null;
         this.mouseMove = null;
         this.dragStart = { x: 0, y: 0 };
