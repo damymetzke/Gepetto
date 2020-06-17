@@ -3,7 +3,7 @@ import { SubDoc } from "./subdoc_alt.js";
 const DISTANCE_FOR_DRAG = 18;
 const DISTANCE_FOR_DRAG_SQUARED = DISTANCE_FOR_DRAG * DISTANCE_FOR_DRAG;
 
-function findTabPointerIndex(tabParent: HTMLUListElement, position: { x: number; y: number; }, pointer: HTMLLIElement): void
+function moveTab(tabParent: HTMLUListElement, position: { x: number; y: number; }, pointer: HTMLLIElement): void
 {
     let result: HTMLLIElement;
     if (!Array.from(tabParent.children).some((element: HTMLLIElement) =>
@@ -107,15 +107,17 @@ export class TabCollection
                         {
                             tab.tabElement.classList.add("dragging");
 
-                            findTabPointerIndex(this.tabParent, this.dragCurrent, this.pointer);
+                            moveTab(this.tabParent, this.dragCurrent, this.pointer);
 
                             this.mouseUp = () =>
                             {
                                 this.mouseUp = null;
                                 this.mouseMove = null;
-                                tab.tabElement.classList.remove("dragging");
 
                                 this.tabParent.removeChild(this.pointer);
+                                moveTab(this.tabParent, this.dragCurrent, tab.tabElement);
+
+                                tab.tabElement.classList.remove("dragging");
                             };
 
                             this.mouseMove = () =>
@@ -125,7 +127,7 @@ export class TabCollection
 
                                 this.tabParent.removeChild(this.pointer);
 
-                                findTabPointerIndex(this.tabParent, this.dragCurrent, this.pointer);
+                                moveTab(this.tabParent, this.dragCurrent, this.pointer);
                             };
                         }
                     };
