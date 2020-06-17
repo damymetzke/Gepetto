@@ -43,7 +43,7 @@ export class Tab
         this.name = name;
 
         this.tabElement = document.createElement("li");
-        this.tabElement.innerHTML = `<h3>${name}</h3>`;
+        this.tabElement.innerHTML = `<h3>${name}</h3><img src="./images/cross.svg">`;
         tabParent.appendChild(this.tabElement);
 
         const contentElement = document.createElement("li");
