@@ -51,6 +51,16 @@ export class Tab
         tabCross.src = TAB_CROSS_IMG_PATH;
         this.tabElement.appendChild(tabCross);
 
+        tabCross.addEventListener("click", (event: MouseEvent) =>
+        {
+            if (event.button !== 0)
+            {
+                return;
+            }
+
+            console.log("Close!");
+        });
+
         tabParent.appendChild(this.tabElement);
 
         const contentElement = document.createElement("li");
