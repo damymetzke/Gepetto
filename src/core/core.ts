@@ -9,6 +9,8 @@ import { SynchronizedObject, SynchronizedTransformCommand } from "./sync/synchro
 import { SyncMessage, SynchronizedTree } from "./sync/synchronized-tree";
 import { SyncLog, SynchronizedTreeLog } from "./sync/synchronized-tree-log";
 
+import { SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessage as SyncMessageAlt } from "./sync_alt/SyncConnector";
+
 export
 {
     GepettoExceptionType, GepettoException,
@@ -18,5 +20,7 @@ export
     DrawObjectTree, DrawObjectTreePure,
 
     SyncMessage as SyncData, SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand,
-    SyncLog, SynchronizedTreeLog
+    SyncLog, SynchronizedTreeLog,
+
+    SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessageAlt
 };

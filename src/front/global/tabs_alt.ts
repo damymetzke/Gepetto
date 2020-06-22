@@ -215,13 +215,19 @@ export class TabCollection
         {
             return;
         }
+
+        const isSelected = (tab === this.selectedTab);
+
         delete this.tabs[ tab.name ];
-        this.selectedTab = null;
-        //todo: use a more logical method to select next tab (eg. use tab history)
-        for (const name in this.tabs)
+        if (isSelected)
         {
-            this.selectTab(this.tabs[ name ]);
-            break;
+            this.selectedTab = null;
+            //todo: use a more logical method to select next tab (eg. use tab history)
+            for (const name in this.tabs)
+            {
+                this.selectTab(this.tabs[ name ]);
+                break;
+            }
         }
     }
 
