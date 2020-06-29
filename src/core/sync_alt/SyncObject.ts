@@ -13,6 +13,10 @@ export class SyncObject<UnderType>
 
     onRecieve(action: SyncAction)
     {
+        if (!this.under)
+        {
+            return; //under is invalid
+        }
         if (!(action.action in this.under))
         {
             return; //action does not exist
@@ -24,7 +28,7 @@ export class SyncObject<UnderType>
         }
 
         const targetFunction: (...argumentList: any) => any = this.under[ action.action ];
-        targetFunction(...action.argumentList);
+        targetFunction.call(this.under, ...action.argumentList);
     }
 
     constructor (organizerType: SyncOrganizerType, connector: SyncConnector, under: UnderType, toFullSync: (under: UnderType) => any, fromFullSync: (recieved: any) => UnderType)
@@ -45,7 +49,7 @@ export class SyncObject<UnderType>
 
         this.under = under;
 
-        this.organizer.onRecieve(this.onRecieve);
+        this.organizer.onRecieve(action => { this.onRecieve(action); });
         this.organizer.onFullSync(recieved =>
         {
             this.under = fromFullSync(recieved);
