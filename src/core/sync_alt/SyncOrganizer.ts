@@ -2,6 +2,13 @@ import { SyncConnector } from "../../test/core/sync_alt/SyncConnector";
 
 export type SyncAction = { action: string, argumentList: any[]; };
 
+export enum SyncOrganizerType
+{
+    NONE = 0,
+    OWNER,
+    SUBSCRIBER
+}
+
 export interface SyncOrganizer
 {
     send: (action: SyncAction) => void;
@@ -30,6 +37,8 @@ export class SyncOrganizer_Owner implements SyncOrganizer
             argumentList: action.argumentList,
             num: 0
         });
+
+        this.callback(action);
     }
     onRecieve(callback: (action: SyncAction) => void)
     {
@@ -117,6 +126,8 @@ export class SyncOrganizer_Subscriber implements SyncOrganizer
             argumentList: action.argumentList,
             num: ++(this.numSend)
         });
+
+        this.callback(action);
     }
     onRecieve(callback: (action: SyncAction) => void)
     {

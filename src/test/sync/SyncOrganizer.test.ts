@@ -45,14 +45,30 @@ test(``, () =>
             argumentList: []
         },
         {
+            action: "ping",
+            argumentList: [ 2, 6 ]
+        },
+        {
             action: "pong",
             argumentList: [ 6, 2 ]
         }
     ]);
     expect(subscriberResult).toStrictEqual(<SyncAction[]>[
         {
+            action: "notReady",
+            argumentList: []
+        },
+        {
+            action: "ready",
+            argumentList: []
+        },
+        {
             action: "ping",
             argumentList: [ 2, 6 ]
+        },
+        {
+            action: "pong",
+            argumentList: [ 6, 2 ]
         }
     ]);
 
