@@ -10,6 +10,7 @@ import { SyncMessage, SynchronizedTree } from "./sync/synchronized-tree";
 import { SyncLog, SynchronizedTreeLog } from "./sync/synchronized-tree-log";
 
 import { SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessage as SyncMessageAlt } from "./sync_alt/SyncConnector";
+import { SyncOrganizer, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction } from "./sync_alt/SyncOrganizer";
 
 export
 {
@@ -22,5 +23,6 @@ export
     SyncMessage as SyncData, SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand,
     SyncLog, SynchronizedTreeLog,
 
-    SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessageAlt
+    SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessageAlt,
+    SyncOrganizer, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction
 };

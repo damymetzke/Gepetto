@@ -12,6 +12,7 @@
 export type SyncMessage =
     {
         type: "start";
+        num: number;
     }
     |
     {
@@ -57,21 +58,19 @@ export class SyncConnector_Direct implements SyncConnector
 {
     other: SyncConnector_Direct;
 
-    callbacks: ((message: SyncMessage) => void)[];
+    callback: (message: SyncMessage) => void;
 
     send(message: SyncMessage)
     {
-        this.other.callbacks.forEach(callback => callback(message));
+        this.other.callback(message);
     };
     onRecieve(callback: (message: SyncMessage) => void)
     {
-        this.callbacks.push(callback);
+        this.callback = callback;
     };
 
     constructor (other: SyncConnector_Direct = null)
     {
-        this.callbacks = [];
-
         if (other)
         {
             this.other = other;
