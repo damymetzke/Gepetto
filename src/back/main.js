@@ -1,11 +1,13 @@
 const { app, BrowserWindow } = require("electron");
 const { Init } = require("./draw-object-manager");
+const { DrawObjectManager } = require("./DrawObject/DrawObjectManager");
 
 const indexFilePath = `file://${__dirname}/../../index.html`;
 
 const { SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand, SynchronizedTreeLog: SynchronizedTreeLog, TransformCommandType } = require("./core/core");
 
 let window = null;
+let DrawObjectTreeManager = null;
 
 function createWindow()
 {
@@ -23,25 +25,9 @@ function createWindow()
     window.loadURL(indexFilePath);
     window.maximize();
 
-    Init(window);
+    // Init(window);
+    DrawObjectTreeManager = new DrawObjectManager(window);
 }
 
 app.whenReady().then(createWindow);
-
-let tmpTreeUseless = new SynchronizedTreeLog();
-let tmpTree = new SynchronizedTreeLog(tmpTreeUseless);
-let tmp = tmpTree.AddObject("hello world");
-let tmp2 = tmpTree.AddObject("bye world");
-let focus = tmpTree.Focus();
-
-tmp.Select();
-focus.ChangeName("the first change");
-focus.ChangeName("the first change again");
-
-tmp2.Select();
-focus.ChangeName("the second change");
-
-tmpTree.WriteToFile("./saved/test.json");
-tmpTreeUseless.WriteToFile("./saved/test_useless.json");
-console.log(tmpTree);
 

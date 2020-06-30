@@ -1,4 +1,7 @@
 import { DrawObject, DrawObjectPure } from "./draw-object.js";
+import { SyncObject } from "./sync_alt/SyncObject.js";
+import { SyncConnector } from "./sync_alt/SyncConnector.js";
+import { SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
 
 export interface DrawObjectTreePure
 {
@@ -91,5 +94,37 @@ export class DrawObjectTree
         {
             this.objects[ rootObject.name ] = rootObject;
         });
+    }
+}
+
+export class DrawObjectTreeWrapper implements DrawObjectTreeInterface
+{
+    under: SyncObject<DrawObjectTree>;
+
+    AddObject(object: DrawObject): void
+    {
+        this.under.runAction({ action: "AddObject", argumentList: [ object ] });
+    }
+    AddObjectToRoot(object: DrawObject): void
+    {
+        this.under.runAction({ action: "AddObjectToRoot", argumentList: [ object ] });
+    }
+    HasObject(name: string): boolean
+    {
+        return this.under.under.HasObject(name);
+    }
+    ToPureObject(): DrawObjectTreePure
+    {
+        return this.under.under.ToPureObject();
+    }
+    FromPureObject(object: DrawObjectTreePure): DrawObjectTree
+    {
+        this.under.runAction({ action: "FromPureObject", argumentList: [ object ] });
+        return this.under.under;
+    }
+
+    constructor (organizerType: SyncOrganizerType, connector: SyncConnector, drawObjectTree: DrawObjectTree = new DrawObjectTree())
+    {
+        this.under = new SyncObject<DrawObjectTree>(organizerType, connector, drawObjectTree, under => under.ToPureObject(), recieved => (new DrawObjectTree().FromPureObject(recieved)));
     }
 }
