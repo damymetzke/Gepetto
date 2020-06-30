@@ -1,19 +1,28 @@
-import { DrawObject, DrawObjectPure } from "./draw-object";
+import { DrawObject, DrawObjectPure } from "./draw-object.js";
 
 export interface DrawObjectTreePure
 {
     rootObjects: string[];
-    objects: { [name: string]: DrawObjectPure; };
+    objects: { [ name: string ]: DrawObjectPure; };
+}
+
+export interface DrawObjectTreeInterface
+{
+    AddObject(object: DrawObject): void;
+    AddObjectToRoot(object: DrawObject): void;
+    HasObject(name: string): boolean;
+    ToPureObject(): DrawObjectTreePure;
+    FromPureObject(object: DrawObjectTreePure): DrawObjectTree;
 }
 
 export class DrawObjectTree
 {
     rootObjects: DrawObject[] = [];
-    objects: { [name: string]: DrawObject; } = {};
+    objects: { [ name: string ]: DrawObject; } = {};
 
     AddObject(object: DrawObject): void
     {
-        this.objects[object.name] = object;
+        this.objects[ object.name ] = object;
         if (object.parent === null)
         {
             this.rootObjects.push(object);
@@ -29,7 +38,7 @@ export class DrawObjectTree
      */
     AddObjectToRoot(object: DrawObject): void
     {
-        this.objects[object.name] = object;
+        this.objects[ object.name ] = object;
         this.rootObjects.push(object);
     }
 
@@ -44,10 +53,10 @@ export class DrawObjectTree
             rootObjects: this.rootObjects.map(object => object.name),
             objects: (() =>
             {
-                let result: { [name: string]: DrawObjectPure; } = {};
+                let result: { [ name: string ]: DrawObjectPure; } = {};
                 for (let name in this.objects)
                 {
-                    result[name] = this.objects[name].ToPureObject();
+                    result[ name ] = this.objects[ name ].ToPureObject();
                 }
                 return result;
             })()
@@ -58,29 +67,29 @@ export class DrawObjectTree
     {
         for (let name in object.objects)
         {
-            this.objects[name] = new DrawObject().FromPureObject(object.objects[name]);
+            this.objects[ name ] = new DrawObject().FromPureObject(object.objects[ name ]);
         }
         for (let name in object.objects)
         {
-            if (this.objects[name].parent === null)
+            if (this.objects[ name ].parent === null)
             {
                 continue;
             }
 
-            let currentObject = this.objects[name];
-            currentObject.parent = this.objects[<string>currentObject.parent]; //assume string type
+            let currentObject = this.objects[ name ];
+            currentObject.parent = this.objects[ <string>currentObject.parent ]; //assume string type
         }
 
-        this.rootObjects = object.rootObjects.map(name => this.objects[name]);
+        this.rootObjects = object.rootObjects.map(name => this.objects[ name ]);
         return this;
     }
 
-    constructor(rootObject: DrawObject[] = [])
+    constructor (rootObject: DrawObject[] = [])
     {
         this.rootObjects = rootObject;
         rootObject.forEach(rootObject =>
         {
-            this.objects[rootObject.name] = rootObject;
+            this.objects[ rootObject.name ] = rootObject;
         });
     }
 }

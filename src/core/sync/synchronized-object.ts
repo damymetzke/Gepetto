@@ -1,5 +1,5 @@
-import { TransformCommandType } from "../transform-command";
-import { SynchronizedTree } from "./synchronized-tree";
+import { TransformCommandType } from "../transform-command.js";
+import { SynchronizedTree } from "./synchronized-tree.js";
 
 export class SynchronizedObject
 {

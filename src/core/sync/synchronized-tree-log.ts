@@ -1,12 +1,12 @@
-import * as fs from "fs";
-import { SyncData, SynchronizedTree } from "./synchronized-tree";
+const fs = require("fs");
+import { SyncData, SynchronizedTree } from "./synchronized-tree.js";
 
 export interface SyncLog
 {
     time: Date;
     type: "send" | "recieve";
     action: string;
-    data: { [key: string]: any; };
+    data: { [ key: string ]: any; };
 }
 
 export class SynchronizedTreeLog extends SynchronizedTree
@@ -50,7 +50,7 @@ export class SynchronizedTreeLog extends SynchronizedTree
         });
     }
 
-    constructor(under: SynchronizedTree = null)
+    constructor (under: SynchronizedTree = null)
     {
         super();
         this._under = under;

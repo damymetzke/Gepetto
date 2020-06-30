@@ -1,4 +1,4 @@
-import { SyncConnector } from "../../test/core/sync_alt/SyncConnector";
+import { SyncConnector } from "./SyncConnector.js";
 
 export type SyncAction = { action: string, argumentList: any[]; };
 

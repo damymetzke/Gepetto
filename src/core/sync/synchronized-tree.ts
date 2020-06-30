@@ -1,7 +1,7 @@
-import { DrawObjectTree } from "../draw-object-tree";
-import { TransformCommandType, TransformCommand } from "../transform-command";
-import { DrawObject } from "../draw-object";
-import { SynchronizedObject, SynchronizedTransformCommand } from "./synchronized-object";
+import { DrawObjectTree } from "../draw-object-tree.js";
+import { TransformCommandType, TransformCommand } from "../transform-command.js";
+import { DrawObject } from "../draw-object.js";
+import { SynchronizedObject, SynchronizedTransformCommand } from "./synchronized-object.js";
 
 export type SyncData = { [ key: string ]: any; };
 /**

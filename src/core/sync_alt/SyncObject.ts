@@ -1,5 +1,5 @@
-import { SyncOrganizer, SyncOrganizerType, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction } from "./SyncOrganizer";
-import { SyncConnector } from "../../test/core/sync_alt/SyncConnector";
+import { SyncOrganizer, SyncOrganizerType, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction } from "./SyncOrganizer.js";
+import { SyncConnector } from "./SyncConnector.js";
 
 export class SyncObject<UnderType>
 {

@@ -1,5 +1,5 @@
-import { Transform } from "./transform";
-import { GepettoExceptionType, GepettoException } from "./gepetto-exception";
+import { Transform } from "./transform.js";
+import { GepettoExceptionType, GepettoException } from "./gepetto-exception.js";
 
 type MatrixFunction = (fields: TransformCommandField) => Transform;
 export enum TransformCommandType
@@ -22,7 +22,7 @@ export interface TransformCommandPure
     fields: TransformCommandField;
 }
 
-const MATRIX_FUNCTIONS: { [type in keyof typeof TransformCommandType]: MatrixFunction; } = {
+const MATRIX_FUNCTIONS: { [ type in keyof typeof TransformCommandType ]: MatrixFunction; } = {
     "TRANSLATE": (fields) =>
     {
         return new Transform([
@@ -67,7 +67,7 @@ const MATRIX_FUNCTIONS: { [type in keyof typeof TransformCommandType]: MatrixFun
 
 };
 
-const FIELD_DEFAULTS: { [type in keyof typeof TransformCommandType]: TransformCommandField; } = {
+const FIELD_DEFAULTS: { [ type in keyof typeof TransformCommandType ]: TransformCommandField; } = {
     "TRANSLATE": {
         x: 0,
         y: 0
@@ -87,7 +87,7 @@ const FIELD_DEFAULTS: { [type in keyof typeof TransformCommandType]: TransformCo
     }
 };
 
-const RELATIVE_ADDITION_MAP: { [type in keyof typeof TransformCommandType]: (first: TransformCommandField, second: TransformCommandField) => TransformCommandField } = {
+const RELATIVE_ADDITION_MAP: { [ type in keyof typeof TransformCommandType ]: (first: TransformCommandField, second: TransformCommandField) => TransformCommandField } = {
     "TRANSLATE": (first, second) =>
     {
         return {
@@ -138,12 +138,12 @@ export class TransformCommand
 
     set type(value: string)
     {
-        this.typeIndex = TransformCommandType[value];
+        this.typeIndex = TransformCommandType[ value ];
     }
 
     get type(): string
     {
-        return TransformCommandType[this.typeIndex];
+        return TransformCommandType[ this.typeIndex ];
     }
 
     /**
@@ -156,7 +156,7 @@ export class TransformCommand
 
     GetTransform(): Transform
     {
-        return MATRIX_FUNCTIONS[TransformCommandType[this.typeIndex]](this.fields);
+        return MATRIX_FUNCTIONS[ TransformCommandType[ this.typeIndex ] ](this.fields);
     }
 
     ToPureObject(): TransformCommandPure
@@ -185,18 +185,18 @@ export class TransformCommand
         {
             throw new GepettoException(
                 GepettoExceptionType.TRANSFORM_COMMAND_TYPE_ERROR,
-                `types '${TransformCommandType[this.typeIndex]}' and '${TransformCommandType[other.typeIndex]}' do not match\n`
+                `types '${TransformCommandType[ this.typeIndex ]}' and '${TransformCommandType[ other.typeIndex ]}' do not match\n`
             );
         }
 
-        this.fields = { ...RELATIVE_ADDITION_MAP[TransformCommandType[this.typeIndex]](this.fields, other.fields) };
+        this.fields = { ...RELATIVE_ADDITION_MAP[ TransformCommandType[ this.typeIndex ] ](this.fields, other.fields) };
 
         return this;
     }
 
-    constructor(type: string | TransformCommandType = "TRANSLATE", fields: TransformCommandField = {})
+    constructor (type: string | TransformCommandType = "TRANSLATE", fields: TransformCommandField = {})
     {
-        const typeIndex: TransformCommandType = (typeof type === "string") ? TransformCommandType[type] : type;
+        const typeIndex: TransformCommandType = (typeof type === "string") ? TransformCommandType[ type ] : type;
 
         if (!(typeIndex in TransformCommandType))
         {
@@ -208,7 +208,7 @@ export class TransformCommand
 
         this.typeIndex = typeIndex;
         this.fields = {
-            ...FIELD_DEFAULTS[TransformCommandType[typeIndex]],
+            ...FIELD_DEFAULTS[ TransformCommandType[ typeIndex ] ],
             ...fields
         };
     }

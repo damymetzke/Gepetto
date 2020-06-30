@@ -1,5 +1,5 @@
-import { Transform } from "./transform";
-import { TransformCommand, TransformCommandPure } from "./transform-command";
+import { Transform } from "./transform.js";
+import { TransformCommand, TransformCommandPure } from "./transform-command.js";
 
 export interface DrawObjectPure
 {
@@ -129,7 +129,7 @@ export class DrawObject
         );
     }
 
-    constructor(name: string = "", parent: string | DrawObject = null, transformCommands: TransformCommand[] = [])
+    constructor (name: string = "", parent: string | DrawObject = null, transformCommands: TransformCommand[] = [])
     {
         this.name = name;
         this.parent = parent;
