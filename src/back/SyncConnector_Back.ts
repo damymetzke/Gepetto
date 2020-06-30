@@ -22,7 +22,7 @@ export class SyncConnector_Back implements SyncConnector
         this.ipcChannel = ipcChannel;
         this.targetWindow = targetWindow;
 
-        ipcMain.handle(this.ipcChannel, (_event, message: SyncMessageAlt) =>
+        ipcMain.on(this.ipcChannel, (_event, message: SyncMessageAlt) =>
         {
             if (this.callback)
             {
