@@ -8,7 +8,8 @@ const ipcRenderer = require("electron");
 const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "AddObject",
     "AddObjectToRoot",
-    "FromPureObject"
+    "FromPureObject",
+    "--fullSync"
 ]);
 
 export class ObjectEditor implements TabContentImplementation
@@ -41,8 +42,6 @@ export class ObjectEditor implements TabContentImplementation
                 textTreeList.appendChild(newChild);
             });
         });
-
-        this.drawObjectTree.AddObject(new DrawObject("a"));
     }
     onDestroy(root: SubDoc, name: string)
     {
