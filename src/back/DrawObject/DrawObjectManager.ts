@@ -10,6 +10,9 @@ export class DrawObjectManager
     constructor (window: BrowserWindow)
     {
         this.drawObjectTree = new DrawObjectTreeWrapper(SyncOrganizerType.OWNER, new SyncConnector_Back("draw-object-tree", window));
-        console.log("§(*￣▽￣*)§");
+        this.drawObjectTree.under.addAllActionCallback((action, under, argumentList) =>
+        {
+            console.log(action, " >>> ", argumentList);
+        });
     }
 }

@@ -1,6 +1,6 @@
 import { SubDoc } from "../global/subdoc_alt.js";
 import { TabContentImplementation } from "../global/tabs_alt.js";
-import { DrawObjectTreeWrapper } from "../core/core.js";
+import { DrawObjectTreeWrapper, DrawObject } from "../core/core.js";
 import { SyncOrganizerType } from "../core/sync_alt/SyncOrganizer.js";
 import { SyncConnector_Front } from "../global/SyncConnector_Front.js";
 
@@ -14,6 +14,8 @@ export class ObjectEditor implements TabContentImplementation
         this.drawObjectTree.under.organizer.requestSync();
 
         console.log("<(￣ c￣)y▂ξ");
+
+        this.drawObjectTree.AddObject(new DrawObject("a"));
     }
     onDestroy(root: SubDoc, name: string)
     {
