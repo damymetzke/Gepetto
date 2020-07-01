@@ -113,9 +113,12 @@ export class Tab
         const contentElement = document.createElement("li");
         contentParent.appendChild(contentElement);
 
-        this.content = new SubDoc(subdocPath, contentElement, onReady);
+        this.content = new SubDoc(subdocPath, contentElement, () =>
+        {
+            implementation.onInit(this.content, name);
+            onReady();
+        });
 
-        implementation.onInit(this.content, name);
     }
 }
 

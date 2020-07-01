@@ -4,6 +4,12 @@ import { DrawObjectTreeWrapper, DrawObject } from "../core/core.js";
 import { SyncOrganizerType } from "../core/sync_alt/SyncOrganizer.js";
 import { SyncConnector_Front } from "../global/SyncConnector_Front.js";
 
+const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
+    "AddObject",
+    "AddObjectToRoot",
+    "FromPureObject"
+]);
+
 export class ObjectEditor implements TabContentImplementation
 {
     drawObjectTree: DrawObjectTreeWrapper;
@@ -14,6 +20,28 @@ export class ObjectEditor implements TabContentImplementation
         this.drawObjectTree.under.organizer.requestSync();
 
         console.log("<(￣ c￣)y▂ξ");
+
+        this.drawObjectTree.under.addAllActionCallback((action, under, argumentList) =>
+        {
+            if (!UPDATE_TEXT_TREE_BY_ACTIONS.has(action))
+            {
+                return;
+            }
+
+            const textTreeList: HTMLOListElement = <HTMLOListElement>root.getElementBySid("text-tree--list");
+            if (!textTreeList)
+            {
+                return;
+            }
+            textTreeList.innerHTML = "";
+
+            under.rootObjects.forEach((object) =>
+            {
+                let newChild = document.createElement("li");
+                newChild.innerText = object.name;
+                textTreeList.appendChild(newChild);
+            });
+        });
 
         this.drawObjectTree.AddObject(new DrawObject("a"));
     }
