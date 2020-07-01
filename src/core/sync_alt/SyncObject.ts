@@ -1,11 +1,15 @@
 import { SyncOrganizer, SyncOrganizerType, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction } from "./SyncOrganizer.js";
 import { SyncConnector } from "./SyncConnector.js";
 
+export type ActionCallbackFunction = ((under: UnderType, argumentList: any[]) => void);
 export class SyncObject<UnderType>
 {
     under: UnderType;
     organizer: SyncOrganizer;
 
+    callbacks: {
+        [ action: string ]: ActionCallbackFunction[];
+    };
     runAction(action: SyncAction)
     {
         this.organizer.send(action);
@@ -29,6 +33,20 @@ export class SyncObject<UnderType>
 
         const targetFunction: (...argumentList: any) => any = this.under[ action.action ];
         targetFunction.call(this.under, ...action.argumentList);
+
+        if (action.action in this.callbacks)
+        {
+            this.callbacks[ action.action ].forEach(callback => callback(this.under, action.argumentList));
+        }
+    }
+
+    addActionCallback(action: string, callback: ActionCallbackFunction)
+    {
+        if (!(action in this.callbacks))
+        {
+            this.callbacks[ action ] = [];
+        }
+        this.callbacks[ action ].push(callback);
     }
 
     constructor (organizerType: SyncOrganizerType, connector: SyncConnector, under: UnderType, toFullSync: (under: UnderType) => any, fromFullSync: (recieved: any) => UnderType)
@@ -48,6 +66,7 @@ export class SyncObject<UnderType>
         }
 
         this.under = under;
+        this.callbacks = {};
 
         this.organizer.onRecieve(action => { this.onRecieve(action); });
         this.organizer.onFullSync(recieved =>
