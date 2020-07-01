@@ -3,6 +3,7 @@ import { TabContentImplementation } from "../global/tabs_alt.js";
 import { DrawObjectTreeWrapper, DrawObject } from "../core/core.js";
 import { SyncOrganizerType } from "../core/sync_alt/SyncOrganizer.js";
 import { SyncConnector_Front } from "../global/SyncConnector_Front.js";
+const ipcRenderer = require("electron");
 
 const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "AddObject",
@@ -19,9 +20,7 @@ export class ObjectEditor implements TabContentImplementation
         this.drawObjectTree = new DrawObjectTreeWrapper(SyncOrganizerType.SUBSCRIBER, new SyncConnector_Front("draw-object-tree"));
         this.drawObjectTree.under.organizer.requestSync();
 
-        console.log("<(￣ c￣)y▂ξ");
-
-        this.drawObjectTree.under.addAllActionCallback((action, under, argumentList) =>
+        this.drawObjectTree.under.addAllActionCallback((action, under) =>
         {
             if (!UPDATE_TEXT_TREE_BY_ACTIONS.has(action))
             {
@@ -53,4 +52,6 @@ export class ObjectEditor implements TabContentImplementation
     {
 
     }
+
+
 }

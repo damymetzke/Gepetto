@@ -1,18 +1,31 @@
-import { DrawObjectTreeWrapper, SyncOrganizerType } from "../core/core";
+import { DrawObjectTreeWrapper, SyncOrganizerType, DrawObject } from "../core/core";
 
 import { SyncConnector_Back } from "../SyncConnector_Back";
-import { BrowserWindow } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
+
+interface SvgImportData
+{
+    name: string;
+    filePath: string;
+}
 
 export class DrawObjectManager
 {
     drawObjectTree: DrawObjectTreeWrapper;
 
+    onImportSvg(importData: SvgImportData)
+    {
+        this.drawObjectTree.AddObjectToRoot(new DrawObject(importData.name));
+    }
+
     constructor (window: BrowserWindow)
     {
         this.drawObjectTree = new DrawObjectTreeWrapper(SyncOrganizerType.OWNER, new SyncConnector_Back("draw-object-tree", window));
-        this.drawObjectTree.under.addAllActionCallback((action, under, argumentList) =>
+
+
+        ipcMain.handle("import-svg", (_event, importData: SvgImportData) =>
         {
-            console.log(action, " >>> ", argumentList);
+            this.onImportSvg(importData);
         });
     }
 }
