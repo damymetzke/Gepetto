@@ -1,4 +1,4 @@
-import { DrawObjectTreeWrapper, SyncOrganizerType, DrawObject } from "../core/core";
+import { DrawObjectTreeEditorWrapper, SyncOrganizerType, DrawObject } from "../core/core";
 
 import { SyncConnector_Back } from "../SyncConnector_Back";
 import { BrowserWindow, ipcMain } from "electron";
@@ -25,7 +25,7 @@ type ImportResult =
 
 export class DrawObjectManager
 {
-    drawObjectTree: DrawObjectTreeWrapper;
+    drawObjectTree: DrawObjectTreeEditorWrapper;
     resourceDirectory: string;
 
     onImportSvg(importData: SvgImportData): ImportResult
@@ -98,7 +98,7 @@ export class DrawObjectManager
 
     constructor (window: BrowserWindow)
     {
-        this.drawObjectTree = new DrawObjectTreeWrapper(SyncOrganizerType.OWNER, new SyncConnector_Back("draw-object-tree", window));
+        this.drawObjectTree = new DrawObjectTreeEditorWrapper(SyncOrganizerType.OWNER, new SyncConnector_Back("draw-object-tree", window));
 
 
         ipcMain.handle("import-svg", (_event, importData: SvgImportData) =>

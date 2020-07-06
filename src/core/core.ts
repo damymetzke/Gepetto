@@ -5,6 +5,8 @@ import { TransformCommandType, TransformCommand, TransformCommandPure } from "./
 import { DrawObject, DrawObjectPure } from "./draw-object.js";
 import { DrawObjectTree, DrawObjectTreePure, DrawObjectTreeInterface, DrawObjectTreeWrapper } from "./draw-object-tree.js";
 
+import { DrawObjectTreeEditorInterface, DrawObjectTreeEditor, DrawObjectTreeEditorWrapper } from "./DrawObjectTreeEditor.js";
+
 import { SynchronizedObject, SynchronizedTransformCommand } from "./sync/synchronized-object.js";
 import { SyncMessage, SynchronizedTree } from "./sync/synchronized-tree.js";
 import { SyncLog, SynchronizedTreeLog } from "./sync/synchronized-tree-log.js";
@@ -20,6 +22,8 @@ export
     TransformCommandType, TransformCommand, TransformCommandPure as TransformCommandPureObject,
     DrawObject, DrawObjectPure,
     DrawObjectTree, DrawObjectTreePure, DrawObjectTreeInterface, DrawObjectTreeWrapper,
+
+    DrawObjectTreeEditorInterface, DrawObjectTreeEditor, DrawObjectTreeEditorWrapper,
 
     SyncMessage as SyncData, SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand,
     SyncLog, SynchronizedTreeLog,

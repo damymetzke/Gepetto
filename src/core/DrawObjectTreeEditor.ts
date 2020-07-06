@@ -1,9 +1,9 @@
-import { DrawObjectTree, DrawObjectTreePure } from "./draw-object-tree";
-import { TransformCommand } from "./transform-command";
-import { DrawObject } from "./draw-object";
-import { SyncObject } from "./sync_alt/SyncObject";
-import { SyncOrganizerType } from "./sync_alt/SyncOrganizer";
-import { SyncConnector } from "./sync_alt/SyncConnector";
+import { DrawObjectTree, DrawObjectTreePure } from "./draw-object-tree.js";
+import { TransformCommand } from "./transform-command.js";
+import { DrawObject } from "./draw-object.js";
+import { SyncObject } from "./sync_alt/SyncObject.js";
+import { SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
+import { SyncConnector } from "./sync_alt/SyncConnector.js";
 
 export interface DrawObjectTreeEditorInterface
 {
