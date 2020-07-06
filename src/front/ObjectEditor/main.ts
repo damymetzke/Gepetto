@@ -28,6 +28,8 @@ export class ObjectEditor implements TabContentImplementation
                 return;
             }
 
+            root.getElementBySid("body").classList.add("hide-property");
+
             const textTreeList: HTMLOListElement = <HTMLOListElement>root.getElementBySid("text-tree--list");
             if (!textTreeList)
             {
@@ -42,6 +44,7 @@ export class ObjectEditor implements TabContentImplementation
                 if (this.drawObjectTree.under.under.selectedObject === object.name)
                 {
                     newChild.classList.add("selected-element");
+                    root.getElementBySid("body").classList.remove("hide-property");
                 }
 
                 newChild.addEventListener("click", () =>
