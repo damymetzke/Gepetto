@@ -3,12 +3,12 @@ import { TabContentImplementation } from "../global/tabs_alt.js";
 import { DrawObjectTreeEditorWrapper, DrawObject } from "../core/core.js";
 import { SyncOrganizerType } from "../core/sync_alt/SyncOrganizer.js";
 import { SyncConnector_Front } from "../global/SyncConnector_Front.js";
-const ipcRenderer = require("electron");
 
 const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "AddObject",
     "AddObjectToRoot",
     "FromPureObject",
+    "selectObject",
     "--fullSync"
 ]);
 
@@ -39,6 +39,15 @@ export class ObjectEditor implements TabContentImplementation
             {
                 let newChild = document.createElement("li");
                 newChild.innerText = object.name;
+                if (this.drawObjectTree.under.under.selectedObject === object.name)
+                {
+                    newChild.classList.add("selected-element");
+                }
+
+                newChild.addEventListener("click", () =>
+                {
+                    this.drawObjectTree.selectObject(object.name);
+                });
                 textTreeList.appendChild(newChild);
             });
         });
