@@ -36,24 +36,38 @@ export type SyncMessage =
         object: any;
     };
 
+/**
+ * interface that acts as the bridge between 2 synchronized objects.
+ * 
+ * any message given through `send` should be transferred to the opposing object such that the `onRecieve` callback is called with the exact message.
+ */
 export interface SyncConnector
 {
     send: (message: SyncMessage) => void;
     onRecieve: (callback: (message: SyncMessage) => void) => void;
 }
 
+/**
+ * implementation of {@linkcode syncConnector} which does nothing.
+ */
 export class SyncConnector_Null implements SyncConnector
 {
-    send(message: SyncMessage)
+    send(_message: SyncMessage)
     {
 
     };
-    onRecieve(callback: (message: SyncMessage) => void)
+    onRecieve(_callback: (message: SyncMessage) => void)
     {
 
     };
 }
 
+/**
+ * implementation of {@linkcode syncConnector} which connects 2 objects in the same memory space.
+ * 
+ * this implementation has no real world utility, given that you could just reference the original object.
+ * so this function only has real use for debugging.
+ */
 export class SyncConnector_Direct implements SyncConnector
 {
     other: SyncConnector_Direct;

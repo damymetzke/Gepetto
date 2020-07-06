@@ -2,6 +2,13 @@ import { SyncConnector } from "./SyncConnector.js";
 
 export type SyncAction = { action: string, argumentList: any[]; };
 
+/**
+ * the type of organizer dictates the role it plays in synchronizing.
+ * 
+ * the owner is the authority of the object, the subscriber is not.
+ * any full synchronization will be done from owner to subscriber, so the subscriber copies the owner's object.
+ * the owner will send confirmation messages and the subscriber will use those to verify proper order.
+ */
 export enum SyncOrganizerType
 {
     NONE = 0,
@@ -9,6 +16,15 @@ export enum SyncOrganizerType
     SUBSCRIBER
 }
 
+/**
+ * interface for the object in charge of fixing errors during synchronization.
+ * 
+ * this object is in charge of avoiding race conditions.
+ * given the potentially asychronous nature of 2 synchronized classes (e.g. synchronization between 2 servers), order is important.
+ * if a situation is detected where the actions are taken in a different order this class is in charge of rectifying that mistake.
+ * 
+ * @see https://en.wikipedia.org/wiki/Race_condition
+ */
 export interface SyncOrganizer
 {
     send: (action: SyncAction) => void;
