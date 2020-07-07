@@ -12,6 +12,12 @@ const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "--fullSync"
 ]);
 
+function onChangeName(root: SubDoc, name: string)
+{
+    (<HTMLElement>root.getElementBySid("property--name")).innerText = name;
+    (<HTMLInputElement>root.getElementBySid("property--name-input")).value = name;
+}
+
 export class ObjectEditor implements TabContentImplementation
 {
     drawObjectTree: DrawObjectTreeEditorWrapper;
@@ -20,6 +26,18 @@ export class ObjectEditor implements TabContentImplementation
     {
         this.drawObjectTree = new DrawObjectTreeEditorWrapper(SyncOrganizerType.SUBSCRIBER, new SyncConnector_Front("draw-object-tree"));
         this.drawObjectTree.under.organizer.requestSync();
+
+        const nameInput = <HTMLInputElement>root.getElementBySid("property--name-input");
+
+        nameInput.addEventListener("keydown", (event: KeyboardEvent) =>
+        {
+            if (event.key !== "Enter")
+            {
+                return;
+            }
+
+            console.log(nameInput.value);
+        });
 
         this.drawObjectTree.under.addAllActionCallback((action, under) =>
         {
@@ -53,6 +71,11 @@ export class ObjectEditor implements TabContentImplementation
                 });
                 textTreeList.appendChild(newChild);
             });
+        });
+
+        this.drawObjectTree.under.addActionCallback("selectObject", (under, argumentList) =>
+        {
+            onChangeName(root, under.selectedObject);
         });
     }
     onDestroy(root: SubDoc, name: string)
