@@ -113,9 +113,27 @@ export class ObjectEditor implements TabContentImplementation
             }
 
             const readOnlyTree = this.drawObjectTree.under.under;
+
+            const transformList = root.getElementBySid("property--transform-list");
+            transformList.innerHTML = "";
             readOnlyTree.objects[ readOnlyTree.selectedObject ].transformCommands.forEach(command =>
             {
-                console.log(command.type);
+                let commandElement = document.createElement("li");
+                commandElement.innerHTML = `<h5>${command.type}</h5>${
+                    (() =>
+                    {
+                        let result: string = "";
+
+                        for (let key in command.fields)
+                        {
+                            result += `<p>${key}</p><input class="transform-command-number-input" data-transform-command-key="${key}" type="number" value="${command.fields[ key ]}">`;
+                        }
+
+                        return result;
+                    })()
+                    }`;
+
+                transformList.appendChild(commandElement);
             });
         });
 
