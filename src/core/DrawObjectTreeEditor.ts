@@ -17,6 +17,9 @@ type verifyResult =
         message: string;
     };
 
+/**
+ * @see DrawObjectTreeEditor
+ */
 export interface DrawObjectTreeEditorInterface
 {
     AddObject(object: DrawObject): void;
@@ -27,6 +30,7 @@ export interface DrawObjectTreeEditorInterface
     addTransformCommand(object: string, command: TransformCommand): void;
     selectObject(object: string): void;
     validateName(testName: string): verifyResult;
+    renameObject(object: string, newName: string): void;
 }
 
 export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTreeEditorInterface
@@ -79,12 +83,40 @@ export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTr
         };
     }
 
+    renameObject(object: string, newName: string): void
+    {
+        if (object === newName)
+        {
+            return;
+        }
+
+        if (!this.validateName(newName).success)
+        {
+            return;
+        }
+
+        this.objects[ object ].name = newName;
+        this.objects[ newName ] = this.objects[ object ];
+        delete this.objects[ object ];
+
+        if (this.selectedObject === object)
+        {
+            this.selectedObject = newName;
+        }
+    }
+
     constructor (rootObject: DrawObject[] = [])
     {
         super(rootObject);
     }
 }
 
+/**
+ * wrapper function for object synchonization
+ * 
+ * @see DrawObjectTreeEditor
+ * @see SyncObject
+ */
 export class DrawObjectTreeEditorWrapper implements DrawObjectTreeEditorInterface
 {
     under: SyncObject<DrawObjectTreeEditor>;
@@ -123,6 +155,11 @@ export class DrawObjectTreeEditorWrapper implements DrawObjectTreeEditorInterfac
     validateName(testName: string): verifyResult
     {
         return this.under.under.validateName(testName);
+    }
+
+    renameObject(object: string, newName: string): void
+    {
+        this.under.runAction({ action: "renameObject", argumentList: [ object, newName ] });
     }
 
     constructor (organizerType: SyncOrganizerType, connector: SyncConnector, drawObjectTree: DrawObjectTreeEditor = new DrawObjectTreeEditor())

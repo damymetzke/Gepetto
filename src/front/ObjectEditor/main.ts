@@ -12,6 +12,7 @@ const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "AddObjectToRoot",
     "FromPureObject",
     "selectObject",
+    "renameObject",
     "--fullSync"
 ]);
 
@@ -46,7 +47,10 @@ export class ObjectEditor implements TabContentImplementation
                     type: "warning",
                     message: (<any>validateResult).message
                 });
+                return;
             }
+
+            this.drawObjectTree.renameObject(this.drawObjectTree.under.under.selectedObject, nameInput.value);
         });
 
         this.drawObjectTree.under.addAllActionCallback((action, under) =>
