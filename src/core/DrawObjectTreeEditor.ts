@@ -50,6 +50,14 @@ export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTr
 
     validateName(testName: string): verifyResult
     {
+        if (!testName)
+        {
+            return {
+                success: false,
+                message: "Name cannot be empty"
+            };
+        }
+
         if (!REGEX_VALIDATE_IMPORT_NAME.test(testName))
         {
             return {

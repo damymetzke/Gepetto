@@ -43,7 +43,7 @@ export class ObjectEditor implements TabContentImplementation
             if (!validateResult.success)
             {
                 dialog.showMessageBox(currentWindow, {
-                    type: "info",
+                    type: "warning",
                     message: (<any>validateResult).message
                 });
             }
