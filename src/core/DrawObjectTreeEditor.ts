@@ -5,6 +5,18 @@ import { SyncObject } from "./sync_alt/SyncObject.js";
 import { SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
 import { SyncConnector } from "./sync_alt/SyncConnector.js";
 
+const REGEX_VALIDATE_IMPORT_NAME = /^[a-z][a-z0-9_]*$/i;
+
+type verifyResult =
+    {
+        success: true;
+    }
+    |
+    {
+        success: false;
+        message: string;
+    };
+
 export interface DrawObjectTreeEditorInterface
 {
     AddObject(object: DrawObject): void;
@@ -14,6 +26,7 @@ export interface DrawObjectTreeEditorInterface
     FromPureObject(object: DrawObjectTreePure): DrawObjectTree;
     addTransformCommand(object: string, command: TransformCommand): void;
     selectObject(object: string): void;
+    validateName(testName: string): verifyResult;
 }
 
 export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTreeEditorInterface
@@ -33,6 +46,29 @@ export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTr
     selectObject(object: string)
     {
         this.selectedObject = object;
+    }
+
+    validateName(testName: string): verifyResult
+    {
+        if (!REGEX_VALIDATE_IMPORT_NAME.test(testName))
+        {
+            return {
+                success: false,
+                message: "Name can only contain alphanumerical characters and underscore('_')\nName should always start with an alphabetic character (a-z)"
+            };
+        }
+
+        if (this.HasObject(testName))
+        {
+            return {
+                success: false,
+                message: "Name is already in use"
+            };
+        }
+
+        return {
+            success: true
+        };
     }
 
     constructor (rootObject: DrawObject[] = [])
@@ -74,6 +110,11 @@ export class DrawObjectTreeEditorWrapper implements DrawObjectTreeEditorInterfac
     selectObject(object: string): void
     {
         this.under.runAction({ action: "selectObject", argumentList: [ object ] });
+    }
+
+    validateName(testName: string): verifyResult
+    {
+        return this.under.under.validateName(testName);
     }
 
     constructor (organizerType: SyncOrganizerType, connector: SyncConnector, drawObjectTree: DrawObjectTreeEditor = new DrawObjectTreeEditor())

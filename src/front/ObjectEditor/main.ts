@@ -4,6 +4,9 @@ import { DrawObjectTreeEditorWrapper, DrawObject } from "../core/core.js";
 import { SyncOrganizerType } from "../core/sync_alt/SyncOrganizer.js";
 import { SyncConnector_Front } from "../global/SyncConnector_Front.js";
 
+const dialog = require("electron").remote.dialog;
+const currentWindow = require("electron").remote.getCurrentWindow();
+
 const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "AddObject",
     "AddObjectToRoot",
@@ -22,7 +25,7 @@ export class ObjectEditor implements TabContentImplementation
 {
     drawObjectTree: DrawObjectTreeEditorWrapper;
 
-    onInit(root: SubDoc, name: string)
+    onInit(root: SubDoc, _name: string)
     {
         this.drawObjectTree = new DrawObjectTreeEditorWrapper(SyncOrganizerType.SUBSCRIBER, new SyncConnector_Front("draw-object-tree"));
         this.drawObjectTree.under.organizer.requestSync();
@@ -36,7 +39,14 @@ export class ObjectEditor implements TabContentImplementation
                 return;
             }
 
-            console.log(nameInput.value);
+            const validateResult = this.drawObjectTree.validateName(nameInput.value);
+            if (!validateResult.success)
+            {
+                dialog.showMessageBox(currentWindow, {
+                    type: "info",
+                    message: (<any>validateResult).message
+                });
+            }
         });
 
         this.drawObjectTree.under.addAllActionCallback((action, under) =>
