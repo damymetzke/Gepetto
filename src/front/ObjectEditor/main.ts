@@ -1,8 +1,10 @@
 import { SubDoc } from "../global/subdoc_alt.js";
 import { TabContentImplementation } from "../global/tabs_alt.js";
-import { DrawObjectTreeEditorWrapper, DrawObject } from "../core/core.js";
+import { DrawObjectTreeEditorWrapper, DrawObject, TransformCommand } from "../core/core.js";
 import { SyncOrganizerType } from "../core/sync_alt/SyncOrganizer.js";
 import { SyncConnector_Front } from "../global/SyncConnector_Front.js";
+import { OnScriptLoad as loadDropdown } from "../global/dropdown.js";
+import { arrayExpression } from "@babel/types";
 
 const dialog = require("electron").remote.dialog;
 const currentWindow = require("electron").remote.getCurrentWindow();
@@ -13,6 +15,12 @@ const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "FromPureObject",
     "selectObject",
     "renameObject",
+    "--fullSync"
+]);
+
+const UPDATE_TRANSFORM_COMMANDS_BY_ACTIONS = new Set([
+    "selectObject",
+    "addTransformCommand",
     "--fullSync"
 ]);
 
@@ -28,6 +36,16 @@ export class ObjectEditor implements TabContentImplementation
 
     onInit(root: SubDoc, _name: string)
     {
+        loadDropdown(root.root);
+
+        Array.from(root.getElementBySid("property--transform-add-controls").children).forEach((child: HTMLButtonElement) =>
+        {
+            child.addEventListener("click", () =>
+            {
+                this.drawObjectTree.addTransformCommand(this.drawObjectTree.under.under.selectedObject, new TransformCommand(child.dataset.transformCommandType));
+            });
+        });
+
         this.drawObjectTree = new DrawObjectTreeEditorWrapper(SyncOrganizerType.SUBSCRIBER, new SyncConnector_Front("draw-object-tree"));
         this.drawObjectTree.under.organizer.requestSync();
 
@@ -84,6 +102,20 @@ export class ObjectEditor implements TabContentImplementation
                     this.drawObjectTree.selectObject(object.name);
                 });
                 textTreeList.appendChild(newChild);
+            });
+        });
+
+        this.drawObjectTree.under.addAllActionCallback((action, under) =>
+        {
+            if (!UPDATE_TRANSFORM_COMMANDS_BY_ACTIONS.has(action) || !this.drawObjectTree.under.under.selectedObject)
+            {
+                return;
+            }
+
+            const readOnlyTree = this.drawObjectTree.under.under;
+            readOnlyTree.objects[ readOnlyTree.selectedObject ].transformCommands.forEach(command =>
+            {
+                console.log(command.type);
             });
         });
 

@@ -164,6 +164,11 @@ export class DrawObjectTreeEditorWrapper implements DrawObjectTreeEditorInterfac
 
     constructor (organizerType: SyncOrganizerType, connector: SyncConnector, drawObjectTree: DrawObjectTreeEditor = new DrawObjectTreeEditor())
     {
-        this.under = new SyncObject<DrawObjectTreeEditor>(organizerType, connector, drawObjectTree, under => under.ToPureObject(), recieved => <DrawObjectTreeEditor>(new DrawObjectTreeEditor().FromPureObject(recieved)));
+        this.under = new SyncObject<DrawObjectTreeEditor>(organizerType, connector, drawObjectTree, under => under.ToPureObject(), recieved => <DrawObjectTreeEditor>(new DrawObjectTreeEditor().FromPureObject(recieved)), {
+            "AddObjectToRoot": {
+                ConvertToSend: argumentList => [ (<DrawObject>argumentList[ 0 ]).ToPureObject() ],
+                ConvertFromSend: argumentList => [ new DrawObject().FromPureObject(argumentList[ 0 ]) ]
+            }
+        });
     }
 }

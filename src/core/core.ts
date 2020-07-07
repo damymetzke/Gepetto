@@ -13,7 +13,7 @@ import { SyncLog, SynchronizedTreeLog } from "./sync/synchronized-tree-log.js";
 
 import { SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessage as SyncMessageAlt } from "./sync_alt/SyncConnector.js";
 import { SyncOrganizer, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction, SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
-import { SyncObject } from "./sync_alt/SyncObject.js";
+import { SyncObject, SyncConverter } from "./sync_alt/SyncObject.js";
 
 export
 {
@@ -30,5 +30,5 @@ export
 
     SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessageAlt,
     SyncOrganizer, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction, SyncOrganizerType,
-    SyncObject
+    SyncObject, SyncConverter
 };
