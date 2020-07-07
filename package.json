@@ -42,7 +42,7 @@
     "@babel/types": "^7.9.6",
     "@types/jest": "^25.2.3",
     "del": "^5.1.0",
-    "electron": "^8.2.0",
+    "electron": "^8.2.4",
     "electron-builder": "^22.7.0",
     "jest": "^25.2.7",
     "jsdoc": "^3.6.3",
