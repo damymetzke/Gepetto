@@ -48,8 +48,14 @@ function onRename(event: KeyboardEvent, nameInput: HTMLInputElement, tree: DrawO
 export class ObjectEditor implements TabContentImplementation
 {
     drawObjectTree: DrawObjectTreeEditorWrapper;
+    resourceDirectory: string;
 
-    onInit(root: SubDoc, _name: string)
+    constructor ()
+    {
+        this.resourceDirectory = "../saved/objects";
+    }
+
+    onInit(root: SubDoc)
     {
         loadDropdown(root.root);
 
@@ -99,6 +105,18 @@ export class ObjectEditor implements TabContentImplementation
         this.drawObjectTree.under.addActionCallback("selectObject", (under, argumentList) =>
         {
             onChangeName(root, under.selectedObject);
+        });
+
+        this.drawObjectTree.under.addActionCallback("AddObjectToRoot", (_under, argumentList) =>
+        {
+            // console.log((<DrawObject>argumentList[ 0 ]).name);
+            let objectRequest = new window.XMLHttpRequest();
+            objectRequest.open("GET", `${this.resourceDirectory}/${(<DrawObject>argumentList[ 0 ]).name}.xml`);
+            objectRequest.onload = () =>
+            {
+                console.log(objectRequest.response);
+            };
+            objectRequest.send();
         });
     }
     onDestroy(root: SubDoc, name: string)
