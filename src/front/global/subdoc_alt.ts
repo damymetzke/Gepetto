@@ -6,6 +6,7 @@ export class SubDoc
     ready: boolean;
     sidMap: { [ sid: string ]: HTMLElement | SVGElement; } = {};
     root: HTMLElement | SVGElement;
+    onReady: (() => void)[];
 
     destroy(destroyRoot: boolean = false)
     {
@@ -28,6 +29,7 @@ export class SubDoc
 
     constructor (sourcePath: string, root: HTMLElement, onready: () => void = () => { })
     {
+        this.onReady = [];
         this.ready = false;
         if (!REGEX_SUBDOC_PATH.test(sourcePath))
         {
@@ -53,6 +55,7 @@ export class SubDoc
 
             this.ready = true;
             onready();
+            this.onReady.forEach(callback => callback());
         };
 
         client.send();

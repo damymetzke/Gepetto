@@ -45,13 +45,48 @@ function onRename(event: KeyboardEvent, nameInput: HTMLInputElement, tree: DrawO
     }
 
     tree.renameObject(tree.under.under.selectedObject, nameInput.value);
-});
+};
+
+function loadXmlObject(newObject: DrawObject, root: SubDoc, resourceDirectory: string): Promise<SVGGElement>
+{
+    const resourceLoaction = `${resourceDirectory}/${newObject.name}.xml`;
+    let objectRequest = new window.XMLHttpRequest();
+    objectRequest.open("GET", resourceLoaction);
+
+    return new Promise((resolve, reject) =>
+    {
+        objectRequest.onload = () =>
+        {
+            const match = REGEX_XML_CONTENT.exec(objectRequest.response);
+            if (!match)
+            {
+                const errorMessage = `could not load object '${newObject.name}' svg data at resource location '${resourceLoaction}'`;
+                console.error(errorMessage);
+                reject(errorMessage);
+            }
+
+            const [ , svgContent ] = match;
+
+            let newGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            newGroup.innerHTML = svgContent;
+
+            newGroup.setAttribute("transform", newObject.WorldTransform().svgString());
+
+            root.getElementBySid("main--svg").appendChild(newGroup);
+            resolve(newGroup);
+        };
+        objectRequest.send();
+    });
+
+
+}
 
 export class ObjectEditor implements TabContentImplementation
 {
     drawObjectTree: DrawObjectTreeEditorWrapper;
     resourceDirectory: string;
     displayedObjects: { [ name: string ]: SVGGElement; };
+    connector: SyncConnector_Front;
 
     constructor ()
     {
@@ -61,6 +96,9 @@ export class ObjectEditor implements TabContentImplementation
 
     onInit(root: SubDoc)
     {
+        this.connector = new SyncConnector_Front("draw-object-tree");
+        this.drawObjectTree = new DrawObjectTreeEditorWrapper(SyncOrganizerType.SUBSCRIBER, this.connector);
+
         loadDropdown(root.root);
 
         Array.from(root.getElementBySid("property--transform-add-controls").children).forEach((child: HTMLButtonElement) =>
@@ -71,7 +109,6 @@ export class ObjectEditor implements TabContentImplementation
             });
         });
 
-        this.drawObjectTree = new DrawObjectTreeEditorWrapper(SyncOrganizerType.SUBSCRIBER, new SyncConnector_Front("draw-object-tree"));
         this.drawObjectTree.under.organizer.requestSync();
 
         const nameInput = <HTMLInputElement>root.getElementBySid("property--name-input");
@@ -93,7 +130,17 @@ export class ObjectEditor implements TabContentImplementation
                 return;
             }
 
-            updateTextTree(root, this.drawObjectTree, under);
+            if (root.ready)
+            {
+                updateTextTree(root, this.drawObjectTree, under);
+                return;
+            }
+
+            root.onReady.push(() =>
+            {
+                updateTextTree(root, this.drawObjectTree, under);
+            });
+
         });
 
         this.drawObjectTree.under.addAllActionCallback((action, under) =>
@@ -103,7 +150,17 @@ export class ObjectEditor implements TabContentImplementation
                 return;
             }
 
-            updateTransformCommands(root, this.drawObjectTree, under);
+            if (root.ready)
+            {
+                updateTransformCommands(root, this.drawObjectTree, under);
+                return;
+            }
+
+            root.onReady.push(() =>
+            {
+                updateTransformCommands(root, this.drawObjectTree, under);
+            });
+
         });
 
         this.drawObjectTree.under.addActionCallback("selectObject", (under, argumentList) =>
@@ -113,32 +170,10 @@ export class ObjectEditor implements TabContentImplementation
 
         this.drawObjectTree.under.addActionCallback("AddObjectToRoot", (_under, argumentList: [ DrawObject ]) =>
         {
-            const [ newObject ] = argumentList;
-            const resourceLoaction = `${this.resourceDirectory}/${newObject.name}.xml`;
-            let objectRequest = new window.XMLHttpRequest();
-            objectRequest.open("GET", resourceLoaction);
-            objectRequest.onload = (event) =>
+            loadXmlObject(argumentList[ 0 ], root, this.resourceDirectory).then((result) =>
             {
-                // console.log(objectRequest.response);
-                const match = REGEX_XML_CONTENT.exec(objectRequest.response);
-                if (!match)
-                {
-                    console.error(`could not load object '${newObject.name}' svg data at resource location '${resourceLoaction}'`);
-                    return;
-                }
-
-                const [ , svgContent ] = match;
-
-                let newGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-                newGroup.innerHTML = svgContent;
-
-                this.displayedObjects[ newObject.name ] = newGroup;
-
-                newGroup.setAttribute("transform", newObject.WorldTransform().svgString());
-
-                root.getElementBySid("main--svg").appendChild(newGroup);
-            };
-            objectRequest.send();
+                this.displayedObjects[ argumentList[ 0 ].name ] = result;
+            });
         });
 
         this.drawObjectTree.under.addActionCallback("renameObject", (_under, argumentList: [ string, string ]) =>
@@ -153,10 +188,39 @@ export class ObjectEditor implements TabContentImplementation
             this.displayedObjects[ newName ] = this.displayedObjects[ oldName ];
             delete this.displayedObjects[ oldName ];
         });
+
+        this.drawObjectTree.under.addActionCallback("--fullSync", (under) =>
+        {
+            function displayInitialObjects()
+            {
+                root.getElementBySid("main--svg").innerHTML = "";
+                this.displayedObjects = {};
+
+                for (const name in under.objects)
+                {
+                    loadXmlObject(under.objects[ name ], root, this.resourceDirectory).then((result) =>
+                    {
+                        this.displayedObjects[ name ] = result;
+                    });
+                }
+                console.log("ψ(._. )>");
+            }
+
+            if (root.ready)
+            {
+                displayInitialObjects();
+                return;
+            }
+
+            root.onReady.push(() =>
+            {
+                displayInitialObjects();
+            });
+        });
     }
     onDestroy(root: SubDoc, name: string)
     {
-
+        this.connector.onDestroy();
     }
     onSave(root: SubDoc, name: string)
     {

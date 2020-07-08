@@ -16,6 +16,11 @@ export class SyncConnector_Front implements SyncConnector
         this.callback = callback;
     }
 
+    onDestroy()
+    {
+        ipcRenderer.removeAllListeners(this.ipcChannel);
+    }
+
     constructor (ipcChannel: string)
     {
         this.ipcChannel = ipcChannel;
