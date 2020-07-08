@@ -4,7 +4,7 @@ import { DrawObjectTreeEditorWrapper, DrawObject, TransformCommand } from "../co
 import { SyncOrganizerType } from "../core/sync_alt/SyncOrganizer.js";
 import { SyncConnector_Front } from "../global/SyncConnector_Front.js";
 import { OnScriptLoad as loadDropdown } from "../global/dropdown.js";
-import { arrayExpression } from "@babel/types";
+import { updateTextTree, updateTransformCommands } from "./Updates.js";
 
 const dialog = require("electron").remote.dialog;
 const currentWindow = require("electron").remote.getCurrentWindow();
@@ -78,31 +78,7 @@ export class ObjectEditor implements TabContentImplementation
                 return;
             }
 
-            root.getElementBySid("body").classList.add("hide-property");
-
-            const textTreeList: HTMLOListElement = <HTMLOListElement>root.getElementBySid("text-tree--list");
-            if (!textTreeList)
-            {
-                return;
-            }
-            textTreeList.innerHTML = "";
-
-            under.rootObjects.forEach((object) =>
-            {
-                let newChild = document.createElement("li");
-                newChild.innerText = object.name;
-                if (this.drawObjectTree.under.under.selectedObject === object.name)
-                {
-                    newChild.classList.add("selected-element");
-                    root.getElementBySid("body").classList.remove("hide-property");
-                }
-
-                newChild.addEventListener("click", () =>
-                {
-                    this.drawObjectTree.selectObject(object.name);
-                });
-                textTreeList.appendChild(newChild);
-            });
+            updateTextTree(root, this.drawObjectTree, under);
         });
 
         this.drawObjectTree.under.addAllActionCallback((action, under) =>
@@ -112,42 +88,7 @@ export class ObjectEditor implements TabContentImplementation
                 return;
             }
 
-            const readOnlyTree = this.drawObjectTree.under.under;
-
-            const transformList = root.getElementBySid("property--transform-list");
-            transformList.innerHTML = "";
-            readOnlyTree.objects[ readOnlyTree.selectedObject ].transformCommands.forEach((command, index) =>
-            {
-                let commandElement = document.createElement("li");
-                commandElement.innerHTML = `<h5>${command.type}</h5>${
-                    (() =>
-                    {
-                        let result: string = "";
-
-                        for (let key in command.fields)
-                        {
-                            result += `<p>${key}</p><input class="transform-command-number-input" data-transform-command-key="${key}" type="number" value="${command.fields[ key ]}">`;
-                        }
-
-                        return result;
-                    })()
-                    }`;
-
-                Array.from(commandElement.getElementsByClassName("transform-command-number-input")).forEach((element: HTMLInputElement) =>
-                {
-                    element.addEventListener("keydown", (event: KeyboardEvent) =>
-                    {
-                        if (event.key !== "Enter")
-                        {
-                            return;
-                        }
-
-                        this.drawObjectTree.updateTransformCommandField(this.drawObjectTree.under.under.selectedObject, index, element.dataset.transformCommandKey, Number.parseFloat(element.value));
-                    });
-                });
-
-                transformList.appendChild(commandElement);
-            });
+            updateTransformCommands(root, this.drawObjectTree, under);
         });
 
         this.drawObjectTree.under.addActionCallback("selectObject", (under, argumentList) =>
