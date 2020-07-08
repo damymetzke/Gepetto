@@ -1,5 +1,5 @@
-export type Matrix = [number, number, number, number, number, number];
-export type Vector = [number, number];
+export type Matrix = [ number, number, number, number, number, number ];
+export type Vector = [ number, number ];
 
 /**
  * class that holds a transformation matrix.
@@ -20,19 +20,19 @@ export type Vector = [number, number];
  */
 export class Transform
 {
-    matrix: Matrix = [1, 0, 0, 1, 0, 0];
+    matrix: Matrix = [ 1, 0, 0, 1, 0, 0 ];
 
     static Identity = new Transform();
 
     Lerp(target: Transform, progress: number): Transform
     {
         return new Transform([
-            this.matrix[0] + (progress * (target.matrix[0] - this.matrix[0])),
-            this.matrix[1] + (progress * (target.matrix[1] - this.matrix[1])),
-            this.matrix[2] + (progress * (target.matrix[2] - this.matrix[2])),
-            this.matrix[3] + (progress * (target.matrix[3] - this.matrix[3])),
-            this.matrix[4] + (progress * (target.matrix[4] - this.matrix[4])),
-            this.matrix[5] + (progress * (target.matrix[5] - this.matrix[5]))
+            this.matrix[ 0 ] + (progress * (target.matrix[ 0 ] - this.matrix[ 0 ])),
+            this.matrix[ 1 ] + (progress * (target.matrix[ 1 ] - this.matrix[ 1 ])),
+            this.matrix[ 2 ] + (progress * (target.matrix[ 2 ] - this.matrix[ 2 ])),
+            this.matrix[ 3 ] + (progress * (target.matrix[ 3 ] - this.matrix[ 3 ])),
+            this.matrix[ 4 ] + (progress * (target.matrix[ 4 ] - this.matrix[ 4 ])),
+            this.matrix[ 5 ] + (progress * (target.matrix[ 5 ] - this.matrix[ 5 ]))
         ]);
     }
 
@@ -50,12 +50,12 @@ export class Transform
     MultiplyMatrix(right: Transform): Transform
     {
         return new Transform([
-            this.matrix[0] * right.matrix[0] + this.matrix[2] * right.matrix[1],
-            this.matrix[1] * right.matrix[0] + this.matrix[3] * right.matrix[1],
-            this.matrix[0] * right.matrix[2] + this.matrix[2] * right.matrix[3],
-            this.matrix[1] * right.matrix[2] + this.matrix[3] * right.matrix[3],
-            this.matrix[0] * right.matrix[4] + this.matrix[2] * right.matrix[5] + this.matrix[4],
-            this.matrix[1] * right.matrix[4] + this.matrix[3] * right.matrix[5] + this.matrix[5],
+            this.matrix[ 0 ] * right.matrix[ 0 ] + this.matrix[ 2 ] * right.matrix[ 1 ],
+            this.matrix[ 1 ] * right.matrix[ 0 ] + this.matrix[ 3 ] * right.matrix[ 1 ],
+            this.matrix[ 0 ] * right.matrix[ 2 ] + this.matrix[ 2 ] * right.matrix[ 3 ],
+            this.matrix[ 1 ] * right.matrix[ 2 ] + this.matrix[ 3 ] * right.matrix[ 3 ],
+            this.matrix[ 0 ] * right.matrix[ 4 ] + this.matrix[ 2 ] * right.matrix[ 5 ] + this.matrix[ 4 ],
+            this.matrix[ 1 ] * right.matrix[ 4 ] + this.matrix[ 3 ] * right.matrix[ 5 ] + this.matrix[ 5 ],
         ]);
     }
 
@@ -78,12 +78,12 @@ export class Transform
     Add(next: Transform): Transform
     {
         return new Transform([
-            next.matrix[0] * this.matrix[0] + next.matrix[2] * this.matrix[1],
-            next.matrix[1] * this.matrix[0] + next.matrix[3] * this.matrix[1],
-            next.matrix[0] * this.matrix[2] + next.matrix[2] * this.matrix[3],
-            next.matrix[1] * this.matrix[2] + next.matrix[3] * this.matrix[3],
-            next.matrix[0] * this.matrix[4] + next.matrix[2] * this.matrix[5] + next.matrix[4],
-            next.matrix[1] * this.matrix[4] + next.matrix[3] * this.matrix[5] + next.matrix[5],
+            next.matrix[ 0 ] * this.matrix[ 0 ] + next.matrix[ 2 ] * this.matrix[ 1 ],
+            next.matrix[ 1 ] * this.matrix[ 0 ] + next.matrix[ 3 ] * this.matrix[ 1 ],
+            next.matrix[ 0 ] * this.matrix[ 2 ] + next.matrix[ 2 ] * this.matrix[ 3 ],
+            next.matrix[ 1 ] * this.matrix[ 2 ] + next.matrix[ 3 ] * this.matrix[ 3 ],
+            next.matrix[ 0 ] * this.matrix[ 4 ] + next.matrix[ 2 ] * this.matrix[ 5 ] + next.matrix[ 4 ],
+            next.matrix[ 1 ] * this.matrix[ 4 ] + next.matrix[ 3 ] * this.matrix[ 5 ] + next.matrix[ 5 ],
         ]);
     }
 
@@ -106,8 +106,8 @@ export class Transform
     ApplyToVector(vector: Vector): Vector
     {
         return [
-            this.matrix[0] * vector[0] + this.matrix[2] * vector[1] + this.matrix[4],
-            this.matrix[1] * vector[0] + this.matrix[3] * vector[1] + this.matrix[5]
+            this.matrix[ 0 ] * vector[ 0 ] + this.matrix[ 2 ] * vector[ 1 ] + this.matrix[ 4 ],
+            this.matrix[ 1 ] * vector[ 0 ] + this.matrix[ 3 ] * vector[ 1 ] + this.matrix[ 5 ]
         ];
     }
 
@@ -127,8 +127,8 @@ export class Transform
     InnerMatrix(): Transform
     {
         return new Transform([
-            this.matrix[0], this.matrix[1],
-            this.matrix[2], this.matrix[3],
+            this.matrix[ 0 ], this.matrix[ 1 ],
+            this.matrix[ 2 ], this.matrix[ 3 ],
             0, 0
         ]);
     }
@@ -151,7 +151,7 @@ export class Transform
         return new Transform([
             1, 0,
             0, 1,
-            this.matrix[4], this.matrix[5]
+            this.matrix[ 4 ], this.matrix[ 5 ]
         ]);
     }
 
@@ -166,17 +166,25 @@ export class Transform
      */
     Inverse(): Transform
     {
-        const determinant = (this.matrix[0] * this.matrix[3]) - (this.matrix[1] * this.matrix[2]);
+        const determinant = (this.matrix[ 0 ] * this.matrix[ 3 ]) - (this.matrix[ 1 ] * this.matrix[ 2 ]);
 
         return new Transform([
-            this.matrix[3] / determinant, this.matrix[1] / -determinant,
-            this.matrix[2] / -determinant, this.matrix[0] / determinant,
-            ((this.matrix[2] * this.matrix[5]) - (this.matrix[4] * this.matrix[3])) / determinant,
-            ((this.matrix[0] * this.matrix[5]) - (this.matrix[4] * this.matrix[1])) / -determinant
+            this.matrix[ 3 ] / determinant, this.matrix[ 1 ] / -determinant,
+            this.matrix[ 2 ] / -determinant, this.matrix[ 0 ] / determinant,
+            ((this.matrix[ 2 ] * this.matrix[ 5 ]) - (this.matrix[ 4 ] * this.matrix[ 3 ])) / determinant,
+            ((this.matrix[ 0 ] * this.matrix[ 5 ]) - (this.matrix[ 4 ] * this.matrix[ 1 ])) / -determinant
         ]);
     }
 
-    constructor(matrix: Matrix = [1, 0, 0, 1, 0, 0])
+    /**
+     * @returns a string that can be used inside the 'transform' property of an svg element
+     */
+    svgString(): string
+    {
+        return `matrix(${this.matrix.reduce((accumelator, current) => `${accumelator} ${current.toString()}`, "")})`;
+    }
+
+    constructor (matrix: Matrix = [ 1, 0, 0, 1, 0, 0 ])
     {
         this.matrix = matrix;
     }

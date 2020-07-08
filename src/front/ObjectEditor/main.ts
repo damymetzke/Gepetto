@@ -111,9 +111,10 @@ export class ObjectEditor implements TabContentImplementation
             onChangeName(root, under.selectedObject);
         });
 
-        this.drawObjectTree.under.addActionCallback("AddObjectToRoot", (_under, argumentList) =>
+        this.drawObjectTree.under.addActionCallback("AddObjectToRoot", (_under, argumentList: [ DrawObject ]) =>
         {
-            const resourceLoaction = `${this.resourceDirectory}/${(<DrawObject>argumentList[ 0 ]).name}.xml`;
+            const [ newObject ] = argumentList;
+            const resourceLoaction = `${this.resourceDirectory}/${newObject.name}.xml`;
             let objectRequest = new window.XMLHttpRequest();
             objectRequest.open("GET", resourceLoaction);
             objectRequest.onload = (event) =>
@@ -122,7 +123,8 @@ export class ObjectEditor implements TabContentImplementation
                 const match = REGEX_XML_CONTENT.exec(objectRequest.response);
                 if (!match)
                 {
-                    console.error(`could not load object '${(<DrawObject>argumentList[ 0 ]).name}' at resource location '${resourceLoaction}'`);
+                    console.error(`could not load object '${newObject.name}' svg data at resource location '${resourceLoaction}'`);
+                    return;
                 }
 
                 const [ , svgContent ] = match;
@@ -130,9 +132,26 @@ export class ObjectEditor implements TabContentImplementation
                 let newGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 newGroup.innerHTML = svgContent;
 
+                this.displayedObjects[ newObject.name ] = newGroup;
+
+                newGroup.setAttribute("transform", newObject.WorldTransform().svgString());
+
                 root.getElementBySid("main--svg").appendChild(newGroup);
             };
             objectRequest.send();
+        });
+
+        this.drawObjectTree.under.addActionCallback("renameObject", (_under, argumentList: [ string, string ]) =>
+        {
+            const [ oldName, newName ] = argumentList;
+            if (!(oldName in this.displayedObjects))
+            {
+                console.warn(`object '${oldName}' is not tracked for display`);
+                return;
+            }
+
+            this.displayedObjects[ newName ] = this.displayedObjects[ oldName ];
+            delete this.displayedObjects[ oldName ];
         });
     }
     onDestroy(root: SubDoc, name: string)
