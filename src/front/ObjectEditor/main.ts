@@ -116,7 +116,7 @@ export class ObjectEditor implements TabContentImplementation
 
             const transformList = root.getElementBySid("property--transform-list");
             transformList.innerHTML = "";
-            readOnlyTree.objects[ readOnlyTree.selectedObject ].transformCommands.forEach(command =>
+            readOnlyTree.objects[ readOnlyTree.selectedObject ].transformCommands.forEach((command, index) =>
             {
                 let commandElement = document.createElement("li");
                 commandElement.innerHTML = `<h5>${command.type}</h5>${
@@ -132,6 +132,19 @@ export class ObjectEditor implements TabContentImplementation
                         return result;
                     })()
                     }`;
+
+                Array.from(commandElement.getElementsByClassName("transform-command-number-input")).forEach((element: HTMLInputElement) =>
+                {
+                    element.addEventListener("keydown", (event: KeyboardEvent) =>
+                    {
+                        if (event.key !== "Enter")
+                        {
+                            return;
+                        }
+
+                        this.drawObjectTree.updateTransformCommandField(this.drawObjectTree.under.under.selectedObject, index, element.dataset.transformCommandKey, Number.parseFloat(element.value));
+                    });
+                });
 
                 transformList.appendChild(commandElement);
             });

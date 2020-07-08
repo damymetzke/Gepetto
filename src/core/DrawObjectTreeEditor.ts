@@ -31,6 +31,7 @@ export interface DrawObjectTreeEditorInterface
     selectObject(object: string): void;
     validateName(testName: string): verifyResult;
     renameObject(object: string, newName: string): void;
+    updateTransformCommandField(object: string, command: number, field: string, value: number): void;
 }
 
 export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTreeEditorInterface
@@ -105,6 +106,25 @@ export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTr
         }
     }
 
+    updateTransformCommandField(object: string, command: number, field: string, value: number): void
+    {
+        if (!(object in this.objects))
+        {
+            return;
+        }
+
+        const targetObject = this.objects[ object ];
+
+        if (command >= targetObject.transformCommands.length)
+        {
+            return;
+        }
+
+        const targetCommand = targetObject.transformCommands[ command ];
+
+        targetCommand.fields[ field ] = value;
+    }
+
     constructor (rootObject: DrawObject[] = [])
     {
         super(rootObject);
@@ -160,6 +180,11 @@ export class DrawObjectTreeEditorWrapper implements DrawObjectTreeEditorInterfac
     renameObject(object: string, newName: string): void
     {
         this.under.runAction({ action: "renameObject", argumentList: [ object, newName ] });
+    }
+
+    updateTransformCommandField(object: string, command: number, field: string, value: number): void
+    {
+        this.under.runAction({ action: "updateTransformCommandField", argumentList: [ object, command, field, value ] });
     }
 
     constructor (organizerType: SyncOrganizerType, connector: SyncConnector, drawObjectTree: DrawObjectTreeEditor = new DrawObjectTreeEditor())
