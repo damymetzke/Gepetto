@@ -30,6 +30,21 @@ function onChangeName(root: SubDoc, name: string)
     (<HTMLInputElement>root.getElementBySid("property--name-input")).value = name;
 }
 
+function onRename(event: KeyboardEvent, nameInput: HTMLInputElement, tree: DrawObjectTreeEditorWrapper)
+{
+    const validateResult = tree.validateName(nameInput.value);
+    if (!validateResult.success)
+    {
+        dialog.showMessageBox(currentWindow, {
+            type: "warning",
+            message: (<any>validateResult).message
+        });
+        return;
+    }
+
+    tree.renameObject(tree.under.under.selectedObject, nameInput.value);
+});
+
 export class ObjectEditor implements TabContentImplementation
 {
     drawObjectTree: DrawObjectTreeEditorWrapper;
@@ -58,17 +73,7 @@ export class ObjectEditor implements TabContentImplementation
                 return;
             }
 
-            const validateResult = this.drawObjectTree.validateName(nameInput.value);
-            if (!validateResult.success)
-            {
-                dialog.showMessageBox(currentWindow, {
-                    type: "warning",
-                    message: (<any>validateResult).message
-                });
-                return;
-            }
-
-            this.drawObjectTree.renameObject(this.drawObjectTree.under.under.selectedObject, nameInput.value);
+            onRename(event, nameInput, this.drawObjectTree);
         });
 
         this.drawObjectTree.under.addAllActionCallback((action, under) =>
