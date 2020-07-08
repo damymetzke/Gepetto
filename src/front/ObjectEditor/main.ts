@@ -9,6 +9,8 @@ import { updateTextTree, updateTransformCommands } from "./Updates.js";
 const dialog = require("electron").remote.dialog;
 const currentWindow = require("electron").remote.getCurrentWindow();
 
+const REGEX_XML_CONTENT = /^<root>([^]*)<\/root>$/i;
+
 const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "AddObject",
     "AddObjectToRoot",
@@ -49,10 +51,12 @@ export class ObjectEditor implements TabContentImplementation
 {
     drawObjectTree: DrawObjectTreeEditorWrapper;
     resourceDirectory: string;
+    displayedObjects: { [ name: string ]: SVGGElement; };
 
     constructor ()
     {
         this.resourceDirectory = "../saved/objects";
+        this.displayedObjects = {};
     }
 
     onInit(root: SubDoc)
@@ -109,12 +113,24 @@ export class ObjectEditor implements TabContentImplementation
 
         this.drawObjectTree.under.addActionCallback("AddObjectToRoot", (_under, argumentList) =>
         {
-            // console.log((<DrawObject>argumentList[ 0 ]).name);
+            const resourceLoaction = `${this.resourceDirectory}/${(<DrawObject>argumentList[ 0 ]).name}.xml`;
             let objectRequest = new window.XMLHttpRequest();
-            objectRequest.open("GET", `${this.resourceDirectory}/${(<DrawObject>argumentList[ 0 ]).name}.xml`);
-            objectRequest.onload = () =>
+            objectRequest.open("GET", resourceLoaction);
+            objectRequest.onload = (event) =>
             {
-                console.log(objectRequest.response);
+                // console.log(objectRequest.response);
+                const match = REGEX_XML_CONTENT.exec(objectRequest.response);
+                if (!match)
+                {
+                    console.error(`could not load object '${(<DrawObject>argumentList[ 0 ]).name}' at resource location '${resourceLoaction}'`);
+                }
+
+                const [ , svgContent ] = match;
+
+                let newGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                newGroup.innerHTML = svgContent;
+
+                root.getElementBySid("main--svg").appendChild(newGroup);
             };
             objectRequest.send();
         });
@@ -129,4 +145,4 @@ export class ObjectEditor implements TabContentImplementation
     }
 
 
-}
+};;

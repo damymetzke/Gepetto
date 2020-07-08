@@ -57,7 +57,7 @@ function SvgToObjectXml(svgContent)
         }
 
         //todo: transform all values into normalized coordinates (from -1 to 1)
-        delete innerContent["$"];
+        delete innerContent[ "$" ];
         innerContent = { root: innerContent };
         let builder = new xml.Builder({
             headless: true,
@@ -76,11 +76,10 @@ function SvgToObjectXml(svgContent)
         }
         catch (error)
         {
-            result = {
+            return {
                 success: false,
                 error: "error when rebuilding svg content:\n" + error
             };
-            return;
         }
     });
 
@@ -103,19 +102,19 @@ function ReadObjectXml(name)
     names = name;
     if (!Array.isArray(name))
     {
-        names = [name];
+        names = [ name ];
     }
 
     let result = {};
 
     for (let i = 0; i < names.length; ++i)
     {
-        const fileContent = fs.readFileSync(ResourceDirectory + names[i] + ".xml", "utf8");
+        const fileContent = fs.readFileSync(ResourceDirectory + names[ i ] + ".xml", "utf8");
         if (!(/^<root>[^]*<\/root>$/.test(fileContent)))
         {
             console.warn("Attempted to read object xml, however no root tags were found '<root>*</root>'\n" + fileContent);
         }
-        result[names[i]] = fileContent.substring(6, fileContent.length - 7);
+        result[ names[ i ] ] = fileContent.substring(6, fileContent.length - 7);
     }
 
     return result;
