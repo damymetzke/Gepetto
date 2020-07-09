@@ -34,10 +34,24 @@ function moveTab(tabParent: HTMLUListElement, position: { x: number; y: number; 
     tabParent.insertBefore(pointer, result);
 }
 
+/**
+ * interface for code running for each tab.
+ */
 export interface TabContentImplementation
 {
+    /**
+     * called whenever the tab is created.
+     */
     onInit: (root: SubDoc, name: string) => void;
+
+    /**
+     * called whenever the tab is closed.
+     */
     onDestroy: (root: SubDoc, name: string) => void;
+
+    /**
+     * called whenever the tab is saved.
+     */
     onSave: (root: SubDoc, name: string) => void;
 }
 
@@ -56,6 +70,15 @@ export class Tab
     }
 
 
+    /**
+     * @param owner each tab is owned by a single tab collection
+     * @param tabParent element which acts as the root of this tab (not the content)
+     * @param contentParent element which acts as the root of the content of this tab
+     * @param name name of the tab, will be displayed in the tab
+     * @param subdocPath path the the location of the subdoc file that should be loaded
+     * @param implementation code for the tab content
+     * @param onReady callback, will be called when the tab is ready
+     */
     constructor (owner: TabCollection, tabParent: HTMLUListElement, contentParent: HTMLUListElement, name: string, subdocPath: string, implementation: TabContentImplementation, onReady: () => void = () => { })
     {
         this.owner = owner;
@@ -122,6 +145,9 @@ export class Tab
     }
 }
 
+/**
+ * @see Tab
+ */
 export class TabCollection
 {
     tabs: { [ name: string ]: Tab; };
@@ -145,6 +171,15 @@ export class TabCollection
         y: number;
     };
 
+    /**
+     * @param name name of the tab, wil be displayed on the tab header.
+     * this name must be unique, or no tab will be created.
+     * @param subdocPath path to subdoc document.
+     * @param implementation code to run for the tab.
+     * @param autoSelect if true this tab will automatically selected.
+     * 
+     * @see {@link SubDoc}
+     */
     createTab(name: string, subdocPath: string, implementation: TabContentImplementation, autoSelect: boolean = true): Tab
     {
         if (name in this.tabs)
@@ -257,6 +292,10 @@ export class TabCollection
         this.selectedTab = targetTab;
     }
 
+    /**
+     * @param tabParent parent of the tab headers; this is where tab names are displayed, tabs can be selected and tabs can be reordered.
+     * @param contentParent parent of the tab content; only a single content is displayed at once, other tabs can be selected to change the displayed content.
+     */
     constructor (tabParent: HTMLUListElement, contentParent: HTMLUListElement)
     {
         this.tabs = {};
