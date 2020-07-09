@@ -63,6 +63,9 @@ export interface SyncOrganizer
     requestSync: () => void;
 }
 
+/**
+ * @see SyncOrganizerType
+ */
 export class SyncOrganizer_Owner implements SyncOrganizer
 {
     connector: SyncConnector;
@@ -141,6 +144,9 @@ export class SyncOrganizer_Owner implements SyncOrganizer
     }
 }
 
+/**
+ * @see SyncOrganizerType
+ */
 export class SyncOrganizer_Subscriber implements SyncOrganizer
 {
     connector: SyncConnector;
@@ -187,6 +193,7 @@ export class SyncOrganizer_Subscriber implements SyncOrganizer
 
     requestSync()
     {
+        this.waitForSync = true;
         this.connector.send({
             type: "request-sync"
         });
@@ -235,6 +242,7 @@ export class SyncOrganizer_Subscriber implements SyncOrganizer
                         });
                     });
                     this.queuedActions = [];
+                    this.waitForSync = false;
                     break;
             }
         });

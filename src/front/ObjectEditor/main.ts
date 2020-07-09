@@ -98,6 +98,7 @@ export class ObjectEditor implements TabContentImplementation
     {
         this.connector = new SyncConnector_Front("draw-object-tree");
         this.drawObjectTree = new DrawObjectTreeEditorWrapper(SyncOrganizerType.SUBSCRIBER, this.connector);
+        this.drawObjectTree.under.organizer.requestSync();
 
         loadDropdown(root.root);
 
@@ -109,7 +110,6 @@ export class ObjectEditor implements TabContentImplementation
             });
         });
 
-        this.drawObjectTree.under.organizer.requestSync();
 
         const nameInput = <HTMLInputElement>root.getElementBySid("property--name-input");
 
@@ -189,6 +189,7 @@ export class ObjectEditor implements TabContentImplementation
             delete this.displayedObjects[ oldName ];
         });
 
+        console.log("ψ(._. )>");
         this.drawObjectTree.under.addActionCallback("--fullSync", (under) =>
         {
             function displayInitialObjects()
@@ -203,7 +204,6 @@ export class ObjectEditor implements TabContentImplementation
                         this.displayedObjects[ name ] = result;
                     });
                 }
-                console.log("ψ(._. )>");
             }
 
             if (root.ready)
