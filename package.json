@@ -23,7 +23,7 @@
     "build": "node ./node_scripts/run-scripts.js compile then test then build:docs",
     "prebuild:docs": "node ./node_scripts/run-scripts.js setup:app setup:test",
     "build:docs": "node ./node_scripts/run-scripts.js build:docs#typedoc build:docs#markdown",
-    "build:docs#typedoc": "node ./node_scripts/wrap_command.js \".\\node_modules\\.bin\\typedoc ./src/ --out {build_config:directoryMaps.typedoc.to} --tsconfig ./config/tsconfig.json --exclude ./src/front/core --exclude ./src/back/core --exclude ./src/test/core\"",
+    "build:docs#typedoc": "node ./node_scripts/wrap_command.js \".\\node_modules\\.bin\\typedoc ./intermediate/typedoc_src/ --out {build_config:directoryMaps.typedoc.to} --tsconfig ./config/tsconfig.json --exclude ./src/front/core --exclude ./src/back/core --exclude ./src/test/core\"",
     "build:docs#markdown": "node ./node_scripts/build_markdown.js",
     "clean": "node ./node_scripts/clean.js",
     "prepack": "node ./node_scripts/run-scripts.js clean then compile:app compile:test then test",

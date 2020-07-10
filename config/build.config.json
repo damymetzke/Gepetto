@@ -3,7 +3,8 @@
         "./out",
         "./dev_out",
         "./documentation/build",
-        "./distribution"
+        "./distribution",
+        "./intermediate"
     ],
     "consoleColors": {
         "warn": [
