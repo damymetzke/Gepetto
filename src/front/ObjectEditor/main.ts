@@ -188,20 +188,19 @@ export class ObjectEditor implements TabContentImplementation
             this.displayedObjects[ newName ] = this.displayedObjects[ oldName ];
             delete this.displayedObjects[ oldName ];
         });
-
-        console.log("ψ(._. )>");
+        const self = this;
         this.drawObjectTree.under.addActionCallback("--fullSync", (under) =>
         {
             function displayInitialObjects()
             {
                 root.getElementBySid("main--svg").innerHTML = "";
-                this.displayedObjects = {};
+                self.displayedObjects = {};
 
                 for (const name in under.objects)
                 {
-                    loadXmlObject(under.objects[ name ], root, this.resourceDirectory).then((result) =>
+                    loadXmlObject(under.objects[ name ], root, self.resourceDirectory).then((result) =>
                     {
-                        this.displayedObjects[ name ] = result;
+                        self.displayedObjects[ name ] = result;
                     });
                 }
             }

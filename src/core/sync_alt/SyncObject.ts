@@ -104,6 +104,13 @@ export class SyncObject<UnderType>
             {
                 callback("--fullSync", this.under, []);
             });
+            if ("--fullSync" in this.callbacks)
+            {
+                this.callbacks[ "--fullSync" ].forEach(callback =>
+                {
+                    callback(this.under, []);
+                });
+            }
         });
         this.organizer.getFullSyncData(() =>
         {
