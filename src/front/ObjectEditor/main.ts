@@ -10,6 +10,7 @@ const dialog = require("electron").remote.dialog;
 const currentWindow = require("electron").remote.getCurrentWindow();
 
 const REGEX_XML_CONTENT = /^<root>([^]*)<\/root>$/i;
+const REGEX_REPLACE_SPACES = / /g;
 
 const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "AddObject",
@@ -47,7 +48,7 @@ function onRename(event: KeyboardEvent, nameInput: HTMLInputElement, tree: DrawO
     tree.renameObject(tree.under.under.selectedObject, nameInput.value);
 };
 
-function loadXmlObject(newObject: DrawObject, root: SubDoc, resourceDirectory: string): Promise<SVGGElement>
+function loadXmlObject(newObject: DrawObject, root: SubDoc, resourceDirectory: string, name: string): Promise<SVGGElement>
 {
     const resourceLoaction = `${resourceDirectory}/${newObject.name}.xml`;
     let objectRequest = new window.XMLHttpRequest();
@@ -71,8 +72,11 @@ function loadXmlObject(newObject: DrawObject, root: SubDoc, resourceDirectory: s
             newGroup.innerHTML = svgContent;
 
             newGroup.setAttribute("transform", newObject.WorldTransform().svgString());
+            //tmp
+            newGroup.setAttribute("filter", `url(#filter--${name.toLowerCase().replace(REGEX_REPLACE_SPACES, "-")}--selected-svg-object)`);
+            // newGroup.classList.add("selected-svg-object");
 
-            root.getElementBySid("main--svg").appendChild(newGroup);
+            root.getElementBySid("main--svg--content").appendChild(newGroup);
             resolve(newGroup);
         };
         objectRequest.send();
@@ -94,13 +98,16 @@ export class ObjectEditor implements TabContentImplementation
         this.displayedObjects = {};
     }
 
-    onInit(root: SubDoc)
+    onInit(root: SubDoc, name: string)
     {
         this.connector = new SyncConnector_Front("draw-object-tree");
         this.drawObjectTree = new DrawObjectTreeEditorWrapper(SyncOrganizerType.SUBSCRIBER, this.connector);
         this.drawObjectTree.under.organizer.requestSync();
 
         loadDropdown(root.root);
+
+        root.getElementBySid("filter--selected-svg-object").id = `filter--${name.toLowerCase().replace(REGEX_REPLACE_SPACES, "-")}--selected-svg-object`;
+        console.log("👌:", `filter--${name.toLowerCase().replace(REGEX_REPLACE_SPACES, "-")}--selected-svg-object`);
 
         Array.from(root.getElementBySid("property--transform-add-controls").children).forEach((child: HTMLButtonElement) =>
         {
@@ -170,7 +177,7 @@ export class ObjectEditor implements TabContentImplementation
 
         this.drawObjectTree.under.addActionCallback("AddObjectToRoot", (_under, argumentList: [ DrawObject ]) =>
         {
-            loadXmlObject(argumentList[ 0 ], root, this.resourceDirectory).then((result) =>
+            loadXmlObject(argumentList[ 0 ], root, this.resourceDirectory, name).then((result) =>
             {
                 this.displayedObjects[ argumentList[ 0 ].name ] = result;
             });
@@ -193,14 +200,14 @@ export class ObjectEditor implements TabContentImplementation
         {
             function displayInitialObjects()
             {
-                root.getElementBySid("main--svg").innerHTML = "";
+                root.getElementBySid("main--svg--content").innerHTML = "";
                 self.displayedObjects = {};
 
-                for (const name in under.objects)
+                for (const objectName in under.objects)
                 {
-                    loadXmlObject(under.objects[ name ], root, self.resourceDirectory).then((result) =>
+                    loadXmlObject(under.objects[ objectName ], root, self.resourceDirectory, name).then((result) =>
                     {
-                        self.displayedObjects[ name ] = result;
+                        self.displayedObjects[ objectName ] = result;
                     });
                 }
             }

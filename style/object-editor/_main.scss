@@ -52,6 +52,7 @@ section[data-generated-sid="main"]
     {
         outline: solid 3px blue;
         outline-offset: 5px;
+        filter: url(#selected-svg-object-filter);
     }
 
     .drag-display
