@@ -29,8 +29,6 @@ const UPDATE_TRANSFORM_COMMANDS_BY_ACTIONS = new Set([
 
 const UPDATE_SELECTED_OBJECT_BY_ACTION = new Set([
     "selectObject",
-    "AddObject",
-    "AddObjectToRoot",
     "FromPureObject",
     "--fullSync"
 ]);
@@ -194,7 +192,6 @@ export class ObjectEditor implements TabContentImplementation
                 return;
             }
 
-            console.log("👉selected: ", under.selectedObject);
             this.displayedObjects[ under.selectedObject ].setAttribute("filter", `url(#${sidToUniqueId(name, "filter--selected-svg-object")})`);
             this.currentDisplayedAsSelected = this.displayedObjects[ under.selectedObject ];
         });
@@ -249,11 +246,14 @@ export class ObjectEditor implements TabContentImplementation
             loadXmlObject(argumentList[ 0 ], root, this.resourceDirectory, name).then((result) =>
             {
                 this.displayedObjects[ argumentList[ 0 ].name ] = result;
+                result.setAttribute("filter", `url(#${sidToUniqueId(name, "filter--selected-svg-object")})`);
+
             });
         });
 
         this.drawObjectTree.under.addActionCallback("renameObject", (_under, argumentList: [ string, string ]) =>
         {
+            a;
             const [ oldName, newName ] = argumentList;
             if (!(oldName in this.displayedObjects))
             {
