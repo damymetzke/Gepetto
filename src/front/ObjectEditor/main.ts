@@ -247,7 +247,10 @@ export class ObjectEditor implements TabContentImplementation
             {
                 this.displayedObjects[ argumentList[ 0 ].name ] = result;
                 result.setAttribute("filter", `url(#${sidToUniqueId(name, "filter--selected-svg-object")})`);
-
+                result.addEventListener("click", () =>
+                {
+                    this.drawObjectTree.selectObject(argumentList[ 0 ].name);
+                });
             });
         });
 
@@ -277,6 +280,10 @@ export class ObjectEditor implements TabContentImplementation
                     loadXmlObject(under.objects[ objectName ], root, self.resourceDirectory, name).then((result) =>
                     {
                         self.displayedObjects[ objectName ] = result;
+                        result.addEventListener("click", () =>
+                        {
+                            self.drawObjectTree.selectObject(objectName);
+                        });
                     });
                 }
             }
