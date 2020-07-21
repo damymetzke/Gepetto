@@ -86,7 +86,6 @@ function loadXmlObject(newObject: DrawObject, root: SubDoc, resourceDirectory: s
 
             newGroup.setAttribute("transform", newObject.WorldTransform().svgString());
             //tmp
-            newGroup.setAttribute("filter", `url(#${sidToUniqueId(name, "filter--selected-svg-object")})`);
             // newGroup.classList.add("selected-svg-object");
 
             root.getElementBySid("main--svg--content").appendChild(newGroup);
@@ -103,12 +102,14 @@ export class ObjectEditor implements TabContentImplementation
     drawObjectTree: DrawObjectTreeEditorWrapper;
     resourceDirectory: string;
     displayedObjects: { [ name: string ]: SVGGElement; };
+    currentDisplayedAsSelected: SVGGElement;
     connector: SyncConnector_Front;
 
     constructor ()
     {
         this.resourceDirectory = "../saved/objects";
         this.displayedObjects = {};
+        this.currentDisplayedAsSelected = null;
     }
 
     onInit(root: SubDoc, name: string)
@@ -144,6 +145,12 @@ export class ObjectEditor implements TabContentImplementation
 
         this.drawObjectTree.under.addAllActionCallback((action, under) =>
         {
+            if (this.currentDisplayedAsSelected)
+            {
+                this.currentDisplayedAsSelected.setAttribute("filter", "");
+                this.currentDisplayedAsSelected = null;
+            }
+
             if (!UPDATE_SELECTED_OBJECT_BY_ACTION.has(action))
             {
                 return;
@@ -155,6 +162,8 @@ export class ObjectEditor implements TabContentImplementation
             }
 
             console.log("👉selected: ", under.selectedObject);
+            this.displayedObjects[ under.selectedObject ].setAttribute("filter", `url(#${sidToUniqueId(name, "filter--selected-svg-object")})`);
+            this.currentDisplayedAsSelected = this.displayedObjects[ under.selectedObject ];
         });
 
         this.drawObjectTree.under.addAllActionCallback((action, under) =>
