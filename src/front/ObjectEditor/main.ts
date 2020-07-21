@@ -35,6 +35,18 @@ const UPDATE_SELECTED_OBJECT_BY_ACTION = new Set([
     "--fullSync"
 ]);
 
+const UPDATE_TRANSFORM_BY_ACTIONS = new Set([
+    "addTransformCommand",
+    "updateTransformCommandField",
+    "FromPureObject",
+    "--fullSync"
+]);
+
+const SINGLE_TRANSFORM_UPDATE = new Set([
+    "addTransformCommand",
+    "updateTransformCommandField"
+]);
+
 function sidToUniqueId(name: string, sid: string)
 {
     return `---${name.toLowerCase().replace(REGEX_REPLACE_SPACES, "-")}--${sid}`;
@@ -85,8 +97,6 @@ function loadXmlObject(newObject: DrawObject, root: SubDoc, resourceDirectory: s
             newGroup.innerHTML = svgContent;
 
             newGroup.setAttribute("transform", newObject.WorldTransform().svgString());
-            //tmp
-            // newGroup.classList.add("selected-svg-object");
 
             root.getElementBySid("main--svg--content").appendChild(newGroup);
             resolve(newGroup);
@@ -141,6 +151,29 @@ export class ObjectEditor implements TabContentImplementation
             }
 
             onRename(event, nameInput, this.drawObjectTree);
+        });
+
+        this.drawObjectTree.under.addAllActionCallback((action, under, argumentList: [ string ]) =>
+        {
+            const [ object ] = argumentList;
+            if (!UPDATE_TRANSFORM_BY_ACTIONS.has(action))
+            {
+                return;
+            }
+
+            const updateList = SINGLE_TRANSFORM_UPDATE.has(action)
+                ? [ object ]
+                : Object.keys(under.objects);
+
+
+            updateList.forEach((targetObject) =>
+            {
+                if (!(targetObject in this.displayedObjects))
+                {
+                    return;
+                }
+                this.displayedObjects[ targetObject ].setAttribute("transform", under.objects[ targetObject ].WorldTransform().svgString());
+            });
         });
 
         this.drawObjectTree.under.addAllActionCallback((action, under) =>
