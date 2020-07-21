@@ -27,6 +27,14 @@ const UPDATE_TRANSFORM_COMMANDS_BY_ACTIONS = new Set([
     "--fullSync"
 ]);
 
+const UPDATE_SELECTED_OBJECT_BY_ACTION = new Set([
+    "selectObject",
+    "AddObject",
+    "AddObjectToRoot",
+    "FromPureObject",
+    "--fullSync"
+]);
+
 function sidToUniqueId(name: string, sid: string)
 {
     return `---${name.toLowerCase().replace(REGEX_REPLACE_SPACES, "-")}--${sid}`;
@@ -132,6 +140,21 @@ export class ObjectEditor implements TabContentImplementation
             }
 
             onRename(event, nameInput, this.drawObjectTree);
+        });
+
+        this.drawObjectTree.under.addAllActionCallback((action, under) =>
+        {
+            if (!UPDATE_SELECTED_OBJECT_BY_ACTION.has(action))
+            {
+                return;
+            }
+
+            if (!under.selectedObject)
+            {
+                return;
+            }
+
+            console.log("👉selected: ", under.selectedObject);
         });
 
         this.drawObjectTree.under.addAllActionCallback((action, under) =>

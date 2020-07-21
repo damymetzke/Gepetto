@@ -38,6 +38,18 @@ export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTr
 {
     selectedObject: string;
 
+    AddObject(object: DrawObject): void
+    {
+        super.AddObject(object);
+        this.selectedObject = object.name;
+    }
+
+    AddObjectToRoot(object: DrawObject): void
+    {
+        super.AddObjectToRoot(object);
+        this.selectedObject = object.name;
+    }
+
     addTransformCommand(object: string, command: TransformCommand): void
     {
         if (!(object in this.objects))
