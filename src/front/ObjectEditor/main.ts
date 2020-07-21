@@ -27,6 +27,11 @@ const UPDATE_TRANSFORM_COMMANDS_BY_ACTIONS = new Set([
     "--fullSync"
 ]);
 
+function sidToUniqueId(name: string, sid: string)
+{
+    return `---${name.toLowerCase().replace(REGEX_REPLACE_SPACES, "-")}--${sid}`;
+}
+
 function onChangeName(root: SubDoc, name: string)
 {
     (<HTMLElement>root.getElementBySid("property--name")).innerText = name;
@@ -73,7 +78,7 @@ function loadXmlObject(newObject: DrawObject, root: SubDoc, resourceDirectory: s
 
             newGroup.setAttribute("transform", newObject.WorldTransform().svgString());
             //tmp
-            newGroup.setAttribute("filter", `url(#filter--${name.toLowerCase().replace(REGEX_REPLACE_SPACES, "-")}--selected-svg-object)`);
+            newGroup.setAttribute("filter", `url(#${sidToUniqueId(name, "filter--selected-svg-object")})`);
             // newGroup.classList.add("selected-svg-object");
 
             root.getElementBySid("main--svg--content").appendChild(newGroup);
@@ -106,8 +111,7 @@ export class ObjectEditor implements TabContentImplementation
 
         loadDropdown(root.root);
 
-        root.getElementBySid("filter--selected-svg-object").id = `filter--${name.toLowerCase().replace(REGEX_REPLACE_SPACES, "-")}--selected-svg-object`;
-        console.log("👌:", `filter--${name.toLowerCase().replace(REGEX_REPLACE_SPACES, "-")}--selected-svg-object`);
+        root.getElementBySid("filter--selected-svg-object").id = sidToUniqueId(name, "filter--selected-svg-object");
 
         Array.from(root.getElementBySid("property--transform-add-controls").children).forEach((child: HTMLButtonElement) =>
         {
