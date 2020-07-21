@@ -256,7 +256,6 @@ export class ObjectEditor implements TabContentImplementation
 
         this.drawObjectTree.under.addActionCallback("renameObject", (_under, argumentList: [ string, string ]) =>
         {
-            a;
             const [ oldName, newName ] = argumentList;
             if (!(oldName in this.displayedObjects))
             {

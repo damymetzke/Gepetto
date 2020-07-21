@@ -205,6 +205,10 @@ export class DrawObjectTreeEditorWrapper implements DrawObjectTreeEditorInterfac
             "AddObjectToRoot": {
                 ConvertToSend: argumentList => [ (<DrawObject>argumentList[ 0 ]).ToPureObject() ],
                 ConvertFromSend: argumentList => [ new DrawObject().FromPureObject(argumentList[ 0 ]) ]
+            },
+            "addTransformCommand": {
+                ConvertToSend: argumentList => [ argumentList[ 0 ], (<TransformCommand>argumentList[ 1 ]).ToPureObject() ],
+                ConvertFromSend: argumentList => [ argumentList[ 0 ], new TransformCommand().FromPureObject(argumentList[ 1 ]) ]
             }
         });
     }
