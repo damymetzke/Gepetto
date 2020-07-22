@@ -40,21 +40,24 @@ function createWindow()
                 click: () =>
                 {
                     projectManager.openFrom();
-                }
+                },
+                accelerator: "CommandOrControl+O"
             }),
             new MenuItem({
                 label: "Save Project",
                 click: () =>
                 {
                     projectManager.save();
-                }
+                },
+                accelerator: "CommandOrControl+Alt+S"
             }),
             new MenuItem({
                 label: "Save As",
                 click: () =>
                 {
                     projectManager.saveAs();
-                }
+                },
+                accelerator: "CommandOrControl+Shift+S"
             })
         ]
     });
