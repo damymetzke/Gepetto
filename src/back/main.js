@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const { Init } = require("./draw-object-manager");
 const { DrawObjectManager } = require("./DrawObject/DrawObjectManager");
 const { ProjectManager } = require("./ProjectManager");
@@ -29,9 +29,12 @@ function createWindow()
 
     // Init(window);
     DrawObjectTreeManager = new DrawObjectManager(window);
-    projectManager = new ProjectManager("./ERROR/wrong.gpp", DrawObjectTreeManager.drawObjectTree.under.under);
+    projectManager = new ProjectManager("./saved/project.gpp", DrawObjectTreeManager.drawObjectTree.under.under);
 
-    projectManager.save();
+    ipcMain.on("saveProject", () =>
+    {
+        projectManager.save();
+    });
 }
 
 app.whenReady().then(createWindow);

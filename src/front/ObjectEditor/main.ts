@@ -8,6 +8,7 @@ import { updateTextTree, updateTransformCommands } from "./Updates.js";
 
 const dialog = require("electron").remote.dialog;
 const currentWindow = require("electron").remote.getCurrentWindow();
+const { ipcRenderer } = require("electron");
 
 const REGEX_XML_CONTENT = /^<root>([^]*)<\/root>$/i;
 const REGEX_REPLACE_SPACES = / /g;
@@ -305,7 +306,7 @@ export class ObjectEditor implements TabContentImplementation
     }
     onSave(root: SubDoc, name: string)
     {
-
+        ipcRenderer.send("saveProject", {});
     }
 
 
