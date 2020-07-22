@@ -2,6 +2,7 @@ import { DrawObject, DrawObjectPure } from "./draw-object.js";
 import { SyncObject } from "./sync_alt/SyncObject.js";
 import { SyncConnector } from "./sync_alt/SyncConnector.js";
 import { SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
+import { Serializable, SerializeObject } from "./Serializable.js";
 
 export interface DrawObjectTreePure
 {
@@ -18,7 +19,7 @@ export interface DrawObjectTreeInterface
     FromPureObject(object: DrawObjectTreePure): DrawObjectTree;
 }
 
-export class DrawObjectTree
+export class DrawObjectTree implements Serializable
 {
     rootObjects: DrawObject[] = [];
     objects: { [ name: string ]: DrawObject; } = {};
@@ -50,6 +51,9 @@ export class DrawObjectTree
         return (name in this.objects);
     }
 
+    /**
+     * @deprecated use DrawObjectTree.serialize instead
+     */
     ToPureObject(): DrawObjectTreePure
     {
         return {
@@ -66,7 +70,10 @@ export class DrawObjectTree
         };
     }
 
-    FromPureObject(object: DrawObjectTreePure): DrawObjectTree
+    /**
+     * @deprecated use DrawObjectTree.deserialize instead
+     */
+    FromPureObject(object: DrawObjectTreePure): this
     {
         for (let name in object.objects)
         {
@@ -94,6 +101,14 @@ export class DrawObjectTree
         {
             this.objects[ rootObject.name ] = rootObject;
         });
+    }
+    serialize(): SerializeObject
+    {
+        return <any>this.ToPureObject();
+    }
+    deserialize(serialized: SerializeObject): this
+    {
+        return this.FromPureObject(<any>serialized);
     }
 }
 
