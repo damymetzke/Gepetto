@@ -71,13 +71,8 @@ function Run()
     const root = document.getElementById("body");
 
     Dropdown.OnScriptLoad(root);
-    // Tabs.OnScriptLoad(root);
 
-    TAB_COLLECTION.createTab("Object Editor Fake 1", "./object-editor.subdoc.html", new EmptyImplementation());
-    TAB_COLLECTION.createTab("Object Editor Fake 2", "./object-editor.subdoc.html", new EmptyImplementation());
-    TAB_COLLECTION.createTab("Object Editor Fake 3", "./object-editor.subdoc.html", new EmptyImplementation());
-    TAB_COLLECTION.createTab("Object Editor Fake 4", "./object-editor.subdoc.html", new EmptyImplementation());
-    TAB_COLLECTION.createTab("Object Editor Fake 5", "./object-editor.subdoc.html", new EmptyImplementation());
+    openObjectEditor();
 
     document.getElementById("toolbar--buttons--import-object").addEventListener("click", ImportSvg);
     document.getElementById("toolbar--buttons--edit-objects").addEventListener("click", openObjectEditor);
