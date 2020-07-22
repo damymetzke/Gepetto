@@ -89,6 +89,33 @@ export class ProjectManager
 
     openFrom(): void
     {
+        dialog.showOpenDialog(null, {
+            title: "Open Project",
+            properties: [
+                "openFile"
+            ],
+            filters: [
+                {
+                    name: "Gepetto Project File",
+                    extensions: [ "gpp" ]
+                },
+                {
+                    name: "All File Types",
+                    extensions: [ "*" ]
+                }
+            ]
+        })
+            .then(({ canceled, filePaths }) =>
+            {
+                if (canceled)
+                {
+                    return;
+                }
 
+                const [ filePath ] = filePaths;
+
+                this.projectPath = filePath;
+                this.open();
+            });
     }
 }
