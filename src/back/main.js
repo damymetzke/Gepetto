@@ -35,6 +35,8 @@ function createWindow()
     {
         projectManager.save();
     });
+
+    projectManager.open();
 }
 
 app.whenReady().then(createWindow);

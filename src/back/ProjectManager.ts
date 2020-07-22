@@ -20,7 +20,7 @@ export class ProjectManager
     {
         if (!this.projectPath)
         {
-            //no file open, automatically open save as
+            //no file open, automatically use save as
             this.saveAs();
             return;
         }
@@ -45,12 +45,33 @@ export class ProjectManager
 
     }
 
-    load(): void
+    open(): void
     {
+        if (!this.projectPath)
+        {
+            //no file open, automatically use open from
+            this.openFrom();
+            return;
+        }
 
+        fs.readFile(this.projectPath)
+            .then((content) =>
+            {
+                const serialized = JSON.parse(content.toString());
+
+                this.project.deserialize(serialized);
+            })
+            .catch((error) =>
+            {
+                dialog.showMessageBox(null, {
+                    type: "error",
+                    message: `Error opening file '${this.projectPath}':\n${error}`,
+                    title: "Error opening file!"
+                });
+            });
     }
 
-    loadFrom(): void
+    openFrom(): void
     {
 
     }
