@@ -29,7 +29,7 @@ function createWindow()
 
     // Init(window);
     DrawObjectTreeManager = new DrawObjectManager(window);
-    projectManager = new ProjectManager("./saved/project.gpp", DrawObjectTreeManager.drawObjectTree.under.under);
+    projectManager = new ProjectManager("./saved/project.gpp", DrawObjectTreeManager.drawObjectTree);
 
     const applicationSubMenu_File = new MenuItem({
         type: "submenu",

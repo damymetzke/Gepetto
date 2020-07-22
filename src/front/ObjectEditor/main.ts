@@ -19,18 +19,21 @@ const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "FromPureObject",
     "selectObject",
     "renameObject",
+    "deserialize",
     "--fullSync"
 ]);
 
 const UPDATE_TRANSFORM_COMMANDS_BY_ACTIONS = new Set([
     "selectObject",
     "addTransformCommand",
+    "deserialize",
     "--fullSync"
 ]);
 
 const UPDATE_SELECTED_OBJECT_BY_ACTION = new Set([
     "selectObject",
     "FromPureObject",
+    "deserialize",
     "--fullSync"
 ]);
 
@@ -38,6 +41,7 @@ const UPDATE_TRANSFORM_BY_ACTIONS = new Set([
     "addTransformCommand",
     "updateTransformCommandField",
     "FromPureObject",
+    "deserialize",
     "--fullSync"
 ]);
 

@@ -4,6 +4,7 @@ import { DrawObject } from "./draw-object.js";
 import { SyncObject } from "./sync_alt/SyncObject.js";
 import { SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
 import { SyncConnector } from "./sync_alt/SyncConnector.js";
+import { Serializable, SerializeObject } from "./Serializable.js";
 
 const REGEX_VALIDATE_IMPORT_NAME = /^[a-z][a-z0-9_]*$/i;
 
@@ -20,7 +21,7 @@ type verifyResult =
 /**
  * @see DrawObjectTreeEditor
  */
-export interface DrawObjectTreeEditorInterface
+export interface DrawObjectTreeEditorInterface extends Serializable
 {
     AddObject(object: DrawObject): void;
     AddObjectToRoot(object: DrawObject): void;
@@ -211,5 +212,14 @@ export class DrawObjectTreeEditorWrapper implements DrawObjectTreeEditorInterfac
                 ConvertFromSend: argumentList => [ argumentList[ 0 ], new TransformCommand().FromPureObject(argumentList[ 1 ]) ]
             }
         });
+    }
+    serialize(): SerializeObject
+    {
+        return this.under.under.serialize();
+    }
+    deserialize(serialized: SerializeObject): this
+    {
+        this.under.runAction({ action: "deserialize", argumentList: [ serialized ] });
+        return this;
     }
 }
