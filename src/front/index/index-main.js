@@ -6,6 +6,7 @@ import { ObjectEditor } from "../ObjectEditor/main.js";
 
 const currentWindow = require('electron').remote.getCurrentWindow();
 const BrowserWindow = require("electron").remote.BrowserWindow;
+const { ipcRenderer } = require("electron");
 
 const svgImportFilePath = `file://${__dirname}/svg-import.html`;
 
@@ -72,10 +73,23 @@ function Run()
 
     Dropdown.OnScriptLoad(root);
 
-    openObjectEditor();
 
     document.getElementById("toolbar--buttons--import-object").addEventListener("click", ImportSvg);
     document.getElementById("toolbar--buttons--edit-objects").addEventListener("click", openObjectEditor);
+
+    ipcRenderer.once("open-start-tab", (_event, shouldOpen) =>
+    {
+        if (shouldOpen)
+        {
+            TAB_COLLECTION.createTab("Welcome", "./start.subdoc.html", new EmptyImplementation());
+        }
+        else
+        {
+            openObjectEditor();
+        }
+
+    });
+
 }
 
 Run();

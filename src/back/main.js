@@ -24,7 +24,11 @@ function createWindow()
         useContentSize: true
     });
 
-    window.loadURL(indexFilePath);
+    window.loadURL(indexFilePath)
+        .then(() =>
+        {
+            window.webContents.send("open-start-tab", true);
+        });
     window.maximize();
 
     // Init(window);
