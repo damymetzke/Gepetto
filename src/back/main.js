@@ -24,16 +24,18 @@ function createWindow()
         useContentSize: true
     });
 
+    const projectPath = (process.argv.length >= 3) ? process.argv[ 2 ] : "";
     window.loadURL(indexFilePath)
         .then(() =>
         {
-            window.webContents.send("open-start-tab", true);
+            window.webContents.send("open-start-tab", !projectPath);
         });
     window.maximize();
 
+
     // Init(window);
     DrawObjectTreeManager = new DrawObjectManager(window);
-    projectManager = new ProjectManager("", DrawObjectTreeManager.drawObjectTree);
+    projectManager = new ProjectManager(projectPath, DrawObjectTreeManager.drawObjectTree);
 
     const applicationSubMenu_File = new MenuItem({
         type: "submenu",

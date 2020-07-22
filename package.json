@@ -72,6 +72,20 @@
     },
     "files": [
       "./out/**/*"
+    ],
+    "fileAssociations": [
+      {
+        "ext": "gpp",
+        "name": "Gepetto Project File",
+        "role": "Editor",
+        "perMachine": true
+      },
+      {
+        "ext": "gpp.pak",
+        "name": "Packaged Gepetto File",
+        "role": "Viewer",
+        "perMachine": true
+      }
     ]
   }
 }
