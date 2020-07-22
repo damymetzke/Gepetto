@@ -1,4 +1,4 @@
-import { Project, DrawObjectTree } from "./core/core.js";
+import { Project, DrawObjectTreeEditorWrapper } from "./core/core.js";
 
 import { promises as fs } from "fs";
 
@@ -11,7 +11,7 @@ export class ProjectManager
 
     project: Project;
 
-    constructor (projectPath: string = "", drawObjectTree: DrawObjectTree = null)
+    constructor (projectPath: string = "", drawObjectTree: DrawObjectTreeEditorWrapper = null)
     {
         this.projectPath = projectPath;
         this.project = new Project(drawObjectTree);

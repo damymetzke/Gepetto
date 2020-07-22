@@ -1,3 +1,5 @@
+import { GepettoFileVersion, GEPETTO_FILE_VERSION } from "./Globals.js";
+
 import { GepettoExceptionType, GepettoException } from "./gepetto-exception.js";
 
 import { Matrix, Vector, Transform } from "./transform.js";
@@ -20,6 +22,7 @@ import { Serializable, SerializeArray, SerializeObject, SerializeValue } from ".
 
 export
 {
+    GepettoFileVersion, GEPETTO_FILE_VERSION,
     GepettoExceptionType, GepettoException,
     Matrix, Vector, Transform,
     TransformCommandType, TransformCommand, TransformCommandPure as TransformCommandPureObject,
