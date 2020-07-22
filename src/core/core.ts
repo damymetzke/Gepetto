@@ -15,6 +15,9 @@ import { SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessage as
 import { SyncOrganizer, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction, SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
 import { SyncObject, SyncConverter } from "./sync_alt/SyncObject.js";
 
+import { Project, SerializedProject } from "./Project.js";
+import { Serializable, SerializeArray, SerializeObject, SerializeValue } from "./Serializable.js";
+
 export
 {
     GepettoExceptionType, GepettoException,
@@ -30,5 +33,8 @@ export
 
     SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessageAlt,
     SyncOrganizer, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction, SyncOrganizerType,
-    SyncObject, SyncConverter
+    SyncObject, SyncConverter,
+
+    Project, SerializedProject,
+    Serializable, SerializeArray, SerializeObject, SerializeValue
 };

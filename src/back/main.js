@@ -1,6 +1,7 @@
 const { app, BrowserWindow } = require("electron");
 const { Init } = require("./draw-object-manager");
 const { DrawObjectManager } = require("./DrawObject/DrawObjectManager");
+const { ProjectManager } = require("./ProjectManager");
 
 const indexFilePath = `file://${__dirname}/../../index.html`;
 
@@ -8,6 +9,7 @@ const { SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand, Sync
 
 let window = null;
 let DrawObjectTreeManager = null;
+let projectManager = null;
 
 function createWindow()
 {
@@ -27,6 +29,9 @@ function createWindow()
 
     // Init(window);
     DrawObjectTreeManager = new DrawObjectManager(window);
+    projectManager = new ProjectManager("./ERROR/wrong.gpp", DrawObjectTreeManager.drawObjectTree.under.under);
+
+    projectManager.save();
 }
 
 app.whenReady().then(createWindow);
