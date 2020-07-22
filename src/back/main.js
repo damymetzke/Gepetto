@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu, MenuItem } = require("electron");
 const { Init } = require("./draw-object-manager");
 const { DrawObjectManager } = require("./DrawObject/DrawObjectManager");
 const { ProjectManager } = require("./ProjectManager");
@@ -30,6 +30,56 @@ function createWindow()
     // Init(window);
     DrawObjectTreeManager = new DrawObjectManager(window);
     projectManager = new ProjectManager("./saved/project.gpp", DrawObjectTreeManager.drawObjectTree.under.under);
+
+    const applicationSubMenu_File = new MenuItem({
+        type: "submenu",
+        label: "File",
+        submenu: [
+            new MenuItem({
+                label: "Open Project",
+                click: () =>
+                {
+                    projectManager.openFrom();
+                }
+            }),
+            new MenuItem({
+                label: "Save Project",
+                click: () =>
+                {
+                    projectManager.save();
+                }
+            }),
+            new MenuItem({
+                label: "Save As",
+                click: () =>
+                {
+                    projectManager.saveAs();
+                }
+            })
+        ]
+    });
+
+    const applicationSubMenu_Developer = new MenuItem({
+        type: "submenu",
+        label: "Developer",
+        submenu: [
+            new MenuItem({
+                label: "Toggle Developer Tools",
+                click: () =>
+                {
+                    window.webContents.openDevTools();
+                },
+                accelerator: "CommandOrControl+Shift+I"
+            })
+        ]
+    });
+
+    const applicationMenu = new Menu();
+    applicationMenu.append(applicationSubMenu_File);
+    applicationMenu.append(applicationSubMenu_Developer);
+
+
+    Menu.setApplicationMenu(applicationMenu);
 
     ipcMain.on("saveProject", () =>
     {
