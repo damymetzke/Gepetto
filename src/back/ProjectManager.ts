@@ -3,6 +3,7 @@ import { Project, DrawObjectTree } from "./core/core.js";
 import { promises as fs } from "fs";
 
 import { dialog } from "electron";
+import { file } from "@babel/types";
 
 export class ProjectManager
 {
@@ -33,8 +34,8 @@ export class ProjectManager
             {
                 dialog.showMessageBox(null, {
                     type: "error",
-                    message: `Error writing to file '${this.projectPath}':\n${error}`,
-                    title: "Error writing file!"
+                    message: `Could not save project '${this.projectPath}':\n${error}`,
+                    title: "Error saving project!"
                 });
             });
 
@@ -42,15 +43,30 @@ export class ProjectManager
 
     saveAs(): void
     {
+        dialog.showSaveDialog(null, {
+            title: "Save Project",
+            properties: [
+                "createDirectory",
+                "showOverwriteConfirmation"
+            ]
+        })
+            .then(({ canceled, filePath }) =>
+            {
+                if (canceled)
+                {
+                    return;
+                }
 
+                this.projectPath = filePath;
+                this.save();
+            });
     }
 
     open(): void
     {
         if (!this.projectPath)
         {
-            //no file open, automatically use open from
-            this.openFrom();
+            //no path, don't open anything
             return;
         }
 
@@ -65,8 +81,8 @@ export class ProjectManager
             {
                 dialog.showMessageBox(null, {
                     type: "error",
-                    message: `Error opening file '${this.projectPath}':\n${error}`,
-                    title: "Error opening file!"
+                    message: `Could not open project '${this.projectPath}':\n${error}`,
+                    title: "Error opening project!"
                 });
             });
     }
