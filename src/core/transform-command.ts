@@ -1,5 +1,6 @@
 import { Transform } from "./transform.js";
 import { GepettoExceptionType, GepettoException } from "./gepetto-exception.js";
+import { Serializable, SerializeObject } from "./Serializable.js";
 
 type MatrixFunction = (fields: TransformCommandField) => Transform;
 export enum TransformCommandType
@@ -10,13 +11,13 @@ export enum TransformCommandType
     SHEARX,
     SHEARY
 }
-interface TransformCommandField
+interface TransformCommandField extends SerializeObject
 {
     x?: number;
     y?: number;
     rotation?: number;
 }
-export interface TransformCommandPure
+export interface TransformCommandPure extends SerializeObject
 {
     type: number,
     fields: TransformCommandField;
@@ -131,7 +132,7 @@ const RELATIVE_ADDITION_MAP: { [ type in keyof typeof TransformCommandType ]: (f
     }
 };
 
-export class TransformCommand
+export class TransformCommand implements Serializable
 {
     typeIndex: TransformCommandType = TransformCommandType.TRANSLATE;
     fields: TransformCommandField = {};
@@ -159,6 +160,9 @@ export class TransformCommand
         return MATRIX_FUNCTIONS[ TransformCommandType[ this.typeIndex ] ](this.fields);
     }
 
+    /**
+     * @deprecated use {@link TransformCommand.serialize} instead.
+     */
     ToPureObject(): TransformCommandPure
     {
         return {
@@ -167,7 +171,10 @@ export class TransformCommand
         };
     }
 
-    FromPureObject(object: TransformCommandPure): TransformCommand
+    /**
+     * @deprecated use {@link TransformCommand.deserialize} instead.
+     */
+    FromPureObject(object: TransformCommandPure): this
     {
         this.typeIndex = object.type;
         this.fields = { ...object.fields };
@@ -211,5 +218,13 @@ export class TransformCommand
             ...FIELD_DEFAULTS[ TransformCommandType[ typeIndex ] ],
             ...fields
         };
+    }
+    serialize(): SerializeObject
+    {
+        return this.ToPureObject();
+    }
+    deserialize(serialized: TransformCommandPure): this
+    {
+        return this.FromPureObject(serialized);
     }
 }

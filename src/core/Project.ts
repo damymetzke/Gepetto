@@ -1,6 +1,6 @@
 import { Serializable, SerializeObject } from "./Serializable.js";
-import { DrawObjectTree } from "./draw-object-tree.js";
 import { GepettoFileVersion, GEPETTO_FILE_VERSION } from "./Globals.js";
+import { DrawObjectTreeEditorWrapper } from "./DrawObjectTreeEditor.js";
 
 export interface SerializedProject extends SerializeObject
 {
@@ -14,9 +14,9 @@ export class Project implements Serializable
     projectName: string;
     fileVersion: GepettoFileVersion;
 
-    drawObjectTree: DrawObjectTree;
+    drawObjectTree: DrawObjectTreeEditorWrapper;
 
-    constructor (drawObjectTree: DrawObjectTree = null)
+    constructor (drawObjectTree: DrawObjectTreeEditorWrapper = null)
     {
         this.drawObjectTree = drawObjectTree;
         this.projectName = "Gepetto Project";
