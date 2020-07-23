@@ -52,7 +52,7 @@ export class DrawObjectTree implements Serializable
     }
 
     /**
-     * @deprecated use DrawObjectTree.serialize instead
+     * @deprecated use {@link DrawObjectTree.serialize} instead.
      */
     ToPureObject(): DrawObjectTreePure
     {
@@ -71,7 +71,7 @@ export class DrawObjectTree implements Serializable
     }
 
     /**
-     * @deprecated use DrawObjectTree.deserialize instead
+     * @deprecated use {@link DrawObjectTree.deserialize} instead.
      */
     FromPureObject(object: DrawObjectTreePure): this
     {
