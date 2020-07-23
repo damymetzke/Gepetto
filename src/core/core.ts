@@ -9,10 +9,6 @@ import { DrawObjectTree, DrawObjectTreePure, DrawObjectTreeInterface, DrawObject
 
 import { DrawObjectTreeEditorInterface, DrawObjectTreeEditor, DrawObjectTreeEditorWrapper } from "./DrawObjectTreeEditor.js";
 
-import { SynchronizedObject, SynchronizedTransformCommand } from "./sync/synchronized-object.js";
-import { SyncMessage, SynchronizedTree } from "./sync/synchronized-tree.js";
-import { SyncLog, SynchronizedTreeLog } from "./sync/synchronized-tree-log.js";
-
 import { SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessage as SyncMessageAlt } from "./sync_alt/SyncConnector.js";
 import { SyncOrganizer, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction, SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
 import { SyncObject, SyncConverter } from "./sync_alt/SyncObject.js";
@@ -30,9 +26,6 @@ export
     DrawObjectTree, DrawObjectTreePure, DrawObjectTreeInterface, DrawObjectTreeWrapper,
 
     DrawObjectTreeEditorInterface, DrawObjectTreeEditor, DrawObjectTreeEditorWrapper,
-
-    SyncMessage as SyncData, SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand,
-    SyncLog, SynchronizedTreeLog,
 
     SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessageAlt,
     SyncOrganizer, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction, SyncOrganizerType,
