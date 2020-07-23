@@ -1,12 +1,12 @@
 import { Transform } from "./transform.js";
-import { TransformCommand, TransformCommandPure } from "./transform-command.js";
+import { TransformCommand, SerializedTransformCommand } from "./transform-command.js";
 import { SerializeObject, Serializable } from "./Serializable";
 
-export interface DrawObjectPure extends SerializeObject
+export interface SerializedDrawObject extends SerializeObject
 {
     name: string;
     parent: string | null;
-    transformCommands: TransformCommandPure[];
+    transformCommands: SerializedTransformCommand[];
 }
 
 export class DrawObject implements Serializable
@@ -90,7 +90,7 @@ export class DrawObject implements Serializable
     /**
      * @deprecated use {@link DrawObject.serialize} instead.
      */
-    ToPureObject(): DrawObjectPure
+    ToPureObject(): SerializedDrawObject
     {
         this.parent;
         return {
@@ -103,7 +103,7 @@ export class DrawObject implements Serializable
     /**
      * @deprecated use {@link DrawObject.serialize} instead.
      */
-    FromPureObject(object: DrawObjectPure): this
+    FromPureObject(object: SerializedDrawObject): this
     {
         this.name = object.name;
         this.parent = object.parent;
@@ -150,7 +150,7 @@ export class DrawObject implements Serializable
     {
         return this.ToPureObject();
     }
-    deserialize(serialized: DrawObjectPure): this
+    deserialize(serialized: SerializedDrawObject): this
     {
         return this.FromPureObject(serialized);
     }

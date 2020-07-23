@@ -17,7 +17,7 @@ interface TransformCommandField extends SerializeObject
     y?: number;
     rotation?: number;
 }
-export interface TransformCommandPure extends SerializeObject
+export interface SerializedTransformCommand extends SerializeObject
 {
     type: number,
     fields: TransformCommandField;
@@ -163,7 +163,7 @@ export class TransformCommand implements Serializable
     /**
      * @deprecated use {@link TransformCommand.serialize} instead.
      */
-    ToPureObject(): TransformCommandPure
+    ToPureObject(): SerializedTransformCommand
     {
         return {
             type: this.typeIndex,
@@ -174,7 +174,7 @@ export class TransformCommand implements Serializable
     /**
      * @deprecated use {@link TransformCommand.deserialize} instead.
      */
-    FromPureObject(object: TransformCommandPure): this
+    FromPureObject(object: SerializedTransformCommand): this
     {
         this.typeIndex = object.type;
         this.fields = { ...object.fields };
@@ -223,7 +223,7 @@ export class TransformCommand implements Serializable
     {
         return this.ToPureObject();
     }
-    deserialize(serialized: TransformCommandPure): this
+    deserialize(serialized: SerializedTransformCommand): this
     {
         return this.FromPureObject(serialized);
     }

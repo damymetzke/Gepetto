@@ -1,4 +1,4 @@
-import { DrawObjectTree, DrawObjectTreePure } from "./draw-object-tree.js";
+import { DrawObjectTree, SerializedDrawObjectTree } from "./draw-object-tree.js";
 import { TransformCommand } from "./transform-command.js";
 import { DrawObject } from "./draw-object.js";
 import { SyncObject } from "./sync_alt/SyncObject.js";
@@ -26,8 +26,8 @@ export interface DrawObjectTreeEditorInterface extends Serializable
     AddObject(object: DrawObject): void;
     AddObjectToRoot(object: DrawObject): void;
     HasObject(name: string): boolean;
-    ToPureObject(): DrawObjectTreePure;
-    FromPureObject(object: DrawObjectTreePure): DrawObjectTree;
+    ToPureObject(): SerializedDrawObjectTree;
+    FromPureObject(object: SerializedDrawObjectTree): DrawObjectTree;
     addTransformCommand(object: string, command: TransformCommand): void;
     selectObject(object: string): void;
     validateName(testName: string): verifyResult;
@@ -166,11 +166,11 @@ export class DrawObjectTreeEditorWrapper implements DrawObjectTreeEditorInterfac
     {
         return this.under.under.HasObject(name);
     }
-    ToPureObject(): DrawObjectTreePure
+    ToPureObject(): SerializedDrawObjectTree
     {
         return this.under.under.ToPureObject();
     }
-    FromPureObject(object: DrawObjectTreePure): DrawObjectTree
+    FromPureObject(object: SerializedDrawObjectTree): DrawObjectTree
     {
         this.under.runAction({ action: "FromPureObject", argumentList: [ object ] });
         return this.under.under;

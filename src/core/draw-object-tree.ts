@@ -1,13 +1,13 @@
-import { DrawObject, DrawObjectPure } from "./draw-object.js";
+import { DrawObject, SerializedDrawObject } from "./draw-object.js";
 import { SyncObject } from "./sync_alt/SyncObject.js";
 import { SyncConnector } from "./sync_alt/SyncConnector.js";
 import { SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
 import { Serializable, SerializeObject } from "./Serializable.js";
 
-export interface DrawObjectTreePure
+export interface SerializedDrawObjectTree
 {
     rootObjects: string[];
-    objects: { [ name: string ]: DrawObjectPure; };
+    objects: { [ name: string ]: SerializedDrawObject; };
 }
 
 export interface DrawObjectTreeInterface
@@ -15,8 +15,8 @@ export interface DrawObjectTreeInterface
     AddObject(object: DrawObject): void;
     AddObjectToRoot(object: DrawObject): void;
     HasObject(name: string): boolean;
-    ToPureObject(): DrawObjectTreePure;
-    FromPureObject(object: DrawObjectTreePure): DrawObjectTree;
+    ToPureObject(): SerializedDrawObjectTree;
+    FromPureObject(object: SerializedDrawObjectTree): DrawObjectTree;
 }
 
 export class DrawObjectTree implements Serializable
@@ -54,13 +54,13 @@ export class DrawObjectTree implements Serializable
     /**
      * @deprecated use {@link DrawObjectTree.serialize} instead.
      */
-    ToPureObject(): DrawObjectTreePure
+    ToPureObject(): SerializedDrawObjectTree
     {
         return {
             rootObjects: this.rootObjects.map(object => object.name),
             objects: (() =>
             {
-                let result: { [ name: string ]: DrawObjectPure; } = {};
+                let result: { [ name: string ]: SerializedDrawObject; } = {};
                 for (let name in this.objects)
                 {
                     result[ name ] = this.objects[ name ].ToPureObject();
@@ -73,7 +73,7 @@ export class DrawObjectTree implements Serializable
     /**
      * @deprecated use {@link DrawObjectTree.deserialize} instead.
      */
-    FromPureObject(object: DrawObjectTreePure): this
+    FromPureObject(object: SerializedDrawObjectTree): this
     {
         for (let name in object.objects)
         {
@@ -128,11 +128,11 @@ export class DrawObjectTreeWrapper implements DrawObjectTreeInterface
     {
         return this.under.under.HasObject(name);
     }
-    ToPureObject(): DrawObjectTreePure
+    ToPureObject(): SerializedDrawObjectTree
     {
         return this.under.under.ToPureObject();
     }
-    FromPureObject(object: DrawObjectTreePure): DrawObjectTree
+    FromPureObject(object: SerializedDrawObjectTree): DrawObjectTree
     {
         this.under.runAction({ action: "FromPureObject", argumentList: [ object ] });
         return this.under.under;

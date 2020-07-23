@@ -3,9 +3,9 @@ import { GepettoFileVersion, GEPETTO_FILE_VERSION } from "./Globals.js";
 import { GepettoExceptionType, GepettoException } from "./gepetto-exception.js";
 
 import { Matrix, Vector, Transform } from "./transform.js";
-import { TransformCommandType, TransformCommand, TransformCommandPure } from "./transform-command.js";
-import { DrawObject, DrawObjectPure } from "./draw-object.js";
-import { DrawObjectTree, DrawObjectTreePure, DrawObjectTreeInterface, DrawObjectTreeWrapper } from "./draw-object-tree.js";
+import { TransformCommandType, TransformCommand, SerializedTransformCommand as TransformCommandPure } from "./transform-command.js";
+import { DrawObject, SerializedDrawObject as DrawObjectPure } from "./draw-object.js";
+import { DrawObjectTree, SerializedDrawObjectTree as DrawObjectTreePure, DrawObjectTreeInterface, DrawObjectTreeWrapper } from "./draw-object-tree.js";
 
 import { DrawObjectTreeEditorInterface, DrawObjectTreeEditor, DrawObjectTreeEditorWrapper } from "./DrawObjectTreeEditor.js";
 
