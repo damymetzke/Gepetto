@@ -1,4 +1,4 @@
-import { Transform, TransformCommand, TransformCommandType, TransformCommandPureObject } from "./core/core";
+import { Transform, TransformCommand, TransformCommandType, SerializedTransformCommand } from "./core/core";
 
 import "./shared";
 
@@ -39,10 +39,10 @@ test(`CLASS_FUNCTION TransformCommand.GetTransform @ '${TARGET_FILE}'`, () =>
     const rotateTransform = rotateCommand.GetTransform();
     const shearTransform = shearCommand.GetTransform();
 
-    (<any>expect(translateTransform)).toEqualTransform(new Transform([1, 0, 0, 1, 2142, 7854]));
-    (<any>expect(scaleTransform)).toEqualTransform(new Transform([7384, 0, 0, 8285, 0, 0]));
-    (<any>expect(rotateTransform)).toEqualTransform(new Transform([-0.139, 0.990, -0.990, -0.139, 0, 0]));
-    (<any>expect(shearTransform)).toEqualTransform(new Transform([1, 0, 4887, 1, 0, 0]));
+    (<any>expect(translateTransform)).toEqualTransform(new Transform([ 1, 0, 0, 1, 2142, 7854 ]));
+    (<any>expect(scaleTransform)).toEqualTransform(new Transform([ 7384, 0, 0, 8285, 0, 0 ]));
+    (<any>expect(rotateTransform)).toEqualTransform(new Transform([ -0.139, 0.990, -0.990, -0.139, 0, 0 ]));
+    (<any>expect(shearTransform)).toEqualTransform(new Transform([ 1, 0, 4887, 1, 0, 0 ]));
 });
 
 test(`CLASS_FUNCTION TransformCommand.ToPureObject @ '${TARGET_FILE}'`, () =>
@@ -53,7 +53,7 @@ test(`CLASS_FUNCTION TransformCommand.ToPureObject @ '${TARGET_FILE}'`, () =>
     const pureA = commandA.ToPureObject();
     const pureB = commandB.ToPureObject();
 
-    expect(pureA).toStrictEqual(<TransformCommandPureObject>{
+    expect(pureA).toStrictEqual(<SerializedTransformCommand>{
         type: TransformCommandType.TRANSLATE,
         fields: {
             x: 5647,
@@ -61,7 +61,7 @@ test(`CLASS_FUNCTION TransformCommand.ToPureObject @ '${TARGET_FILE}'`, () =>
         }
     });
 
-    expect(pureB).toStrictEqual(<TransformCommandPureObject>{
+    expect(pureB).toStrictEqual(<SerializedTransformCommand>{
         type: TransformCommandType.SCALE,
         fields: {
             x: 9464,
@@ -72,13 +72,13 @@ test(`CLASS_FUNCTION TransformCommand.ToPureObject @ '${TARGET_FILE}'`, () =>
 
 test(`CLASS_FUNCTION TransformCommand.FromPureObject @ '${TARGET_FILE}'`, () =>
 {
-    const pureA: TransformCommandPureObject = {
+    const pureA: SerializedTransformCommand = {
         type: TransformCommandType.ROTATE,
         fields: {
             rotation: 99
         }
     };
-    const pureB: TransformCommandPureObject = {
+    const pureB: SerializedTransformCommand = {
         type: TransformCommandType.SHEARX,
         fields: {
             x: 3482

@@ -1,7 +1,6 @@
+import { DrawObjectTreeEditorWrapper, DrawObject, TransformCommand, SyncOrganizerType } from "../core/core.js";
 import { SubDoc } from "../global/subdoc_alt.js";
 import { TabContentImplementation } from "../global/tabs_alt.js";
-import { DrawObjectTreeEditorWrapper, DrawObject, TransformCommand } from "../core/core.js";
-import { SyncOrganizerType } from "../core/sync_alt/SyncOrganizer.js";
 import { SyncConnector_Front } from "../global/SyncConnector_Front.js";
 import { OnScriptLoad as loadDropdown } from "../global/dropdown.js";
 import { updateTextTree, updateTransformCommands } from "./Updates.js";

@@ -1,4 +1,4 @@
-import { SyncConnector_Direct, SyncMessageAlt } from "../core/core";
+import { SyncConnector_Direct, SyncMessage } from "../core/core";
 
 const TARGET_FILE = "core/sync_alt/SyncConnector.ts";
 
@@ -7,8 +7,8 @@ test(``, () =>
     let a = new SyncConnector_Direct();
     let b = new SyncConnector_Direct(a);
 
-    let aResult: SyncMessageAlt[] = [];
-    let bResult: SyncMessageAlt[] = [];
+    let aResult: SyncMessage[] = [];
+    let bResult: SyncMessage[] = [];
 
     a.onRecieve((message) =>
     {

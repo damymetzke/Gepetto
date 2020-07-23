@@ -1,18 +1,18 @@
-import { SyncConnector, SyncMessageAlt } from "./core/core";
+import { SyncConnector, SyncMessage } from "./core/core";
 
 import { ipcMain, BrowserWindow } from "electron";
 
 export class SyncConnector_Back implements SyncConnector
 {
-    callback: (message: SyncMessageAlt) => void;
+    callback: (message: SyncMessage) => void;
     ipcChannel: string;
     targetWindow: BrowserWindow;
 
-    send(message: SyncMessageAlt)
+    send(message: SyncMessage)
     {
         this.targetWindow.webContents.send(this.ipcChannel, message);
     };
-    onRecieve(callback: (message: SyncMessageAlt) => void)
+    onRecieve(callback: (message: SyncMessage) => void)
     {
         this.callback = callback;
     }
@@ -22,7 +22,7 @@ export class SyncConnector_Back implements SyncConnector
         this.ipcChannel = ipcChannel;
         this.targetWindow = targetWindow;
 
-        ipcMain.on(this.ipcChannel, (_event, message: SyncMessageAlt) =>
+        ipcMain.on(this.ipcChannel, (_event, message: SyncMessage) =>
         {
             if (this.callback)
             {

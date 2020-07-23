@@ -1,6 +1,4 @@
-import { SyncConnector_Direct } from "../core/sync_alt/SyncConnector";
-import { SyncObject } from "../../core/sync_alt/SyncObject";
-import { SyncOrganizerType } from "../../core/sync_alt/SyncOrganizer";
+import { SyncConnector_Direct, SyncObject, SyncOrganizerType } from "../core/core";
 
 const TARGET_FILE = "/core/sync_alt/SyncObject.ts";
 

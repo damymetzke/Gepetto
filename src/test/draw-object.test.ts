@@ -1,4 +1,4 @@
-import { DrawObject, TransformCommand, TransformCommandType, Transform, DrawObjectPure, TransformCommandPureObject } from "./core/core";
+import { DrawObject, TransformCommand, TransformCommandType, Transform, SerializedDrawObject, SerializedTransformCommand } from "./core/core";
 
 import "./shared";
 
@@ -32,13 +32,13 @@ test(`CLASS_CONSTRUCTOR DrawObject @ '${TARGET_FILE}'`, () =>
     expect(namedParent.parent).toStrictEqual("PARENT_OBJECT");
 
     expect(containsCommands.transformCommands.length).toStrictEqual(3);
-    expect(containsCommands.transformCommands[0].fields).toStrictEqual({ x: 10, y: 20 });
-    expect(containsCommands.transformCommands[1].fields).toStrictEqual({ x: 0.4, y: 2.3 });
-    expect(containsCommands.transformCommands[2].fields).toStrictEqual({ rotation: 36 });
+    expect(containsCommands.transformCommands[ 0 ].fields).toStrictEqual({ x: 10, y: 20 });
+    expect(containsCommands.transformCommands[ 1 ].fields).toStrictEqual({ x: 0.4, y: 2.3 });
+    expect(containsCommands.transformCommands[ 2 ].fields).toStrictEqual({ rotation: 36 });
 
-    expect(containsCommands.transformCommands[0].typeIndex).toStrictEqual(TransformCommandType.TRANSLATE);
-    expect(containsCommands.transformCommands[1].typeIndex).toStrictEqual(TransformCommandType.SCALE);
-    expect(containsCommands.transformCommands[2].typeIndex).toStrictEqual(TransformCommandType.ROTATE);
+    expect(containsCommands.transformCommands[ 0 ].typeIndex).toStrictEqual(TransformCommandType.TRANSLATE);
+    expect(containsCommands.transformCommands[ 1 ].typeIndex).toStrictEqual(TransformCommandType.SCALE);
+    expect(containsCommands.transformCommands[ 2 ].typeIndex).toStrictEqual(TransformCommandType.ROTATE);
 });
 1;
 test(`CLASS_FUNCTION DrawObject.AddTransformCommand @ '${TARGET_FILE}'`, () =>
@@ -48,17 +48,17 @@ test(`CLASS_FUNCTION DrawObject.AddTransformCommand @ '${TARGET_FILE}'`, () =>
     drawObject.AddTransformCommand(new TransformCommand(TransformCommandType.TRANSLATE, { x: 4, y: 7 }));
 
     expect(drawObject.transformCommands.length).toStrictEqual(1);
-    expect(drawObject.transformCommands[0].typeIndex).toStrictEqual(TransformCommandType.TRANSLATE);
-    expect(drawObject.transformCommands[0].fields).toStrictEqual({ x: 4, y: 7 });
+    expect(drawObject.transformCommands[ 0 ].typeIndex).toStrictEqual(TransformCommandType.TRANSLATE);
+    expect(drawObject.transformCommands[ 0 ].fields).toStrictEqual({ x: 4, y: 7 });
 });
 
 test(`CLASS_FUNCTION DrawObject.WorldTransform @ '${TARGET_FILE}'`, () =>
 {
-    const objectA = new DrawObject("A", null, [new TransformCommand(TransformCommandType.TRANSLATE, { x: 10, y: 20 })]);
-    const objectB = new DrawObject("B", objectA, [new TransformCommand(TransformCommandType.ROTATE, { rotation: 45 })]);
-    const objectC = new DrawObject("C", objectB, [new TransformCommand(TransformCommandType.TRANSLATE, { x: 30, y: -25 }), new TransformCommand(TransformCommandType.SCALE, { x: 1.5, y: 1 })]);
+    const objectA = new DrawObject("A", null, [ new TransformCommand(TransformCommandType.TRANSLATE, { x: 10, y: 20 }) ]);
+    const objectB = new DrawObject("B", objectA, [ new TransformCommand(TransformCommandType.ROTATE, { rotation: 45 }) ]);
+    const objectC = new DrawObject("C", objectB, [ new TransformCommand(TransformCommandType.TRANSLATE, { x: 30, y: -25 }), new TransformCommand(TransformCommandType.SCALE, { x: 1.5, y: 1 }) ]);
 
-    (<any>expect(objectC.WorldTransform())).toEqualTransform(new Transform([1.06, 1.06, -0.71, 0.71, 59.5, 34.14]));
+    (<any>expect(objectC.WorldTransform())).toEqualTransform(new Transform([ 1.06, 1.06, -0.71, 0.71, 59.5, 34.14 ]));
 });
 
 test(`CLASS_FUNCTION DrawObject.ToPureObject @ '${TARGET_FILE}'`, () =>
@@ -76,30 +76,30 @@ test(`CLASS_FUNCTION DrawObject.ToPureObject @ '${TARGET_FILE}'`, () =>
     const namedParentPure = namedParent.ToPureObject();
     const commandsPure = commands.ToPureObject();
 
-    expect(parentPure).toStrictEqual(<DrawObjectPure>{
+    expect(parentPure).toStrictEqual(<SerializedDrawObject>{
         name: "PARENT_OBJECT",
         parent: null,
         transformCommands: []
     });
-    expect(childPure).toStrictEqual(<DrawObjectPure>{
+    expect(childPure).toStrictEqual(<SerializedDrawObject>{
         name: "CHILD_OBJECT",
         parent: "PARENT_OBJECT",
         transformCommands: []
     });
-    expect(namedParentPure).toStrictEqual(<DrawObjectPure>{
+    expect(namedParentPure).toStrictEqual(<SerializedDrawObject>{
         name: "CHILD_OBJECT_ALT",
         parent: "PARENT_OBJECT_ALT",
         transformCommands: []
     });
-    expect(commandsPure).toStrictEqual(<DrawObjectPure>{
+    expect(commandsPure).toStrictEqual(<SerializedDrawObject>{
         name: "COMMANDS_OBJECT",
         parent: null,
         transformCommands: [
-            <TransformCommandPureObject>{
+            <SerializedTransformCommand>{
                 type: TransformCommandType.TRANSLATE,
                 fields: { x: 10, y: 20 }
             },
-            <TransformCommandPureObject>{
+            <SerializedTransformCommand>{
                 type: TransformCommandType.ROTATE,
                 fields: { rotation: 135 }
             }
@@ -111,7 +111,7 @@ test(`CLASS_FUNCTION DrawObject.ToPureObject @ '${TARGET_FILE}'`, () =>
 
 test(`CLASS_FUNCTION DrawObject.FromPureObject @ '${TARGET_FILE}'`, () =>
 {
-    const pure: DrawObjectPure = {
+    const pure: SerializedDrawObject = {
         name: "PURE_OBJECT",
         parent: "PARENT_OBJECT",
         transformCommands: [
@@ -132,10 +132,10 @@ test(`CLASS_FUNCTION DrawObject.FromPureObject @ '${TARGET_FILE}'`, () =>
     expect(fromPure.parent).toStrictEqual("PARENT_OBJECT");
     expect(fromPure.transformCommands.length).toStrictEqual(2);
 
-    expect(fromPure.transformCommands[0].typeIndex).toStrictEqual(TransformCommandType.SCALE);
-    expect(fromPure.transformCommands[0].fields).toStrictEqual({ x: 1.5, y: 2.3 });
-    expect(fromPure.transformCommands[1].typeIndex).toStrictEqual(TransformCommandType.SHEARX);
-    expect(fromPure.transformCommands[1].fields).toStrictEqual({ x: 0.9 });
+    expect(fromPure.transformCommands[ 0 ].typeIndex).toStrictEqual(TransformCommandType.SCALE);
+    expect(fromPure.transformCommands[ 0 ].fields).toStrictEqual({ x: 1.5, y: 2.3 });
+    expect(fromPure.transformCommands[ 1 ].typeIndex).toStrictEqual(TransformCommandType.SHEARX);
+    expect(fromPure.transformCommands[ 1 ].fields).toStrictEqual({ x: 0.9 });
 });
 
 test(`CLASS_FUNCTION DrawObject.Clone @ '${TARGET_FILE}'`, () =>

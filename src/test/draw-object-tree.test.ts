@@ -1,4 +1,4 @@
-import { DrawObjectTree, DrawObject, TransformCommand, TransformCommandType, DrawObjectTreePure } from "./core/core";
+import { DrawObjectTree, DrawObject, TransformCommand, TransformCommandType, SerializedDrawObjectTree } from "./core/core";
 
 import "./shared";
 
@@ -14,9 +14,9 @@ test(`CLASS_FUNCTION DrawObjectTree.ToPureObject @ '${TARGET_FILE}'`, () =>
         ])
     ]);
 
-    drawObjectTree.AddObject(new DrawObject("BA", drawObjectTree.rootObjects[1]));
+    drawObjectTree.AddObject(new DrawObject("BA", drawObjectTree.rootObjects[ 1 ]));
 
-    const drawObjectTreePure: DrawObjectTreePure = drawObjectTree.ToPureObject();
+    const drawObjectTreePure: SerializedDrawObjectTree = drawObjectTree.ToPureObject();
 
     expect(drawObjectTreePure.rootObjects).toContain("A");
     expect(drawObjectTreePure.rootObjects).toContain("B");
@@ -59,8 +59,8 @@ test(`CLASS_FUNCTION DrawObjectTree.ToPureObject @ '${TARGET_FILE}'`, () =>
 
 test(`CLASS_FUNCTION DrawObjectTree.FromPureObject @ '${TARGET_FILE}'`, () =>
 {
-    const drawObjectTreePure: DrawObjectTreePure = {
-        rootObjects: ["A", "B"],
+    const drawObjectTreePure: SerializedDrawObjectTree = {
+        rootObjects: [ "A", "B" ],
         objects: {
             "A": {
                 name: "A",
@@ -107,6 +107,6 @@ test(`CLASS_FUNCTION DrawObjectTree.FromPureObject @ '${TARGET_FILE}'`, () =>
     expect(drawObjectTreeObjectKeys).toContain("B");
     expect(drawObjectTreeObjectKeys).toContain("BA");
 
-    expect(drawObjectTree.rootObjects[0]).toStrictEqual(drawObjectTree.objects["A"]);
-    expect(drawObjectTree.rootObjects[1]).toStrictEqual(drawObjectTree.objects["B"]);
+    expect(drawObjectTree.rootObjects[ 0 ]).toStrictEqual(drawObjectTree.objects[ "A" ]);
+    expect(drawObjectTree.rootObjects[ 1 ]).toStrictEqual(drawObjectTree.objects[ "B" ]);
 });

@@ -1,17 +1,17 @@
-import { SyncConnector, SyncMessageAlt } from "../core/core";
+import { SyncConnector, SyncMessage } from "../core/core";
 
 const { ipcRenderer } = require("electron");
 
 export class SyncConnector_Front implements SyncConnector
 {
-    callback: (message: SyncMessageAlt) => void;
+    callback: (message: SyncMessage) => void;
     ipcChannel: string;
 
-    send(message: SyncMessageAlt)
+    send(message: SyncMessage)
     {
         ipcRenderer.send(this.ipcChannel, message);
     }
-    onRecieve(callback: (message: SyncMessageAlt) => void)
+    onRecieve(callback: (message: SyncMessage) => void)
     {
         this.callback = callback;
     }
@@ -25,7 +25,7 @@ export class SyncConnector_Front implements SyncConnector
     {
         this.ipcChannel = ipcChannel;
 
-        ipcRenderer.on(this.ipcChannel, (_event, message: SyncMessageAlt) =>
+        ipcRenderer.on(this.ipcChannel, (_event, message: SyncMessage) =>
         {
             if (this.callback)
             {
