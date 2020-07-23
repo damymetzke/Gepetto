@@ -4,7 +4,10 @@
         "./dev_out",
         "./documentation/build",
         "./distribution",
-        "./intermediate"
+        "./intermediate",
+        "./src/back/core",
+        "./src/front/core",
+        "./src/test/core"
     ],
     "consoleColors": {
         "warn": [
