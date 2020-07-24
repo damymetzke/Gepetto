@@ -1,5 +1,5 @@
-import { Transform } from "./transform.js";
-import { GepettoExceptionType, GepettoException } from "./gepetto-exception.js";
+import { Transform } from "./Transform.js";
+import { GepettoExceptionType, GepettoException } from "./GepettoExecption.js";
 import { Serializable, SerializeObject } from "./Serializable.js";
 
 type MatrixFunction = (fields: TransformCommandField) => Transform;

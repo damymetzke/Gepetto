@@ -1,4 +1,4 @@
-import { DrawObject, SerializedDrawObject } from "./draw-object.js";
+import { DrawObject, SerializedDrawObject } from "./DrawObject.js";
 import { SyncObject } from "./sync_alt/SyncObject.js";
 import { SyncConnector } from "./sync_alt/SyncConnector.js";
 import { SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";

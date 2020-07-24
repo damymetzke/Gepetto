@@ -1,6 +1,6 @@
-import { DrawObjectTree, SerializedDrawObjectTree } from "./draw-object-tree.js";
-import { TransformCommand } from "./transform-command.js";
-import { DrawObject } from "./draw-object.js";
+import { DrawObjectTree, SerializedDrawObjectTree } from "./DrawObjectTree.js";
+import { TransformCommand } from "./TransformCommand.js";
+import { DrawObject } from "./DrawObject.js";
 import { SyncObject } from "./sync_alt/SyncObject.js";
 import { SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
 import { SyncConnector } from "./sync_alt/SyncConnector.js";

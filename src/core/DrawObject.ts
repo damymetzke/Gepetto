@@ -1,5 +1,5 @@
-import { Transform } from "./transform.js";
-import { TransformCommand, SerializedTransformCommand } from "./transform-command.js";
+import { Transform } from "./Transform.js";
+import { TransformCommand, SerializedTransformCommand } from "./TransformCommand.js";
 import { SerializeObject, Serializable } from "./Serializable";
 
 export interface SerializedDrawObject extends SerializeObject
