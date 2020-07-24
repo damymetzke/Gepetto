@@ -1,4 +1,4 @@
-import { Transform } from "./Transform.js";
+import { Transform } from "./transform.js";
 import { GepettoExceptionType, GepettoException } from "./GepettoExecption.js";
 import { Serializable, SerializeObject } from "./Serializable.js";
 

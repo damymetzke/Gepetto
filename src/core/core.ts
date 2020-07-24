@@ -2,7 +2,7 @@ import { GepettoFileVersion, GEPETTO_FILE_VERSION } from "./Globals.js";
 
 import { GepettoExceptionType, GepettoException } from "./GepettoExecption.js";
 
-import { Matrix, Vector, Transform } from "./Transform.js";
+import { Matrix, Vector, Transform } from "./transform.js";
 import { TransformCommandType, TransformCommand, SerializedTransformCommand } from "./TransformCommand.js";
 import { DrawObject, SerializedDrawObject } from "./DrawObject.js";
 import { DrawObjectTree, SerializedDrawObjectTree, DrawObjectTreeInterface, DrawObjectTreeWrapper } from "./DrawObjectTree.js";

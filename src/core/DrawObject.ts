@@ -1,4 +1,4 @@
-import { Transform } from "./Transform.js";
+import { Transform } from "./transform.js";
 import { TransformCommand, SerializedTransformCommand } from "./TransformCommand.js";
 import { SerializeObject, Serializable } from "./Serializable";
 
