@@ -9,9 +9,9 @@ import { DrawObjectTree, SerializedDrawObjectTree, DrawObjectTreeInterface, Draw
 
 import { DrawObjectTreeEditorInterface, DrawObjectTreeEditor, DrawObjectTreeEditorWrapper } from "./DrawObjectTreeEditor.js";
 
-import { SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessage } from "./sync_alt/SyncConnector.js";
-import { SyncOrganizer, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction, SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
-import { SyncObject, SyncConverter } from "./sync_alt/SyncObject.js";
+import { SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessage } from "./sync/SyncConnector.js";
+import { SyncOrganizer, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction, SyncOrganizerType } from "./sync/SyncOrganizer.js";
+import { SyncObject, SyncConverter } from "./sync/SyncObject.js";
 
 import { Project, SerializedProject } from "./Project.js";
 import { Serializable, SerializeArray, SerializeObject, SerializeValue } from "./Serializable.js";

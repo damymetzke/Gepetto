@@ -1,9 +1,9 @@
 import { DrawObjectTree, SerializedDrawObjectTree } from "./DrawObjectTree.js";
 import { TransformCommand } from "./TransformCommand.js";
 import { DrawObject } from "./DrawObject.js";
-import { SyncObject } from "./sync_alt/SyncObject.js";
-import { SyncOrganizerType } from "./sync_alt/SyncOrganizer.js";
-import { SyncConnector } from "./sync_alt/SyncConnector.js";
+import { SyncObject } from "./sync/SyncObject.js";
+import { SyncOrganizerType } from "./sync/SyncOrganizer.js";
+import { SyncConnector } from "./sync/SyncConnector.js";
 import { Serializable, SerializeObject } from "./Serializable.js";
 
 const REGEX_VALIDATE_IMPORT_NAME = /^[a-z][a-z0-9_]*$/i;
