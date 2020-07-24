@@ -1,0 +1,29 @@
+name: Jest automatic test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: use Node.js ${{matrix.node-version}}
+      uses: actions/setup-node@1
+      with: ${{matrix.node-version}}
+      
+    - name: install
+      run: npm install
+      
+    - name: run test
+      run: npm test
