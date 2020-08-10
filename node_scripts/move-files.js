@@ -5,12 +5,13 @@ const Color = require("./color");
 const { Parse } = require("./parse-arguments");
 
 const Walk = require("./walk-directories");
+const { rejects } = require("assert");
 
 //native enum
 const ERROR_CODE = {
     SUCCESS: 0,
-    INVALID_ARGUMENTS = 1,
-    FILE_IO_ERROR = 2
+    INVALID_ARGUMENTS: 1,
+    FILE_IO_ERROR: 2
 };
 
 const REGEX_CONFIG_FILE_REFERENCE = /^\*([a-z]+)$/i;
@@ -109,6 +110,8 @@ function Run()
 
             let failCount = 0;
 
+            let hasWrittenArray = [];
+
             Walk(from, "", test, (data, relative, file) =>
             {
                 const outPath = path.join(to, relative, file);
@@ -117,17 +120,33 @@ function Run()
                 {
                     fs.mkdirSync(outDir, { recursive: true });
                 }
-                fs.writeFile(outPath, data, (error) =>
+                hasWrittenArray.push(new Promise((resolve, reject) =>
                 {
-                    if (error)
+                    fs.writeFile(outPath, data, (error) =>
                     {
-                        Color.Error(`error writing to file (file){'${outPath}'}:\n${error}`);
-                        ++failCount;
-                    }
+                        if (error)
+                        {
+                            Color.Error(`error writing to file (file){'${outPath}'}:\n${error}`);
+                            ++failCount;
+                            reject(error);
+                        }
+                        resolve();
+                    });
+                }));
+            })
+                .then(() =>
+                {
+                    return Promise.all(hasWrittenArray);
+                })
+                .then(() =>
+                {
+                    resolve(failCount);
+                })
+                .catch((error) =>
+                {
+                    rejects(error);
                 });
-            });
 
-            resolve(failCount);
         });
     });
 
@@ -145,8 +164,9 @@ function Run()
             Color.Error(`encounterd ${totalFails} file IO errors over ${failedMappings.length} file mappings`);
             process.exit(ERROR_CODE.FILE_IO_ERROR);
         })
-        .catch(() =>
+        .catch((error) =>
         {
+            Color.Error(`File IO error:\n${error}`);
             process.exit(ERROR_CODE.FILE_IO_ERROR);
         });
 }

@@ -25,7 +25,6 @@ function addFile(relative, currentDirectory, file, root, test, fileCallback)
                     return;
                 }
 
-                resolve([ nextRelative ]);
 
                 if (!fileCallback)
                 {
@@ -36,6 +35,11 @@ function addFile(relative, currentDirectory, file, root, test, fileCallback)
                     .then((data) =>
                     {
                         fileCallback(data, relative, file);
+                        resolve([ nextRelative ]);
+                    })
+                    .catch((error) =>
+                    {
+                        reject(error);
                     });
             })
             .catch((error) =>
