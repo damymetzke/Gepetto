@@ -1,3 +1,4 @@
+
 const fs = require("fs");
 const path = require("path");
 const Color = require("./color");
@@ -5,11 +6,18 @@ const { Parse } = require("./parse-arguments");
 
 const Walk = require("./walk-directories");
 
+//native enum
+const ERROR_CODE = {
+    SUCCESS: 0,
+    INVALID_ARGUMENTS = 1,
+    FILE_IO_ERROR = 2
+};
+
 const REGEX_CONFIG_FILE_REFERENCE = /^\*([a-z]+)$/i;
 const REGEX_ALL = /[^]*/;
 
-const COLOR_COMMAND = [Color.EFFECTS["FG_RED"], Color.EFFECTS["BOLD"]];
-const COLOR_ARGUMENT = [Color.EFFECTS['FG_YELLOW'], Color.EFFECTS["UNDERLINE"]];
+const COLOR_COMMAND = [ Color.EFFECTS[ "FG_RED" ], Color.EFFECTS[ "BOLD" ] ];
+const COLOR_ARGUMENT = [ Color.EFFECTS[ 'FG_YELLOW' ], Color.EFFECTS[ "UNDERLINE" ] ];
 
 const CONFIG_PATH = "./config/build.config.json";
 const CONFIG = JSON.parse(fs.readFileSync(CONFIG_PATH));
@@ -31,7 +39,7 @@ function Run()
             throw ("no positional arguments");
         }
 
-        const match = arguments.positional[0].match(REGEX_CONFIG_FILE_REFERENCE);
+        const match = arguments.positional[ 0 ].match(REGEX_CONFIG_FILE_REFERENCE);
 
         mappings = match ?
             (() =>
@@ -46,12 +54,12 @@ function Run()
                     throw (`config file reference passed in as arguments, but config file '${CONFIG_PATH}' does not have a key 'directoryMaps.custom'`);
                 }
 
-                if (!(match[1] in CONFIG.directoryMaps.custom))
+                if (!(match[ 1 ] in CONFIG.directoryMaps.custom))
                 {
-                    throw (`config file reference '${match[1]}' was not found in config file '${CONFIG_PATH}' under the key 'directoryMaps.custom'`);
+                    throw (`config file reference '${match[ 1 ]}' was not found in config file '${CONFIG_PATH}' under the key 'directoryMaps.custom'`);
                 }
 
-                const configMappings = CONFIG.directoryMaps.custom[match[1]];
+                const configMappings = CONFIG.directoryMaps.custom[ match[ 1 ] ];
                 return configMappings.map(mapping =>
                 {
                     return {
@@ -68,11 +76,11 @@ function Run()
                     throw ("expected 2 arguments if no config file reference was provided");
                 }
 
-                return [{
-                    from: arguments.positional[0],
-                    to: arguments.positional[1],
-                    test: arguments.positional.length >= 3 ? new RegExp(arguments.positional[2]) : REGEX_ALL
-                }];
+                return [ {
+                    from: arguments.positional[ 0 ],
+                    to: arguments.positional[ 1 ],
+                    test: arguments.positional.length >= 3 ? new RegExp(arguments.positional[ 2 ]) : REGEX_ALL
+                } ];
             })();
     }
     catch (error)
@@ -89,31 +97,58 @@ function Run()
                 command: COLOR_COMMAND,
                 argument: COLOR_ARGUMENT
             });
-        return;
+        process.exit(ERROR_CODE.INVALID_ARGUMENTS);
     }
 
-    mappings.forEach(mapping =>
+    const promises = mappings.map(mapping =>
     {
-        const { from, to, test } = mapping;
-        Color.Log(`Moving all files from (file){'${from}'} to (file){'${to}'}`);
-
-        Walk(from, "", test, (data, relative, file) =>
+        return new Promise((resolve) =>
         {
-            const outPath = path.join(to, relative, file);
-            const outDir = path.join(to, relative);
-            if (!fs.existsSync(outDir))
+            const { from, to, test } = mapping;
+            Color.Log(`Moving all files from (file){'${from}'} to (file){'${to}'}`);
+
+            let failCount = 0;
+
+            Walk(from, "", test, (data, relative, file) =>
             {
-                fs.mkdirSync(outDir, { recursive: true });
-            }
-            fs.writeFile(outPath, data, (error) =>
-            {
-                if (error)
+                const outPath = path.join(to, relative, file);
+                const outDir = path.join(to, relative);
+                if (!fs.existsSync(outDir))
                 {
-                    Color.Warn(`error writing to file (file){'${outPath}'}:\n${error}`);
+                    fs.mkdirSync(outDir, { recursive: true });
                 }
+                fs.writeFile(outPath, data, (error) =>
+                {
+                    if (error)
+                    {
+                        Color.Error(`error writing to file (file){'${outPath}'}:\n${error}`);
+                        ++failCount;
+                    }
+                });
             });
+
+            resolve(failCount);
         });
     });
+
+    Promise.all(promises)
+        .then((fails) =>
+        {
+            const failedMappings = fails.filter(fail => fail !== 0);
+            if (failedMappings.length === 0)
+            {
+                process.exit(ERROR_CODE.SUCCESS);
+            }
+
+            const totalFails = failedMappings.reduce((sum, fail) => sum + fail, 0);
+
+            Color.Error(`encounterd ${totalFails} file IO errors over ${failedMappings.length} file mappings`);
+            process.exit(ERROR_CODE.FILE_IO_ERROR);
+        })
+        .catch(() =>
+        {
+            process.exit(ERROR_CODE.FILE_IO_ERROR);
+        });
 }
 
 Run();
