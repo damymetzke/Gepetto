@@ -2,8 +2,11 @@ import { Project, DrawObjectTreeEditorWrapper } from "./core/core.js";
 
 import { promises as fs } from "fs";
 
-import { dialog } from "electron";
-import { file } from "@babel/types";
+import { dialog, app } from "electron";
+
+import * as path from "path";
+
+const USER_CONFIG_PATH = path.join(app.getPath("userData"), "config.json");
 
 export class ProjectManager
 {
@@ -62,8 +65,13 @@ export class ProjectManager
             });
     }
 
-    open(): void
+    open(path: string = ""): void
     {
+        if (path.length > 0)
+        {
+            this.projectPath = path;
+        }
+
         if (!this.projectPath)
         {
             //no path, don't open anything
@@ -115,7 +123,35 @@ export class ProjectManager
                 const [ filePath ] = filePaths;
 
                 this.projectPath = filePath;
+                app.addRecentDocument(filePath);
                 this.open();
+                return Promise.all([
+                    fs.readFile(USER_CONFIG_PATH, { flag: "a+" }),
+                    Promise.resolve(filePath)
+                ]);
+            })
+            .then(([ data, filePath ]) =>
+            {
+                let configData;
+                try
+                {
+                    configData = JSON.parse(data.toString());
+                }
+                catch (_error)
+                {
+                    configData = {};
+                }
+                if (!("recentDocuments" in configData))
+                {
+                    configData.recentDocuments = [];
+                }
+
+                configData.recentDocuments.push(filePath);
+                return fs.writeFile(USER_CONFIG_PATH, JSON.stringify(configData));
+            })
+            .catch((error) =>
+            {
+                console.error(`error in project manager:\n${error}`);
             });
     }
 }

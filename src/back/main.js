@@ -3,13 +3,19 @@ const { Init } = require("./draw-object-manager");
 const { DrawObjectManager } = require("./DrawObject/DrawObjectManager");
 const { ProjectManager } = require("./ProjectManager");
 
+const path = require("path");
+const fs = require("fs").promises;
+
 const indexFilePath = `file://${__dirname}/../../index.html`;
+
+const USER_CONFIG_PATH = path.join(app.getPath("userData"), "config.json");
 
 const { SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand, SynchronizedTreeLog: SynchronizedTreeLog, TransformCommandType } = require("./core/core");
 
 let window = null;
 let DrawObjectTreeManager = null;
 let projectManager = null;
+let configData = {};
 
 function createWindow()
 {
@@ -37,6 +43,19 @@ function createWindow()
     DrawObjectTreeManager = new DrawObjectManager(window);
     projectManager = new ProjectManager(projectPath, DrawObjectTreeManager.drawObjectTree);
 
+    const recentDocuments = ("recentDocuments" in configData)
+        ? configData.recentDocuments.map(recentDocument =>
+        {
+            return new MenuItem({
+                label: path.basename(recentDocument),
+                click: () =>
+                {
+                    projectManager.open(recentDocument);
+                }
+            });
+        })
+        : [];
+
     const applicationSubMenu_File = new MenuItem({
         type: "submenu",
         label: "File",
@@ -48,6 +67,15 @@ function createWindow()
                     projectManager.openFrom();
                 },
                 accelerator: "CommandOrControl+O"
+            }),
+            new MenuItem({
+                label: "Open Recent",
+                submenu: [
+                    ...recentDocuments,
+                    new MenuItem({
+                        label: "Clear Recent",
+                    })
+                ]
             }),
             new MenuItem({
                 label: "Save Project",
@@ -98,5 +126,12 @@ function createWindow()
     projectManager.open();
 }
 
-app.whenReady().then(createWindow);
-
+fs.readFile(USER_CONFIG_PATH)
+    .then((data) =>
+    {
+        configData = JSON.parse(data.toString());
+        app.whenReady().then(createWindow);
+    }).catch(() =>
+    {
+        app.whenReady().then(createWindow);
+    });
