@@ -1,0 +1,52 @@
+div[data-generated-sid="body--start"]
+{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-areas: 
+    "header"
+    "main  ";
+
+    grid-template-rows: 100px 1fr;
+
+    background-color: $s7;
+    
+    header
+    {
+        padding: 10px 30px;
+        grid-area: header;
+
+        h1
+        {
+            font-size: 2.5rem;
+            text-decoration: underline;
+            color: $dark;
+        }
+        p
+        {
+            font-style: italic;
+        }
+    }
+    
+    main
+    {
+        grid-area: main;
+
+        display: grid;
+        grid-template-areas: 
+        "start "
+        "recent";
+
+    }
+    section[data-generated-sid="start"]
+    {
+        padding: 10px 30px;
+        grid-area: start;
+    }
+    
+    section[data-generated-sid="recent"]
+    {
+        padding: 10px 30px;
+        grid-area: recent;
+    }
+}

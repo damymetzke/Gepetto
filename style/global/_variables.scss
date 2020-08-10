@@ -8,6 +8,8 @@ $dark-color: #000111;
 //shades
 $s9-color: mix($light-color, $dark-color, 90%);
 $s8-color: mix($light-color, $dark-color, 80%);
+$s7-color: mix($light-color, $dark-color, 70%);
+$s6-color: mix($light-color, $dark-color, 60%);
 $s2-color: mix($light-color, $dark-color, 20%);
 $s1-color: mix($light-color, $dark-color, 10%);
 
@@ -30,6 +32,8 @@ $dark: var(--dark, $dark-color);
 
 $s9: var(--s9, $s9-color);
 $s8: var(--s8, $s8-color);
+$s8: var(--s7, $s7-color);
+$s8: var(--s6, $s6-color);
 $s2: var(--s2, $s2-color);
 $s1: var(--s1, $s1-color);
 
