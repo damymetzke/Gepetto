@@ -66,7 +66,15 @@ function Run()
     {
         if (shouldOpen)
         {
-            TAB_COLLECTION.createTab("Welcome", "./start.subdoc.html", new StartMenu());
+            TAB_COLLECTION.createTab("Welcome", "./start.subdoc.html", new StartMenu(() =>
+            {
+                if ("Welcome" in TAB_COLLECTION.tabs)
+                {
+                    TAB_COLLECTION.tabs[ "Welcome" ].destroy();
+                }
+
+                openObjectEditor();
+            }));
         }
         else
         {

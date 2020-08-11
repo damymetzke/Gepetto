@@ -5,11 +5,24 @@ const { ipcRenderer } = require("electron");
 
 export class StartMenu implements TabContentImplementation
 {
+
+    newProjectCallback: () => void;
+
+    constructor (newProjectCallback: () => void = () => { })
+    {
+        this.newProjectCallback = newProjectCallback;
+    }
+
     onInit(root: SubDoc, name: string): void
     {
         root.getElementBySid("start--open-project").addEventListener("click", () =>
         {
             ipcRenderer.send("open-project-from", {});
+        });
+
+        root.getElementBySid("start--new-project").addEventListener("click", () =>
+        {
+            this.newProjectCallback();
         });
 
         ipcRenderer.invoke("request-recents", {})
