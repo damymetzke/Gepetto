@@ -74,6 +74,33 @@ function createWindow()
                     ...recentDocuments,
                     new MenuItem({
                         label: "Clear Recent",
+                        click: () =>
+                        {
+                            fs.readFile(USER_CONFIG_PATH)
+                                .then(data =>
+                                {
+                                    let configData;
+                                    try
+                                    {
+                                        configData = JSON.parse(data.toString());
+                                    }
+                                    catch (_error)
+                                    {
+                                        configData = {};
+                                    }
+
+                                    if ("recentDocuments" in configData && configData.recentDocuments.length > 0)
+                                    {
+                                        delete configData[ "recentDocuments" ];
+                                        return fs.writeFile(USER_CONFIG_PATH, JSON.stringify(configData));
+                                    }
+
+                                })
+                                .catch(error =>
+                                {
+                                    console.error(`error clearing recent documents:\n${error}`);
+                                });
+                        }
                     })
                 ]
             }),

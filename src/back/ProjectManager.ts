@@ -5,6 +5,7 @@ import { promises as fs } from "fs";
 import { dialog, app, BrowserWindow } from "electron";
 
 import * as path from "path";
+import { file } from "@babel/types";
 
 const USER_CONFIG_PATH = path.join(app.getPath("userData"), "config.json");
 
@@ -153,8 +154,13 @@ export class ProjectManager
                     configData.recentDocuments = [];
                 }
 
-                configData.recentDocuments.push(filePath);
-                return fs.writeFile(USER_CONFIG_PATH, JSON.stringify(configData));
+                if (configData.recentDocuments.every(existingFilePath => existingFilePath !== filePath))
+                {
+                    configData.recentDocuments.push(filePath);
+                    return fs.writeFile(USER_CONFIG_PATH, JSON.stringify(configData));
+                }
+
+                return Promise.resolve(null);
             })
             .catch((error) =>
             {
