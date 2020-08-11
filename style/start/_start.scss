@@ -1,15 +1,18 @@
+// @import "../global/global";
+
 div[data-generated-sid="body--start"]
 {
     width: 100%;
     height: 100%;
     display: grid;
     grid-template-areas: 
-    "header"
-    "main  ";
+    "header header"
+    "main   .     ";
 
     grid-template-rows: 100px 1fr;
+    grid-template-columns: 500px 1fr;
 
-    background-color: $s7;
+    background-image: linear-gradient(to bottom, $s6, $start-background-highlight);
     
     header
     {
@@ -25,6 +28,9 @@ div[data-generated-sid="body--start"]
         p
         {
             font-style: italic;
+            color: $s1;
+            font-size: 1.3rem;
+            font-weight: bold;
         }
     }
     
@@ -36,6 +42,34 @@ div[data-generated-sid="body--start"]
         grid-template-areas: 
         "start "
         "recent";
+
+        > *
+        {
+            h2
+            {
+                font-size: 2.5rem;
+                color: $dark;
+            }
+            ul
+            {
+                background-color: $s8;
+                border: 3px solid $light;
+
+                padding: 5px;
+
+                > li
+                {
+                    margin: 3px 0;
+                    list-style: none;
+                    color: $link;
+                    cursor: pointer;
+                    &:hover
+                    {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
 
     }
     section[data-generated-sid="start"]
