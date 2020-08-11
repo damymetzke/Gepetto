@@ -53,6 +53,8 @@ export interface TabContentImplementation
      * called whenever the tab is saved.
      */
     onSave: (root: SubDoc, name: string) => void;
+
+    enableSave: boolean;
 }
 
 export class Tab
@@ -100,13 +102,16 @@ export class Tab
                 this.destroy();
             }
         }));
-        this.contextMenu.append(new MenuItem({
-            label: "Save",
-            click: () =>
-            {
-                this.implementation.onSave(this.content, this.name);
-            }
-        }));
+        if (implementation.enableSave)
+        {
+            this.contextMenu.append(new MenuItem({
+                label: "Save",
+                click: () =>
+                {
+                    this.implementation.onSave(this.content, this.name);
+                }
+            }));
+        }
 
         this.implementation = implementation;
 

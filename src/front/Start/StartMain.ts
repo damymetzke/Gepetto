@@ -7,10 +7,12 @@ export class StartMenu implements TabContentImplementation
 {
 
     newProjectCallback: () => void;
+    enableSave: boolean;
 
     constructor (newProjectCallback: () => void = () => { })
     {
         this.newProjectCallback = newProjectCallback;
+        this.enableSave = false;
     }
 
     onInit(root: SubDoc, name: string): void

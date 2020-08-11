@@ -117,11 +117,14 @@ export class ObjectEditor implements TabContentImplementation
     currentDisplayedAsSelected: SVGGElement;
     connector: SyncConnector_Front;
 
+    enableSave: boolean;
+
     constructor ()
     {
         this.resourceDirectory = "../saved/objects";
         this.displayedObjects = {};
         this.currentDisplayedAsSelected = null;
+        this.enableSave = true;
     }
 
     onInit(root: SubDoc, name: string)
