@@ -123,6 +123,20 @@ function createWindow()
         projectManager.save();
     });
 
+    ipcMain.on("open-project-from", () =>
+    {
+        projectManager.openFrom();
+    });
+
+    ipcMain.on("open-project", (_event, { path }) =>
+    {
+        if (!path)
+        {
+            return;
+        }
+        projectManager.open(path);
+    });
+
     projectManager.open();
 }
 
@@ -130,8 +144,14 @@ fs.readFile(USER_CONFIG_PATH)
     .then((data) =>
     {
         configData = JSON.parse(data.toString());
-        app.whenReady().then(createWindow);
+        ipcMain.handle("request-recents", () =>
+        {
+            return ("recentDocuments" in configData)
+                ? configData.recentDocuments
+                : [];
+        });
+        app.whenReady().then(createWindow());
     }).catch(() =>
     {
-        app.whenReady().then(createWindow);
+        app.whenReady().then(createWindow());
     });

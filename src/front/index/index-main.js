@@ -3,6 +3,7 @@ import * as Dropdown from "../global/dropdown.js";
 // import { SubDoc } from "../global/subdoc_alt.js";
 import { TabCollection } from "../global/tabs_alt.js";
 import { ObjectEditor } from "../ObjectEditor/main.js";
+import { StartMenu } from "../Start/StartMain.js";
 
 const currentWindow = require('electron').remote.getCurrentWindow();
 const BrowserWindow = require("electron").remote.BrowserWindow;
@@ -81,7 +82,7 @@ function Run()
     {
         if (shouldOpen)
         {
-            TAB_COLLECTION.createTab("Welcome", "./start.subdoc.html", new EmptyImplementation());
+            TAB_COLLECTION.createTab("Welcome", "./start.subdoc.html", new StartMenu());
         }
         else
         {
