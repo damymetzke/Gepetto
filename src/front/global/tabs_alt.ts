@@ -69,6 +69,14 @@ export class Tab
         [ this.tabElement, this.content.root ].forEach(element => value ? element.classList.add("selected") : element.classList.remove("selected"));
     }
 
+    destroy(): void
+    {
+        this.implementation.onDestroy(this.content, this.name);
+        this.content.destroy(true);
+        this.tabElement.parentElement.removeChild(this.tabElement);
+        this.owner.destroyTabImplementation(this);
+    }
+
 
     /**
      * @param owner each tab is owned by a single tab collection
@@ -89,10 +97,7 @@ export class Tab
             label: "Close",
             click: () =>
             {
-                this.implementation.onDestroy(this.content, this.name);
-                this.content.destroy(true);
-                this.tabElement.parentElement.removeChild(this.tabElement);
-                this.owner.destroyTabImplementation(this);
+                this.destroy();
             }
         }));
         this.contextMenu.append(new MenuItem({

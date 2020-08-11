@@ -13,22 +13,6 @@ const svgImportFilePath = `file://${__dirname}/svg-import.html`;
 
 const TAB_COLLECTION = new TabCollection(document.getElementById("tabs"), document.getElementById("main"));
 
-class EmptyImplementation
-{
-    onInit(root, name)
-    {
-        console.log("init", name);
-    }
-    onDestroy(root, name)
-    {
-        console.log("destroy", name);
-    }
-    onSave(root, name)
-    {
-        console.log("save", name);
-    }
-}
-
 function ImportSvg()
 {
     let win = new BrowserWindow({
@@ -89,6 +73,16 @@ function Run()
             openObjectEditor();
         }
 
+    });
+
+    ipcRenderer.on("on-open", () =>
+    {
+        if ("Welcome" in TAB_COLLECTION.tabs)
+        {
+            TAB_COLLECTION.tabs[ "Welcome" ].destroy();
+        }
+
+        openObjectEditor();
     });
 
 }

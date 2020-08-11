@@ -2,7 +2,7 @@ import { Project, DrawObjectTreeEditorWrapper } from "./core/core.js";
 
 import { promises as fs } from "fs";
 
-import { dialog, app } from "electron";
+import { dialog, app, BrowserWindow } from "electron";
 
 import * as path from "path";
 
@@ -14,10 +14,13 @@ export class ProjectManager
 
     project: Project;
 
-    constructor (projectPath: string = "", drawObjectTree: DrawObjectTreeEditorWrapper = null)
+    window: BrowserWindow;
+
+    constructor (projectPath: string = "", drawObjectTree: DrawObjectTreeEditorWrapper = null, window: BrowserWindow = null)
     {
         this.projectPath = projectPath;
         this.project = new Project(drawObjectTree);
+        this.window = window;
     }
 
     save(): void
@@ -84,6 +87,10 @@ export class ProjectManager
                 const serialized = JSON.parse(content.toString());
 
                 this.project.deserialize(serialized);
+                if (this.window)
+                {
+                    this.window.webContents.send("on-open", {});
+                }
             })
             .catch((error) =>
             {

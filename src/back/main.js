@@ -41,7 +41,7 @@ function createWindow()
 
     // Init(window);
     DrawObjectTreeManager = new DrawObjectManager(window);
-    projectManager = new ProjectManager(projectPath, DrawObjectTreeManager.drawObjectTree);
+    projectManager = new ProjectManager(projectPath, DrawObjectTreeManager.drawObjectTree, window);
 
     const recentDocuments = ("recentDocuments" in configData)
         ? configData.recentDocuments.map(recentDocument =>
