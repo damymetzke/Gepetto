@@ -7,6 +7,7 @@ const { DrawObjectTree, DrawObject, TransformCommand } = require("./core/core");
 const { SvgToObjectXml, ReadObjectXml } = require("./draw-object-xmlhandler");
 
 const svgManager = require("./svg-manager");
+const { convertSvg } = require("./Svg/SvgConverter");
 
 //file variables//
 //////////////////
@@ -48,6 +49,14 @@ function OnImportSvg(_event, importArguments)
             message: "Name is already in use"
         };
     }
+
+    //tmp
+    convertSvg({
+        sourcePath: inputArguments.filePath,
+        name: inputArguments.name,
+        subObjects: []
+    });
+    //endtmp
 
     //read file
     let fileContent;
@@ -95,7 +104,7 @@ function OnImportSvg(_event, importArguments)
     AddDrawObject(newDrawObject);
 
     svgManager.AddSvgObject(newDrawObject.name, {
-        content: ReadObjectXml(newDrawObject.name)[newDrawObject.name]
+        content: ReadObjectXml(newDrawObject.name)[ newDrawObject.name ]
     });
 
     return {
@@ -107,7 +116,7 @@ function OnSelectObject(_event, data)
 {
     if (typeof data === "string")
     {
-        activeObject = (data in objectTree.objects) ? objectTree.objects[data] : null;
+        activeObject = (data in objectTree.objects) ? objectTree.objects[ data ] : null;
         selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
         window.webContents.send("refresh-objects", {
             selectedObject: activeObject.ToPureObject(),
@@ -119,7 +128,7 @@ function OnSelectObject(_event, data)
         if ("name" in data)
         {
             const name = data.name;
-            activeObject = (name in objectTree.objects) ? objectTree.objects[name] : null;
+            activeObject = (name in objectTree.objects) ? objectTree.objects[ name ] : null;
             selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
             window.webContents.send("refresh-objects", {
                 selectedObject: activeObject.ToPureObject(),
@@ -130,7 +139,7 @@ function OnSelectObject(_event, data)
         {
             if (data.selectLastObject === true)
             {
-                activeObject = objectTree.rootObjects[objectTree.rootObjects.length - 1];
+                activeObject = objectTree.rootObjects[ objectTree.rootObjects.length - 1 ];
                 selectedTransformCommandIndex = activeObject.transformCommands.length - 1;
                 window.webContents.send("refresh-objects", {
                     selectedObject: activeObject.ToPureObject(),
@@ -164,7 +173,7 @@ function OnReparentObject(_event, data)
         return FindCircle(object.parent);
     }
 
-    if (FindCircle(objectTree.objects[data.newParent], activeObject.name))
+    if (FindCircle(objectTree.objects[ data.newParent ], activeObject.name))
     {
         return;
     }
@@ -174,7 +183,7 @@ function OnReparentObject(_event, data)
         objectTree.rootObjects.splice(objectTree.rootObjects.indexOf(activeObject), 1);
     }
 
-    activeObject.parent = objectTree.objects[data.newParent];
+    activeObject.parent = objectTree.objects[ data.newParent ];
 
     window.webContents.send("refresh-objects", {
         selectedObject: activeObject.ToPureObject(),
@@ -205,8 +214,8 @@ function OnUpdateObject(_event, updateValues)
     if ("name" in updateValues)
     {
         fs.rename(ResourceDirectory + "/" + activeObject.name + ".xml", ResourceDirectory + "/" + updateValues.name + ".xml", () => { });
-        objectTree.objects[updateValues.name] = activeObject;
-        delete objectTree.objects[activeObject.name];
+        objectTree.objects[ updateValues.name ] = activeObject;
+        delete objectTree.objects[ activeObject.name ];
     }
 
     activeObject = Object.assign(activeObject, updateValues);
@@ -215,9 +224,9 @@ function OnUpdateObject(_event, updateValues)
         console.warn("⚠ transformCommands is depricated");
         for (let i = 0; i < activeObject.transformCommands.length; ++i)
         {
-            let newData = activeObject.transformCommands[i];
+            let newData = activeObject.transformCommands[ i ];
             delete newData.matrixFunctions;
-            activeObject.transformCommands[i] = Object.assign(new TransformCommand(), newData);
+            activeObject.transformCommands[ i ] = Object.assign(new TransformCommand(), newData);
         }
 
         activeObject.OnTransformCommandsUpdate();
@@ -230,7 +239,7 @@ function OnUpdateObject(_event, updateValues)
     {
         for (let index in updateValues.transformCommandUpdates)
         {
-            Object.assign(activeObject.transformCommands[index].fields, updateValues.transformCommandUpdates[index]);
+            Object.assign(activeObject.transformCommands[ index ].fields, updateValues.transformCommandUpdates[ index ]);
         }
 
         activeObject.OnTransformCommandsUpdate();
@@ -254,38 +263,38 @@ function OnUpdateTransformCommand(_event, data)
 
     var isRelative = ("relative" in data) ? data.relative : false;
 
-    let fields = activeObject.transformCommands[selectedTransformCommandIndex].fields;
+    let fields = activeObject.transformCommands[ selectedTransformCommandIndex ].fields;
 
     for (let key in data.fields) 
     {
         if (isRelative)
         {
-            switch (activeObject.transformCommands[selectedTransformCommandIndex].type)
+            switch (activeObject.transformCommands[ selectedTransformCommandIndex ].type)
             {
                 case "TRANSLATE":
-                    fields[key] = Number(fields[key]) + Number(data.fields[key]);
+                    fields[ key ] = Number(fields[ key ]) + Number(data.fields[ key ]);
                     break;
                 case "SCALE":
-                    fields[key] = Number(fields[key]) * Number(data.fields[key]);
+                    fields[ key ] = Number(fields[ key ]) * Number(data.fields[ key ]);
                     break;
                 case "ROTATE":
-                    fields[key] = Number(fields[key]) + Number(data.fields[key]);
-                    while (fields[key] < 0)
+                    fields[ key ] = Number(fields[ key ]) + Number(data.fields[ key ]);
+                    while (fields[ key ] < 0)
                     {
-                        fields[key] += 360;
+                        fields[ key ] += 360;
                     }
-                    while (fields[key] >= 360)
+                    while (fields[ key ] >= 360)
                     {
-                        fields[key] -= 360;
+                        fields[ key ] -= 360;
                     }
                     break;
                 default:
-                    fields[key] = data.fields[key];
+                    fields[ key ] = data.fields[ key ];
             }
         }
         else
         {
-            fields[key] = data.fields[key];
+            fields[ key ] = data.fields[ key ];
         }
     }
 
@@ -302,7 +311,7 @@ function OnUpdateTransformCommand(_event, data)
 
 function OnAddTransformCommand(_event, command)
 {
-    delete command["matrixFunctions"];
+    delete command[ "matrixFunctions" ];
     if (activeObject === null)
     {
         return;
