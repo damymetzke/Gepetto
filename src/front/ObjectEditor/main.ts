@@ -85,15 +85,17 @@ function loadXmlObject(newObject: DrawObject, root: SubDoc, resourceDirectory: s
     {
         objectRequest.onload = () =>
         {
-            const match = REGEX_XML_CONTENT.exec(objectRequest.response);
-            if (!match)
-            {
-                const errorMessage = `could not load object '${newObject.name}' svg data at resource location '${resourceLoaction}'`;
-                console.error(errorMessage);
-                reject(errorMessage);
-            }
+            // const match = REGEX_XML_CONTENT.exec(objectRequest.response);
+            // if (!match)
+            // {
+            //     const errorMessage = `could not load object '${newObject.name}' svg data at resource location '${resourceLoaction}'`;
+            //     console.error(errorMessage);
+            //     reject(errorMessage);
+            // }
 
-            const [ , svgContent ] = match;
+            // const [ , svgContent ] = match;
+
+            const svgContent = objectRequest.response;
 
             let newGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
             newGroup.innerHTML = svgContent;

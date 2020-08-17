@@ -4,6 +4,8 @@ import { TransformCommand, TransformCommandType } from "../core/core";
 import * as path from "path";
 
 const REGEX_VIEW_BOX = /(?:\s|,)+/g;
+const REGEX_SUBOBJECT_NOTATION = /#([1ai])/;
+const REGEX_SUBOBJECT_ID = /^(?:[0-9][0-9\.]*[0-9]|[0-9]+)$/;
 
 export interface svgConvertInput
 {
@@ -18,7 +20,7 @@ async function convertSingleObject(name: string, transformString: string, elemen
         type: "element",
         name: "g",
         attributes: {
-            viewBox: transformString
+            transform: transformString
         },
         elements: elements
     };
@@ -30,12 +32,115 @@ async function convertSingleObject(name: string, transformString: string, elemen
     }, {
         ignoreComment: true
     });
-    return fs.writeFile(path.join("saved/objects", `${name}__2.xml`), data);
+    return fs.writeFile(path.join("saved/objects", `${name}.xml`), data);
 }
 
-async function convertMultipleObjects(): Promise<void>
+function getSubObject(elements: Element[], index: number[]): Element[]
 {
-    return;
+    if (index.length === 0)
+    {
+        if (elements.length === 0)
+        {
+            throw "Input contains empty sub-object!";
+        }
+        return elements;
+    }
+
+    const [ currentIndex ] = index;
+    const nextIndex = index.splice(1);
+
+    const gElements = elements.filter(element => element.type === "element" && element.name === "g");
+    if (currentIndex >= gElements.length)
+    {
+        throw "Input contains non-existing subobject!";
+    }
+
+    return getSubObject(gElements[ currentIndex ].elements, nextIndex);
+}
+
+async function convertMultipleObjects(name: string, transformString: string, elements: Element[], subObjects: string[]): Promise<void>
+{
+    //todo: include transforms of subobject chain into final result
+
+    //create default name if '#' notation is missing
+    const subName = REGEX_SUBOBJECT_NOTATION.test(name)
+        ? name
+        : `${name}_#1`;
+
+    //test for nested subobjects
+    let testedObjects: string[] = [];
+
+    subObjects.forEach(subObject =>
+    {
+        if (!REGEX_SUBOBJECT_ID.test(subObject))
+        {
+            throw `Subobject is improperly formatted!\nExpecting format like '1.2.3'.\nRecieved: '${subObject}'.`;
+        }
+
+        testedObjects.forEach(testedSubObject =>
+        {
+            const testedIsSmaller = testedSubObject.length < subObject.length;
+
+            const smallest = testedIsSmaller
+                ? testedSubObject
+                : subObject;
+
+            const biggest = testedIsSmaller
+                ? subObject
+                : testedSubObject;
+
+            const biggestSubString = biggest.slice(0, smallest.length);
+
+            if (smallest === biggestSubString)
+            {
+                throw "Input contains nested subobjects!";
+            }
+
+        });
+
+        testedObjects.push(subObject);
+    });
+
+    //get subobjects, test if all objects exist and are non-empty
+    const subElements = subObjects.map(subObject =>
+    {
+        const index = subObject.split(".").map(value => parseInt(value));
+        return getSubObject(elements, index);
+    });
+
+    const results = subElements.map((subElement, index) =>
+    {
+        const thisName = subName.replace(REGEX_SUBOBJECT_NOTATION, (_match, letter) =>
+        {
+            switch (letter)
+            {
+                case "1":
+                    return String(index);
+                case "a":
+                    return String(index);
+                case "i":
+                    return String(index);
+            }
+        });
+
+        const data = js2xml({
+            elements: [ {
+                type: "element",
+                name: "g",
+                attributes: {
+                    transform: transformString
+                },
+                elements: subElement
+            } ]
+        }, {
+            ignoreComment: true
+        });
+
+        return fs.writeFile(path.join("saved/objects", `${thisName}.xml`), data);
+
+    });
+
+    return Promise.all(results).then(() => { return; });
 }
 
 export async function convertSvg(input: svgConvertInput): Promise<void>
@@ -98,6 +203,6 @@ export async function convertSvg(input: svgConvertInput): Promise<void>
     {
         return convertSingleObject(name, transformString, children);
     }
-    return convertMultipleObjects();
+    return convertMultipleObjects(name, transformString, children, subObjects);
 
 }

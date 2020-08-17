@@ -29,7 +29,7 @@ export class DrawObjectManager
     drawObjectTree: DrawObjectTreeEditorWrapper;
     resourceDirectory: string;
 
-    onImportSvg(importData: SvgImportData): ImportResult
+    onImportSvg(importData: SvgImportData): ImportResult | Promise<ImportResult>
     {
         //validate file name
         if (!REGEX_VALIDATE_IMPORT_NAME.test(importData.name))
@@ -48,61 +48,62 @@ export class DrawObjectManager
             };
         }
 
-        //tmp
-        convertSvg({
+        // //read file content
+        // let fileContent;
+        // try
+        // {
+        //     fileContent = fs.readFileSync(importData.filePath, "utf8");
+        // }
+        // catch (error)
+        // {
+        //     return {
+        //         success: false,
+        //         message: `Error reading file:\n${error}`
+        //     };
+        // }
+
+        // //convert file content
+        // const convertedContent: ({ success: true; content: string; } | { success: false; error: string; }) = <any>SvgToObjectXml(fileContent);
+        // if (!convertedContent.success)
+        // {
+        //     return {
+        //         success: false,
+        //         message: `XML conversion failed with error:\n'${(<any>convertedContent).error}'`
+        //     };
+        // }
+
+        // //write converted content
+        // try
+        // {
+        //     if (!fs.existsSync(this.resourceDirectory))
+        //     {
+        //         fs.mkdirSync(this.resourceDirectory);
+        //     }
+        //     fs.writeFileSync(`${this.resourceDirectory}/${importData.name}.xml`, convertedContent.content);
+        // }
+        // catch (error)
+        // {
+        //     return {
+        //         success: false,
+        //         message: `Error writing file:\n'${error}'`
+        //     };
+        // }
+
+        return convertSvg({
             sourcePath: importData.filePath,
             name: importData.name,
             subObjects: []
-        });
-        //endtmp
-
-        //read file content
-        let fileContent;
-        try
-        {
-            fileContent = fs.readFileSync(importData.filePath, "utf8");
-        }
-        catch (error)
-        {
-            return {
-                success: false,
-                message: `Error reading file:\n${error}`
-            };
-        }
-
-        //convert file content
-        const convertedContent: ({ success: true; content: string; } | { success: false; error: string; }) = <any>SvgToObjectXml(fileContent);
-        if (!convertedContent.success)
-        {
-            return {
-                success: false,
-                message: `XML conversion failed with error:\n'${(<any>convertedContent).error}'`
-            };
-        }
-
-        //write converted content
-        try
-        {
-            if (!fs.existsSync(this.resourceDirectory))
+        })
+            .then(() =>
             {
-                fs.mkdirSync(this.resourceDirectory);
-            }
-            fs.writeFileSync(`${this.resourceDirectory}/${importData.name}.xml`, convertedContent.content);
-        }
-        catch (error)
-        {
-            return {
-                success: false,
-                message: `Error writing file:\n'${error}'`
-            };
-        }
+                //success, add draw object
+                this.drawObjectTree.AddObjectToRoot(new DrawObject(importData.name));
+                return {
+                    success: true
+                };
+            });
 
-        //success, add draw object
-        this.drawObjectTree.AddObjectToRoot(new DrawObject(importData.name));
 
-        return {
-            success: true
-        };
     }
 
     constructor (window: BrowserWindow)
