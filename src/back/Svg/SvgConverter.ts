@@ -7,6 +7,58 @@ const REGEX_VIEW_BOX = /(?:\s|,)+/g;
 const REGEX_SUBOBJECT_NOTATION = /#([1aAiI])/;
 const REGEX_SUBOBJECT_ID = /^(?:[0-9][0-9\.]*[0-9]|[0-9]+)$/;
 
+const NUMERALS = [
+    "i",
+    "v",
+    "x",
+    "l",
+    "c",
+    "d",
+    "m"
+];
+
+function numberToRoman(n: number): string
+{
+    if (n < 1)
+    {
+        return "";
+    }
+
+    let upperBound = 1;
+    let index = 0;
+    let even = false;
+    while (upperBound < n)
+    {
+        upperBound *= even
+            ? 2
+            : 5;
+
+        even = !even;
+        ++index;
+    }
+
+    if (n === upperBound)
+    {
+        return NUMERALS[ index ];
+    }
+
+    const subtractOffset = even
+        ? upperBound / 5
+        : upperBound / 10;
+
+    if (n >= upperBound - subtractOffset)
+    {
+        return `${numberToRoman(subtractOffset)}${NUMERALS[ index ]}${numberToRoman(n - upperBound + subtractOffset)}`;
+    }
+
+    const previousValue = upperBound / (even
+        ? 5
+        : 2);
+
+    const numSymbols = Math.floor(n / previousValue);
+    return `${NUMERALS[ index - 1 ].repeat(numSymbols)}${numberToRoman(n - (previousValue * numSymbols))}`;
+}
+
 export interface svgConvertInput
 {
     sourcePath: string;
@@ -118,14 +170,15 @@ async function convertMultipleObjects(name: string, transformString: string, ele
             switch (letter)
             {
                 case "1":
-                    return String(index);
+                    return String(index + 1);
                 case "a":
                     return String.fromCharCode("a".charCodeAt(0) + index);
                 case "A":
                     return String.fromCharCode("A".charCodeAt(0) + index);
                 case "i":
+                    return numberToRoman(index + 1);
                 case "I":
-                    return String(index);
+                    return numberToRoman(index + 1).toUpperCase();
             }
         });
 
