@@ -14,7 +14,13 @@ const NUMERALS = [
     "l",
     "c",
     "d",
-    "m"
+    "m",
+    "̅v",
+    "̅x",
+    "̅̅l",
+    "̅c",
+    "̅d",
+    "̅m"
 ];
 
 function numberToRoman(n: number): string
