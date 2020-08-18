@@ -4,7 +4,7 @@ import { TransformCommand, TransformCommandType } from "../core/core";
 import * as path from "path";
 
 const REGEX_VIEW_BOX = /(?:\s|,)+/g;
-const REGEX_SUBOBJECT_NOTATION = /#([1ai])/;
+const REGEX_SUBOBJECT_NOTATION = /#([1aAiI])/;
 const REGEX_SUBOBJECT_ID = /^(?:[0-9][0-9\.]*[0-9]|[0-9]+)$/;
 
 export interface svgConvertInput
@@ -120,8 +120,11 @@ async function convertMultipleObjects(name: string, transformString: string, ele
                 case "1":
                     return String(index);
                 case "a":
-                    return String(index);
+                    return String.fromCharCode("a".charCodeAt(0) + index);
+                case "A":
+                    return String.fromCharCode("A".charCodeAt(0) + index);
                 case "i":
+                case "I":
                     return String(index);
             }
         });
