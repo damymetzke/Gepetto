@@ -25,6 +25,104 @@ const NUMERALS = [
     "̅m"
 ];
 
+/**
+ * input data that will be used to convert an svg file to its desired xml files.
+ */
+export interface svgConvertInput
+{
+    /**
+     * path to a standard svg file.
+     */
+    sourcePath: string;
+    /**
+     * name of the resulting object(s).
+     * 
+     * this name will determine the name of the object(s),
+     * as well as the names of the file(s) on disk.
+     * 
+     * the name can only contain alphanumerical characters [a-z 0-9] and underscores [_].
+     * the first character has to be an alphabetical character [a-z].
+     * 
+     * when at least 1 sub-object is defined the name also supports pound notation (#).
+     * the pattern `#?` will be converted to a counting character.
+     * different values for '?' will result in different counting characters:
+     * * #1 will result in numbers (1, 2, 3, 4, 5)
+     * * #a/#A will result in lettes (a, b, c, d, e)/(A, B, C, D, E)
+     * * #i/#I will result in roman numerals (i, ii, iii, iv, v)/(I, II, III, IV, V)
+     * 
+     * only the first pound notation will be converted.
+     * any pound notations with values that are not recognized will be ignored.
+     * if the resulting name still has a pound sign the name is invalid.
+     * this means that only a single pound notation can be used.
+     * 
+     * if no pound notation is found `_#1` will be appended.
+     * so `my_object` is implicitly converted to `my_object_#1` before calculateing sub-object names.
+     * 
+     * invalid names will result in an rejection.
+     */
+    name: string;
+    /**
+     * list of objects that should be created from the svg file.
+     * 
+     * if at least 1 subObject is defined multiple objects will be created.
+     * 
+     * sub-objects can be created using the consept of the `g-tree`.
+     * this is the tree consisting of only g elements.
+     * any g elements which are nested in other elements are not part of the g-tree.
+     * 
+     * ```xml
+     * <g id="1">
+     *     <g id="3">
+     *     </g>
+     * </g>
+     * <element>
+     *     <g id="2">
+     *     </g>      
+     * </element>
+     * ```
+     * in this example element 1 is part of the g-tree, since its a root element.
+     * element 2 is nested in a non-g element, and is not part of the g-tree.
+     * element 3 is nested in a g-element which is part of the g-tree, so its part of the g-tree.
+     * 
+     * specific g elements in the g-tree are referenced using a special notation.
+     * this notation is what the input uses to determine sub-objects.
+     * the notation is a list of o based indices, separated by dots [.].
+     * note that non-g-tree elements are ignored;
+     * even if the first element is a non-g element,
+     * the first *g* element will have an index of 0.
+     * 
+     * ```xml
+     * <g id="0">
+     *     <g id="0.0">
+     *         <g id=0.0.0>
+     *         </g>
+     *     </g>
+     *     <g id="0.1">
+     *         <g id=0.1.0>
+     *         </g>
+     *         <g id=0.1.1>
+     *         </g>
+     *     </g>
+     *     <g id="0.2">
+     *     </g>
+     * </g>
+     * <g id="1">
+     * </g>
+     * <g id="2">
+     * </g>
+     * ```
+     * in this example the id is the same as the required notation.
+     * 
+     * sub-objects can have a comman ancestor, but cannot be nested in each other.
+     * so `1.2` and `1.4` can both but used as input, since they only have a comman ancestor.
+     * but `1.2` and `1.2.1` connot both be used as input, since `1.2.1` is a decendent of `1.2`.
+     * nested sub-objects will result in a rejection.
+     * 
+     * a notation which does not correspond to an existing sub-object in the g-tree will result in a rejection.
+     */
+    subObjects: string[];
+}
+
 function numberToRoman(n: number): string
 {
     if (n < 1)
@@ -67,12 +165,6 @@ function numberToRoman(n: number): string
     return `${NUMERALS[ index - 1 ].repeat(numSymbols)}${numberToRoman(n - (previousValue * numSymbols))}`;
 }
 
-export interface svgConvertInput
-{
-    sourcePath: string;
-    name: string;
-    subObjects: string[];
-}
 
 async function convertSingleObject(name: string, transformString: string, elements: Element[]): Promise<string[]>
 {
@@ -224,6 +316,18 @@ async function convertMultipleObjects(name: string, transformString: string, ele
     });
 }
 
+/**
+ * convert an svg file into 1 or more xml files that can be used for objects.
+ * 
+ * this function will read and write to the disk,
+ * it will only except filepaths and only return names that can be converted to filepaths.
+ * 
+ * the sole purpose of the function is to convert,
+ * any detecting of svg structure and other things should be done externally.
+ * 
+ * @returns list of object names.
+ * these correspond to the location on disk.
+ */
 export async function convertSvg(input: svgConvertInput): Promise<string[]>
 {
     const { sourcePath, name, subObjects } = input;
