@@ -32,11 +32,10 @@ async function convertSingleObject(name: string, transformString: string, elemen
     }, {
         ignoreComment: true
     });
-    return fs.writeFile(path.join("saved/objects", `${name}.xml`), data)
-        .then(() =>
-        {
-            return [ name ];
-        });
+    await fs.writeFile(path.join("saved/objects", `${name}.xml`), data);
+
+    return [ name ];
+
 }
 
 function getSubObject(elements: Element[], index: number[]): Element[]
@@ -112,7 +111,7 @@ async function convertMultipleObjects(name: string, transformString: string, ele
         return getSubObject(elements, index);
     });
 
-    const results = subElements.map((subElement, index) =>
+    const results = subElements.map(async (subElement, index) =>
     {
         const thisName = subName.replace(REGEX_SUBOBJECT_NOTATION, (_match, letter) =>
         {
@@ -140,11 +139,9 @@ async function convertMultipleObjects(name: string, transformString: string, ele
             ignoreComment: true
         });
 
-        return fs.writeFile(path.join("saved/objects", `${thisName}.xml`), data)
-            .then(() =>
-            {
-                return thisName;
-            });
+        await fs.writeFile(path.join("saved/objects", `${thisName}.xml`), data);
+        return thisName;
+
 
     });
 
