@@ -6,7 +6,7 @@ import * as fs from "fs";
 import { SvgToObjectXml } from "../draw-object-xmlhandler";
 import { convertSvg } from "../Svg/SvgConverter";
 
-const REGEX_VALIDATE_IMPORT_NAME = /^[a-z][a-z0-9_]*$/i;
+const REGEX_VALIDATE_IMPORT_NAME = /^[a-z][a-z0-9_#]*$/i;
 
 interface SvgImportData
 {
@@ -92,12 +92,19 @@ export class DrawObjectManager
         return convertSvg({
             sourcePath: importData.filePath,
             name: importData.name,
-            subObjects: []
+            subObjects: [
+                "0.0.0",
+                "0.0.1",
+                "0.1"
+            ]
         })
-            .then(() =>
+            .then((names) =>
             {
-                //success, add draw object
-                this.drawObjectTree.AddObjectToRoot(new DrawObject(importData.name));
+                names.forEach(name =>
+                {
+                    //success, add draw object
+                    this.drawObjectTree.AddObjectToRoot(new DrawObject(name));
+                });
                 return {
                     success: true
                 };

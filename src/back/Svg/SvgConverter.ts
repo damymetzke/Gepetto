@@ -14,7 +14,7 @@ export interface svgConvertInput
     subObjects: string[];
 }
 
-async function convertSingleObject(name: string, transformString: string, elements: Element[]): Promise<void>
+async function convertSingleObject(name: string, transformString: string, elements: Element[]): Promise<string[]>
 {
     const root = <Element>{
         type: "element",
@@ -32,7 +32,11 @@ async function convertSingleObject(name: string, transformString: string, elemen
     }, {
         ignoreComment: true
     });
-    return fs.writeFile(path.join("saved/objects", `${name}.xml`), data);
+    return fs.writeFile(path.join("saved/objects", `${name}.xml`), data)
+        .then(() =>
+        {
+            return [ name ];
+        });
 }
 
 function getSubObject(elements: Element[], index: number[]): Element[]
@@ -58,7 +62,7 @@ function getSubObject(elements: Element[], index: number[]): Element[]
     return getSubObject(gElements[ currentIndex ].elements, nextIndex);
 }
 
-async function convertMultipleObjects(name: string, transformString: string, elements: Element[], subObjects: string[]): Promise<void>
+async function convertMultipleObjects(name: string, transformString: string, elements: Element[], subObjects: string[]): Promise<string[]>
 {
     //todo: include transforms of subobject chain into final result
 
@@ -136,14 +140,21 @@ async function convertMultipleObjects(name: string, transformString: string, ele
             ignoreComment: true
         });
 
-        return fs.writeFile(path.join("saved/objects", `${thisName}.xml`), data);
+        return fs.writeFile(path.join("saved/objects", `${thisName}.xml`), data)
+            .then(() =>
+            {
+                return thisName;
+            });
 
     });
 
-    return Promise.all(results).then(() => { return; });
+    return Promise.all(results).then((values) =>
+    {
+        return values;
+    });
 }
 
-export async function convertSvg(input: svgConvertInput): Promise<void>
+export async function convertSvg(input: svgConvertInput): Promise<string[]>
 {
     const { sourcePath, name, subObjects } = input;
     const data = await fs.readFile(sourcePath);

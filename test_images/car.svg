@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 210 297"
+   height="297mm"
+   width="210mm">
+  <defs
+     id="defs2" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <g
+       id="layer3">
+      <g
+         id="layer5">
+        <path
+           style="opacity:0.963;fill:#6fbc29;fill-opacity:1;stroke:#ffffff;stroke-width:0.264999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="path837"
+           d="m 170.14054,237.9673 a 17.508739,17.764881 0 0 1 -17.30161,17.76364 17.508739,17.764881 0 0 1 -17.71096,-17.34336 17.508739,17.764881 0 0 1 16.88258,-18.17397 17.508739,17.764881 0 0 1 18.1104,16.91337" />
+      </g>
+      <g
+         id="layer4">
+        <path
+           d="M 71.250816,238.50185 A 17.508739,17.764881 0 0 1 53.949201,256.26548 17.508739,17.764881 0 0 1 36.238238,238.92213 17.508739,17.764881 0 0 1 53.120819,220.74815 17.508739,17.764881 0 0 1 71.231217,237.66152"
+           id="path833"
+           style="opacity:0.963;fill:#6fbc29;fill-opacity:1;stroke:#ffffff;stroke-width:0.264999;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      </g>
+    </g>
+    <g
+       id="layer2">
+      <path
+         id="path839"
+         d="m 12.294398,235.46445 h 17.907059 c 0,0 4.276312,-26.99422 20.847023,-26.72695 16.570709,0.26727 28.063298,26.45968 28.063298,26.45968 l 48.643052,1.60362 c 0,0 -0.26727,-33.94323 24.05426,-33.14142 24.32153,0.80181 29.93419,38.21954 29.93419,38.21954 l 15.7689,0.53454 c 0,0 2.40542,-87.66441 -23.78699,-89.00075 -26.19241,-1.33635 -130.694797,-2.13816 -130.694797,-2.13816 0,0 -32.339612,-4.81085 -32.339612,24.85607 0,29.66691 1.603617,59.33383 1.603617,59.33383 z"
+         style="fill:#bc3429;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1" />
+    </g>
+  </g>
+</svg>
