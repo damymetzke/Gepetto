@@ -6,6 +6,8 @@ import * as path from "path";
 const REGEX_VIEW_BOX = /(?:\s|,)+/g;
 const REGEX_SUBOBJECT_NOTATION = /#([1aAiI])/;
 const REGEX_SUBOBJECT_ID = /^(?:[0-9][0-9\.]*[0-9]|[0-9]+)$/;
+const REGEX_VALIDATE_FINAL_NAME = /^[a-z][a-z0-9_]*$/i;
+
 
 const NUMERALS = [
     "i",
@@ -74,6 +76,10 @@ export interface svgConvertInput
 
 async function convertSingleObject(name: string, transformString: string, elements: Element[]): Promise<string[]>
 {
+    if (!REGEX_VALIDATE_FINAL_NAME.test(name))
+    {
+        throw `Invalid name: ${name}`;
+    }
     const root = <Element>{
         type: "element",
         name: "g",
@@ -187,6 +193,11 @@ async function convertMultipleObjects(name: string, transformString: string, ele
                     return numberToRoman(index + 1).toUpperCase();
             }
         });
+
+        if (!REGEX_VALIDATE_FINAL_NAME.test(thisName))
+        {
+            throw `Invalid sub-object name: ${thisName}`;
+        }
 
         const data = js2xml({
             elements: [ {

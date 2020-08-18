@@ -48,47 +48,6 @@ export class DrawObjectManager
             };
         }
 
-        // //read file content
-        // let fileContent;
-        // try
-        // {
-        //     fileContent = fs.readFileSync(importData.filePath, "utf8");
-        // }
-        // catch (error)
-        // {
-        //     return {
-        //         success: false,
-        //         message: `Error reading file:\n${error}`
-        //     };
-        // }
-
-        // //convert file content
-        // const convertedContent: ({ success: true; content: string; } | { success: false; error: string; }) = <any>SvgToObjectXml(fileContent);
-        // if (!convertedContent.success)
-        // {
-        //     return {
-        //         success: false,
-        //         message: `XML conversion failed with error:\n'${(<any>convertedContent).error}'`
-        //     };
-        // }
-
-        // //write converted content
-        // try
-        // {
-        //     if (!fs.existsSync(this.resourceDirectory))
-        //     {
-        //         fs.mkdirSync(this.resourceDirectory);
-        //     }
-        //     fs.writeFileSync(`${this.resourceDirectory}/${importData.name}.xml`, convertedContent.content);
-        // }
-        // catch (error)
-        // {
-        //     return {
-        //         success: false,
-        //         message: `Error writing file:\n'${error}'`
-        //     };
-        // }
-
         return convertSvg({
             sourcePath: importData.filePath,
             name: importData.name,
@@ -105,8 +64,15 @@ export class DrawObjectManager
                     //success, add draw object
                     this.drawObjectTree.AddObjectToRoot(new DrawObject(name));
                 });
-                return {
+                return <ImportResult>{
                     success: true
+                };
+            })
+            .catch(error =>
+            {
+                return <ImportResult>{
+                    success: false,
+                    message: error
                 };
             });
 
