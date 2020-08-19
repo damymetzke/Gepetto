@@ -11,7 +11,7 @@
         "simple viewport"
         "list   viewport";
 
-        grid-template-rows: 300px 1fr;
+        grid-template-rows: 250px 1fr;
         grid-template-columns: 300px 1fr;
 
         width: 100vw;
@@ -20,15 +20,77 @@
 
     #simple
     {
-        width: 300px;
-        height: 300px;
         grid-area: simple;
 
+        h1
+        {
+            color: white;
+            text-decoration: underline;
+            font-size: 2rem;
+            background-color: #6b1329;
+            text-align: center;
+    
+            padding: 5px 0;
+        }
+    
+        p
+        {
+            color: white;
+            padding: 5px;
+    
+            &:nth-child(odd)
+            {
+                background-color: #333333;
+            }
+    
+            &:nth-child(even)
+            {
+                background-color: #444444;
+            }
+        }
+        #buttons
+        {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 10px;
+        }
+    
+        #import-button
+        {
+            width: 80px;
+        }
+    
+        #error-output
+        {
+            color: red;
+            height: auto;
+            overflow: auto;
+        }
     }
 
     #list
     {
         grid-area: list;
+        border-top: 10px solid #333333;
+        padding: 5px;
+        color: white;
+
+        &--root
+        {
+            border: 5px solid #333333;
+            height: 100%;
+            overflow: auto;
+        }
+
+        ol
+        {
+            li
+            {
+                margin-left: 20px;
+                list-style: none;
+            }
+        }
     }
 
     #viewport
@@ -37,49 +99,6 @@
         border-left: 10px solid #333333;
     }
 
-    h1
-    {
-        color: white;
-        text-decoration: underline;
-        font-size: 2rem;
-        background-color: #6b1329;
-        text-align: center;
-
-        padding: 5px 0;
-    }
-
-    p
-    {
-        color: white;
-        padding: 5px;
-
-        &:nth-child(odd)
-        {
-            background-color: #333333;
-        }
-
-        &:nth-child(even)
-        {
-            background-color: #444444;
-        }
-    }
 
 
-    #buttons
-    {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 10px;
-    }
-
-    #import-button
-    {
-        width: 80px;
-    }
-
-    #error-output
-    {
-        color: red;
-    }
 }

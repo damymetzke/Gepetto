@@ -18,7 +18,7 @@ function ImportSvg()
 {
     let win = new BrowserWindow({
         width: 300,
-        height: 300,
+        height: 260,
         webPreferences: {
             nodeIntegration: true
         },
