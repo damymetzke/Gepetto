@@ -9,21 +9,6 @@ const REGEX_SUBOBJECT_ID = /^(?:[0-9][0-9\.]*[0-9]|[0-9]+)$/;
 const REGEX_VALIDATE_FINAL_NAME = /^[a-z][a-z0-9_]*$/i;
 
 
-const NUMERALS = [
-    "i",
-    "v",
-    "x",
-    "l",
-    "c",
-    "d",
-    "m",
-    "̅v",
-    "̅x",
-    "̅̅l",
-    "̅c",
-    "̅d",
-    "̅m"
-];
 
 /**
  * input data that will be used to convert an svg file to its desired xml files.
@@ -123,6 +108,25 @@ export interface svgConvertInput
     subObjects: string[];
 }
 
+const NUMERALS = [
+    "i",
+    "v",
+    "x",
+    "l",
+    "c",
+    "d",
+    "m",
+    "̅v",
+    "̅x",
+    "̅̅l",
+    "̅c",
+    "̅d",
+    "̅m"
+];
+
+/**
+ * convert a decimal number to a string formatted using roman numerals.
+ */
 function numberToRoman(n: number): string
 {
     if (n < 1)
@@ -165,7 +169,13 @@ function numberToRoman(n: number): string
     return `${NUMERALS[ index - 1 ].repeat(numSymbols)}${numberToRoman(n - (previousValue * numSymbols))}`;
 }
 
-
+/**
+ * called whenever no subobjects have been defined.
+ *
+ * @param name name of the object.
+ * @param transformString string formated for svg transformations.
+ * @param elements elements of svg file.
+ */
 async function convertSingleObject(name: string, transformString: string, elements: Element[]): Promise<string[]>
 {
     if (!REGEX_VALIDATE_FINAL_NAME.test(name))
@@ -217,6 +227,16 @@ function getSubObject(elements: Element[], index: number[]): Element[]
     return getSubObject(gElements[ currentIndex ].elements, nextIndex);
 }
 
+/**
+ * called whenever at least 1 subobject has been defined.
+ * 
+ * @param name name of the subobjects including pound ['#'] notation.
+ * @param transformString string formated for svg transformations.
+ * @param elements elements of svg file.
+ * @param subObjects list of sub-objects using sub-object notation.
+ * 
+ * @see svgConvertInput
+ */
 async function convertMultipleObjects(name: string, transformString: string, elements: Element[], subObjects: string[]): Promise<string[]>
 {
     //todo: include transforms of subobject chain into final result
@@ -310,10 +330,7 @@ async function convertMultipleObjects(name: string, transformString: string, ele
 
     });
 
-    return Promise.all(results).then((values) =>
-    {
-        return values;
-    });
+    return Promise.all(results);
 }
 
 /**
