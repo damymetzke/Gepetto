@@ -89,10 +89,14 @@
             {
                 margin-left: 20px;
                 list-style: none;
-
-                p:hover
+                
+                p
                 {
-                    background-color: #555555;
+                    padding-left: 5px;
+                    &:hover
+                    {
+                        background-color: #555555;
+                    }
                 }
             }
         }
