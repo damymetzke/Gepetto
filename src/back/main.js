@@ -143,7 +143,7 @@ function createWindow()
     applicationMenu.append(applicationSubMenu_Developer);
 
 
-    Menu.setApplicationMenu(applicationMenu);
+    window.setMenu(applicationMenu);
 
     ipcMain.on("saveProject", () =>
     {

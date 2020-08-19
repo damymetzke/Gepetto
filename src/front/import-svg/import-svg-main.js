@@ -13,20 +13,20 @@ function OpenFile()
     dialog.showOpenDialog(
         currentWindow,
         {
-            properties: ['openFile'],
+            properties: [ 'openFile' ],
             filters:
                 [
-                    { name: "Scalable Vector Graphics", extensions: ["svg", "xml"] },
-                    { name: "All File Types", extensions: ["*"] }
+                    { name: "Scalable Vector Graphics", extensions: [ "svg", "xml" ] },
+                    { name: "All File Types", extensions: [ "*" ] }
                 ]
         }).then(
             function (result)
             {
                 if (result.filePaths.length > 0)
                 {
-                    currentFilePath = result.filePaths[0];
+                    currentFilePath = result.filePaths[ 0 ];
                     const splitFilePath = currentFilePath.split(/\/|\\/);
-                    const fileName = splitFilePath[splitFilePath.length - 1];
+                    const fileName = splitFilePath[ splitFilePath.length - 1 ];
                     fileNameElement.innerText = fileName;
                 }
             },
@@ -81,12 +81,21 @@ function OnImport()
         });
 }
 
+function onSubObject()
+{
+    currentWindow.setBounds({
+        width: 900,
+        height: 600
+    });
+}
+
 {
     OpenFile();
 
 
     document.getElementById("svg-open-file-button").addEventListener("click", OpenFile);
     document.getElementById("import-button").addEventListener("click", OnImport);
+    document.getElementById("sub-object-button").addEventListener("click", onSubObject);
 }
 
 

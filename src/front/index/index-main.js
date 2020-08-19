@@ -7,6 +7,7 @@ import { StartMenu } from "../Start/StartMain.js";
 
 const currentWindow = require('electron').remote.getCurrentWindow();
 const BrowserWindow = require("electron").remote.BrowserWindow;
+const { Menu, MenuItem } = require("electron").remote;
 const { ipcRenderer } = require("electron");
 
 const svgImportFilePath = `file://${__dirname}/svg-import.html`;
@@ -29,12 +30,33 @@ function ImportSvg()
         show: false
     });
 
+    const svgImportSubMenu_Developer = new MenuItem({
+        type: "submenu",
+        label: "Developer",
+        submenu: [
+            new MenuItem({
+                label: "Toggle Developer Tools",
+                click: () =>
+                {
+                    win.webContents.openDevTools();
+                },
+                accelerator: "CommandOrControl+Shift+I"
+            })
+        ]
+    });
+
+    const svgImportMenu = new Menu();
+    svgImportMenu.append(svgImportSubMenu_Developer);
+
+    win.setMenu(svgImportMenu);
+
     console.log(svgImportFilePath);
     win.loadURL(svgImportFilePath);
     win.once("ready-to-show", () =>
     {
         win.show();
     });
+
 }
 
 function openObjectEditor()
