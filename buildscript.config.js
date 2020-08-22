@@ -54,10 +54,24 @@ module.exports = {
             await runNpm("old:typescript-test");
             await runNpm("old:test");
         },
-        buildDocs: () =>
+        buildDocs: async () =>
         {
             LOGGER.log("Running script: 'buildDocs'");
 
+            const buildDocs = runNpm("old:build-md");
+
+            await Promise.all([
+                runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreFront),
+                runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreBack),
+                runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreTest)
+            ]);
+
+            await runNpm("old:prepare-typedoc");
+
+            await Promise.all([
+                runNpm("old:build-typedoc"),
+                buildDocs
+            ]);
         },
         package: () =>
         {
