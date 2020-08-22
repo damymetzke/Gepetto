@@ -73,6 +73,11 @@ module.exports = {
                 buildDocs
             ]);
         },
+        clean: async () =>
+        {
+            LOGGER.log("Running script: 'clean'");
+            await runNpm("old:clean");
+        },
         package: () =>
         {
             LOGGER.log("Running script: 'package'");
