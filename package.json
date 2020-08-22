@@ -19,7 +19,9 @@
     "old:build-typedoc": "node ./node_scripts/wrap_command.js \".\\node_modules\\.bin\\typedoc ./intermediate/typedoc_src/ --out {build_config:directoryMaps.typedoc.to} --tsconfig ./config/tsconfig.json --exclude ./src/front/core --exclude ./src/back/core --exclude ./src/test/core\"",
     "old:build-md": "node ./node_scripts/build_markdown.js",
     "old:prepare-typedoc": "node ./node_scripts/move-typedoc-source.js",
-    "old:clean": "node ./node_scripts/clean.js"
+    "old:clean": "node ./node_scripts/clean.js",
+    "old:pack": "./node_modules/.bin/electron-builder --dir",
+    "old:dist": "./node_modules/.bin/electron-builder"
   },
   "repository": {
     "type": "git",
@@ -68,14 +70,12 @@
       {
         "ext": "gpp",
         "name": "Gepetto Project File",
-        "role": "Editor",
-        "perMachine": true
+        "role": "Editor"
       },
       {
         "ext": "gpp.pak",
         "name": "Packaged Gepetto File",
-        "role": "Viewer",
-        "perMachine": true
+        "role": "Viewer"
       }
     ]
   }

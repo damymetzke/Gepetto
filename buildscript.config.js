@@ -78,15 +78,77 @@ module.exports = {
             LOGGER.log("Running script: 'clean'");
             await runNpm("old:clean");
         },
-        package: () =>
+        package: async () =>
         {
             LOGGER.log("Running script: 'package'");
+            await runNpm("old:clean");
 
+            await Promise.all([
+                (async () => //testing
+                {
+                    const [ source, target ] = DEFAULT_PATHS.coreTest;
+                    await stdLib.fileSystem.copyFolder(source, target);
+                    await runNpm("old:typescript-test");
+                    await runNpm("old:test");
+                })(),
+                (async () => //build app
+                {
+                    const htmlAndSass = [
+                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.html),
+                        runNpm("old:compile-sass")
+                    ];
+
+                    await Promise.all([
+                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreFront),
+                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreBack),
+                    ]);
+
+                    await Promise.all([
+                        runNpm("old:typescript-front"),
+                        runNpm("old:typescript-back"),
+                        ...htmlAndSass
+                    ]);
+                })()
+            ]);
+
+            await runNpm("old:pack");
         },
-        distribute: () =>
+        distribute: async () =>
         {
             LOGGER.log("Running script: 'distribute'");
 
+            LOGGER.log("Running script: 'package'");
+            await runNpm("old:clean");
+
+            await Promise.all([
+                (async () => //testing
+                {
+                    const [ source, target ] = DEFAULT_PATHS.coreTest;
+                    await stdLib.fileSystem.copyFolder(source, target);
+                    await runNpm("old:typescript-test");
+                    await runNpm("old:test");
+                })(),
+                (async () => //build app
+                {
+                    const htmlAndSass = [
+                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.html),
+                        runNpm("old:compile-sass")
+                    ];
+
+                    await Promise.all([
+                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreFront),
+                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreBack),
+                    ]);
+
+                    await Promise.all([
+                        runNpm("old:typescript-front"),
+                        runNpm("old:typescript-back"),
+                        ...htmlAndSass
+                    ]);
+                })()
+            ]);
+
+            await runNpm("old:dist");
         }
     }
 };
