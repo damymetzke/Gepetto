@@ -12,7 +12,9 @@
     "old:compile-sass": "node ./node_scripts/compile-sass.js",
     "old:typescript-front": "./node_modules/.bin/tsc -p ./config/front.tsconfig.json",
     "old:typescript-back": "./node_modules/.bin/tsc -p ./config/back.tsconfig.json",
-    "old:start": "electron ."
+    "old:start": "electron .",
+    "old:typescript-test": "./node_modules/.bin/tsc -p ./config/test.tsconfig.json",
+    "old:test": "jest"
   },
   "repository": {
     "type": "git",

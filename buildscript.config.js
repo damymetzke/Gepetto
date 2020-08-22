@@ -1,4 +1,4 @@
-const { LOGGER, runParallelScript, runNpm } = require("node-build-util");
+const { LOGGER, runParallelScript, runNpm, stdLib } = require("node-build-util");
 
 const path = require("path");
 
@@ -14,6 +14,10 @@ const DEFAULT_PATHS = {
     coreBack: [
         "./src/core",
         "./src/back/core"
+    ],
+    coreTest: [
+        "./src/core",
+        "./src/test/core"
     ]
 };
 
@@ -39,12 +43,16 @@ module.exports = {
                 ...htmlAndSass
             ]);
 
-            runNpm("old:start");
+            await runNpm("old:start");
         },
-        test: () =>
+        test: async () =>
         {
             LOGGER.log("Running script: 'test'");
 
+            const [ source, target ] = DEFAULT_PATHS.coreTest;
+            await stdLib.fileSystem.copyFolder(source, target);
+            await runNpm("old:typescript-test");
+            await runNpm("old:test");
         },
         buildDocs: () =>
         {
