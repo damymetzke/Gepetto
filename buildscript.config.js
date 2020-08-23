@@ -1,4 +1,4 @@
-const { LOGGER, runParallelScript, runNpm, stdLib } = require("node-build-util");
+const { LOGGER, runParallelScript, runNpm, stdLib, runScript } = require("node-build-util");
 
 const path = require("path");
 
@@ -18,7 +18,15 @@ const DEFAULT_PATHS = {
     coreTest: [
         "./src/core",
         "./src/test/core"
+    ],
+    markdown: [
+        path.join(__dirname, "documentation/md"),
+        path.join(__dirname, "documentation/build/md")
     ]
+};
+
+const SCRIPT = {
+    md: path.join(__dirname, "scripts/buildMd.js")
 };
 
 module.exports = {
@@ -66,7 +74,7 @@ module.exports = {
             const buildDocs = (async () =>
             {
                 LOGGER.log("Building markdown documentation...");
-                runNpm("old:build-md"); //todo: create script
+                await runScript(SCRIPT.md, ...DEFAULT_PATHS.markdown);
                 LOGGER.log("Completed building markdown documentation.");
             })();
 
