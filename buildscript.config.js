@@ -22,11 +22,16 @@ const DEFAULT_PATHS = {
     markdown: [
         path.join(__dirname, "documentation/md"),
         path.join(__dirname, "documentation/build/md")
+    ],
+    sass: [
+        path.join(__dirname, "style"),
+        path.join(__dirname, "out/style")
     ]
 };
 
 const SCRIPT = {
-    md: path.join(__dirname, "scripts/buildMd.js")
+    md: path.join(__dirname, "scripts/buildMd.js"),
+    sass: path.join(__dirname, "scripts/compileSass.js")
 };
 
 module.exports = {
@@ -38,7 +43,7 @@ module.exports = {
 
             const htmlAndSass = [
                 runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.html),
-                runNpm("old:compile-sass") //todo: create script
+                runParallelScript(SCRIPT.sass, ...DEFAULT_PATHS.sass)
             ];
 
             await Promise.all([
@@ -119,7 +124,7 @@ module.exports = {
                 {
                     const htmlAndSass = [
                         runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.html),
-                        runNpm("old:compile-sass") //todo: create script
+                        runParallelScript(SCRIPT.sass, ...DEFAULT_PATHS.sass)
                     ];
 
                     await Promise.all([
@@ -155,7 +160,7 @@ module.exports = {
                 {
                     const htmlAndSass = [
                         runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.html),
-                        runNpm("old:compile-sass") //todo: create script
+                        runParallelScript(SCRIPT.sass, ...DEFAULT_PATHS.sass)
                     ];
 
                     await Promise.all([
