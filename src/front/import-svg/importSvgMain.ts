@@ -11,6 +11,54 @@ const fileNameElement = document.getElementById("svg-file-name");
 
 let currentFilePath = null;
 
+function getGTree(element: SVGGElement | SVGSVGElement, gTreeIndex: string, list: HTMLOListElement, parents: SVGGElement[]): any
+{
+    list.innerHTML = "";
+    return Array.from(element.children)
+        .filter(child => child.tagName === "g")
+        .map((child: SVGGElement, index: number) =>
+        {
+            child.classList.add("g-tree-element");
+            const newGTreeIndex = gTreeIndex
+                ? `${gTreeIndex}.${String(index)}`
+                : String(index);
+            child.dataset.index = newGTreeIndex;
+
+            const listEntry = document.createElement("li");
+            listEntry.innerHTML =
+                `
+                    <p>
+                    <input type="checkbox">
+                    &LeftAngleBracket;g&RightAngleBracket;
+                    </p>
+                    <ol>
+                    </ol>
+                `;
+            const [ pElement, subListElement ] = <[ HTMLElement, HTMLOListElement ]>Array.from(listEntry.children);
+            const [ checkBox ] = Array.from(pElement.children);
+
+            const childResults = getGTree(child, newGTreeIndex, subListElement, [ ...parents, child ]);
+            const allElements: SVGGElement[] = [ ...(childResults.reduce((total, current) => [ ...total, ...current.allElements ], [])), child ];
+
+            pElement.addEventListener("mouseenter", () =>
+            {
+                [ ...allElements, ...parents ].forEach(focusElement => focusElement.classList.add("focussed"));
+            });
+            pElement.addEventListener("mouseleave", () =>
+            {
+                allElements.forEach(focusElement => focusElement.classList.remove("focussed"));
+            });
+
+            list.appendChild(listEntry);
+
+            return {
+                element: child,
+                allElements: allElements,
+                children: childResults
+            };
+        });
+}
+
 async function openFile()
 {
     try
@@ -67,7 +115,7 @@ async function openFile()
                 const previewText = js2xml(previewResult);
                 svgElement.innerHTML = previewText;
 
-
+                console.log(getGTree(svgElement, "", <HTMLOListElement>document.getElementById("list--root"), []));
             })();
         }
     }
