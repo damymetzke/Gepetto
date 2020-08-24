@@ -35,10 +35,35 @@ function getGTree(element: SVGGElement | SVGSVGElement, gTreeIndex: string, list
                     </ol>
                 `;
             const [ pElement, subListElement ] = <[ HTMLElement, HTMLOListElement ]>Array.from(listEntry.children);
-            const [ checkBox ] = Array.from(pElement.children);
+            const [ checkBox ] = <[ HTMLInputElement ]>Array.from(pElement.children);
+
 
             const childResults = getGTree(child, newGTreeIndex, subListElement, [ ...parents, child ]);
             const allElements: SVGGElement[] = [ ...(childResults.reduce((total, current) => [ ...total, ...current.allElements ], [])), child ];
+
+            checkBox.addEventListener("input", () =>
+            {
+                [ ...allElements, ...parents ].forEach(selectElement =>
+                {
+                    const previous = selectElement.dataset.numSelected
+                        ? parseInt(selectElement.dataset.numSelected)
+                        : 0;
+
+                    const next = checkBox.checked
+                        ? previous + 1
+                        : previous - 1;
+
+                    selectElement.dataset.numSelected = String(next);
+                    if (next === 0)
+                    {
+                        selectElement.classList.remove("selected");
+                    }
+                    else
+                    {
+                        selectElement.classList.add("selected");
+                    }
+                });
+            });
 
             pElement.addEventListener("mouseenter", () =>
             {

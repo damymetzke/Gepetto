@@ -122,8 +122,12 @@
                 g.g-tree-element
                 {
                     display: none;
-                    &.focussed
-                    {
+                    // &.focussed
+                    // {
+                    //     display: inherit;
+                    // }
+                    &.selected
+                    {   
                         display: inherit;
                     }
                 }
