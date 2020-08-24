@@ -118,23 +118,31 @@
             {
                 width: 100%;
                 height: 100%;
-
-                g.g-tree-element
-                {
-                    display: none;
-                    // &.focussed
-                    // {
-                    //     display: inherit;
-                    // }
-                    &.selected
-                    {   
-                        display: inherit;
-                    }
-                }
             }
         }
     }
 
+    #list
+    {
+        &.any-selected:not(.any-hovered) ~ #viewport g.g-tree-element
+        {
+            display: none;
 
+            &.selected
+            {   
+                display: inherit;
+            }
+        }
+
+        &.any-hovered ~ #viewport g.g-tree-element
+        {
+            display: none;
+
+            &.focussed
+            {   
+                display: inherit;
+            }
+        }
+    }
 
 }

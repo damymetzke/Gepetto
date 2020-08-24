@@ -8,8 +8,11 @@ const { xml2js, js2xml } = require("xml-js");
 const REGEX_VIEW_BOX = /(?:\s|,)+/g;
 
 const fileNameElement = document.getElementById("svg-file-name");
+const listElement = document.getElementById("list");
 
 let currentFilePath = null;
+let numSelected: number = 0;
+
 
 function getGTree(element: SVGGElement | SVGSVGElement, gTreeIndex: string, list: HTMLOListElement, parents: SVGGElement[]): any
 {
@@ -63,15 +66,30 @@ function getGTree(element: SVGGElement | SVGSVGElement, gTreeIndex: string, list
                         selectElement.classList.add("selected");
                     }
                 });
+
+                numSelected += checkBox.checked
+                    ? 1
+                    : -1;
+
+                if (numSelected === 0)
+                {
+                    listElement.classList.remove("any-selected");
+                }
+                else
+                {
+                    listElement.classList.add("any-selected");
+                }
             });
 
             pElement.addEventListener("mouseenter", () =>
             {
                 [ ...allElements, ...parents ].forEach(focusElement => focusElement.classList.add("focussed"));
+                listElement.classList.add("any-hovered");
             });
             pElement.addEventListener("mouseleave", () =>
             {
                 allElements.forEach(focusElement => focusElement.classList.remove("focussed"));
+                listElement.classList.remove("any-hovered");
             });
 
             list.appendChild(listEntry);
