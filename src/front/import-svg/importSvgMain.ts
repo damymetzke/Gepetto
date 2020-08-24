@@ -3,6 +3,9 @@ const { ipcRenderer } = require("electron");
 
 const currentWindow = require('electron').remote.getCurrentWindow();
 
+const { xml2js, js2xml } = require("xml-js");
+
+const REGEX_VIEW_BOX = /(?:\s|,)+/g;
 
 const fileNameElement = document.getElementById("svg-file-name");
 
@@ -29,6 +32,43 @@ async function openFile()
             const splitFilePath = currentFilePath.split(/\/|\\/);
             const fileName = splitFilePath[ splitFilePath.length - 1 ];
             fileNameElement.innerText = fileName;
+
+            //preview svg
+            (async () =>
+            {
+                const svgRequest = new window.XMLHttpRequest();
+                svgRequest.open("GET", currentFilePath);
+                await new Promise(resolve =>
+                {
+                    svgRequest.onload = () =>
+                    {
+                        resolve();
+                    };
+
+                    svgRequest.send();
+                });
+
+                const jsonSvg = xml2js(svgRequest.response);
+                const [ rootElement ] = jsonSvg.elements.filter(element => element.type === "element" && element.name === "svg");
+
+                if (!("attributes" in rootElement) || !("viewBox" in rootElement.attributes))
+                {
+                    return;
+                }
+                const viewBox = rootElement.attributes.viewBox;
+
+                const svgElement = <SVGSVGElement><HTMLOrSVGElement>document.getElementById("viewport--svg");
+                svgElement.setAttribute("viewBox", viewBox);
+
+                const previewResult = {
+                    elements: rootElement.elements
+                };
+
+                const previewText = js2xml(previewResult);
+                svgElement.innerHTML = previewText;
+
+
+            })();
         }
     }
     catch (error)
@@ -89,6 +129,7 @@ function onSubObject()
     });
 }
 
+//execution starts here
 openFile();
 
 
