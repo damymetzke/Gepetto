@@ -158,48 +158,44 @@ function getListEntry(text?: string)
     `;
 }
 
+function onCountableSelect(offset: 1 | -1, element: HTMLOrSVGElement, disable: () => void, enable: () => void)
+{
+    const previous = element.dataset.numSelected
+        ? parseInt(element.dataset.numSelected)
+        : 0;
+
+    const next = previous + offset;
+
+    element.dataset.numSelected = String(next);
+    if (next === 0)
+    {
+        disable();
+    }
+    else
+    {
+        enable();
+    }
+}
+
 function onCheckbox(elements: SVGGElement[], checkBox: HTMLInputElement, toDisable: HTMLInputElement[])
 {
     elements.forEach(selectElement =>
     {
-        const previous = selectElement.dataset.numSelected
-            ? parseInt(selectElement.dataset.numSelected)
-            : 0;
-
-        const next = checkBox.checked
-            ? previous + 1
-            : previous - 1;
-
-        selectElement.dataset.numSelected = String(next);
-        if (next === 0)
-        {
-            selectElement.classList.remove("selected");
-        }
-        else
-        {
-            selectElement.classList.add("selected");
-        }
+        onCountableSelect(
+            checkBox.checked ? 1 : -1,
+            selectElement,
+            () => selectElement.classList.remove("selected"),
+            () => selectElement.classList.add("selected")
+        );
     });
-
     toDisable.forEach(selectElement =>
     {
-        const previous = selectElement.dataset.numSelected
-            ? parseInt(selectElement.dataset.numSelected)
-            : 0;
-
-        const next = checkBox.checked
-            ? previous + 1
-            : previous - 1;
-
-        selectElement.dataset.numSelected = String(next);
-        if (next === 0)
-        {
-            selectElement.disabled = false;
-        }
-        else
-        {
-            selectElement.disabled = true;
-        }
+        onCountableSelect(
+            checkBox.checked ? 1 : -1,
+            selectElement,
+            () => selectElement.disabled = false,
+            () => selectElement.disabled = true
+        );
     });
 
     numSelected += checkBox.checked
