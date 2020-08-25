@@ -127,7 +127,8 @@ function buildGTree(element: SVGGElement, gTreeIndex: string, list: HTMLOListEle
             //setup list item
             /////////////////
             const listEntry = document.createElement("li");
-            listEntry.innerHTML = getListEntry();
+            const childId = child.id;
+            listEntry.innerHTML = getListEntry(childId);
             list.appendChild(listEntry);
 
             const [ pElement, subListElement ] = <[ HTMLElement, HTMLOListElement ]>Array.from(listEntry.children);
@@ -141,13 +142,16 @@ function buildGTree(element: SVGGElement, gTreeIndex: string, list: HTMLOListEle
 
 }
 
-function getListEntry()
+function getListEntry(text?: string)
 {
-    const text = "&LeftAngleBracket;g&RightAngleBracket;";
     return `
         <p>
         <input type="checkbox">
-        ${text}
+        ${
+        text
+            ? text
+            : "&LeftAngleBracket;g&RightAngleBracket;"
+        }
         </p>
         <ol>
         </ol>
@@ -261,7 +265,8 @@ async function previewSvg()
                 //setup list item
                 /////////////////
                 const listEntry = document.createElement("li");
-                listEntry.innerHTML = getListEntry();
+                const childId = child.id;
+                listEntry.innerHTML = getListEntry(childId);
 
                 document.getElementById("list--root").appendChild(listEntry);
 
