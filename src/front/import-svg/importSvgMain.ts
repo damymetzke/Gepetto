@@ -4,6 +4,7 @@ const { ipcRenderer } = require("electron");
 const currentWindow = require('electron').remote.getCurrentWindow();
 
 const { xml2js, js2xml } = require("xml-js");
+const _ = require("lodash");
 
 const REGEX_VIEW_BOX = /(?:\s|,)+/g;
 
@@ -13,6 +14,87 @@ const listElement = document.getElementById("list");
 let currentFilePath = null;
 let numSelected: number = 0;
 let checkBoxList: HTMLInputElement[] = [];
+
+class GTreeNode
+{
+    gElement: SVGGElement;
+    checkBox: HTMLInputElement;
+    listItemContent: HTMLElement;
+
+    parent: GTreeNode;
+    children: GTreeNode[];
+
+    constructor (gElement: SVGGElement, checkBox: HTMLInputElement, listItemContent: HTMLElement, parent: GTreeNode)
+    {
+        this.gElement = gElement;
+        this.checkBox = checkBox;
+        this.listItemContent = listItemContent;
+
+        this.parent = parent;
+        this.children = [];
+    }
+
+    addChild(gElement: SVGGElement, checkBox: HTMLInputElement, listItemContent: HTMLElement): GTreeNode
+    {
+        const result = new GTreeNode(gElement, checkBox, listItemContent, this);
+        this.children.push(result);
+        return result;
+    }
+
+    getSelfAndDescendants(): GTreeNode[]
+    {
+        return [
+            this,
+            ...(_.flatten(
+                this.children
+                    .map(child => child.getSelfAndDescendants())
+            ))
+        ];
+    }
+
+    getSelfAndAncestors(): GTreeNode[]
+    {
+        return [
+            this,
+            ...(this.parent === null
+                ? []
+                : this.parent.getSelfAndAncestors())
+        ];
+    }
+
+}
+
+function buildGTreeAlt(element: SVGGElement, gTreeIndex: string, list: HTMLOListElement, node: GTreeNode): void
+{
+    list.innerHTML = "";
+
+    Array.from(element.children)
+        .filter(child => child.tagName === "g")
+        .forEach((child: SVGGElement, index: number) =>
+        {
+            //setup child
+            /////////////
+            const nextGTreeIndex = `${gTreeIndex}.${String(index)}`;
+
+            child.classList.add("g-tree-element");
+            child.dataset.index = nextGTreeIndex;
+
+            //setup list item
+            /////////////////
+            const listEntry = document.createElement("li");
+            listEntry.innerHTML = getListEntry();
+            list.appendChild(listEntry);
+
+            const [ pElement, subListElement ] = <[ HTMLElement, HTMLOListElement ]>Array.from(listEntry.children);
+            const [ checkBox ] = <[ HTMLInputElement ]>Array.from(pElement.children);
+
+            checkBox.dataset.gTreeIndex = nextGTreeIndex;
+
+            const next = node.addChild(child, checkBox, pElement);
+            buildGTreeAlt(child, nextGTreeIndex, subListElement, next);
+        });
+
+}
 
 function getListEntry()
 {
@@ -158,6 +240,34 @@ async function previewSvg()
 
     checkBoxList = buildGTree(svgElement, "", <HTMLOListElement>document.getElementById("list--root"), [])
         .reduce((total, current) => [ ...total, ...current.checkBoxes ], []);
+
+    const gTree = Array.from(svgElement.children)
+        .filter(child => child.tagName === "g")
+        .map((child: SVGGElement, index) =>
+        {
+            //setup child
+            /////////////
+            const nextGTreeIndex = String(index);
+
+            child.classList.add("g-tree-element");
+            child.dataset.index = nextGTreeIndex;
+
+            //setup list item
+            /////////////////
+            const listEntry = document.createElement("li");
+            listEntry.innerHTML = getListEntry();
+
+            document.getElementById("list--root").appendChild(listEntry);
+
+            const [ pElement, subListElement ] = <[ HTMLElement, HTMLOListElement ]>Array.from(listEntry.children);
+            const [ checkBox ] = <[ HTMLInputElement ]>Array.from(pElement.children);
+
+            checkBox.dataset.gTreeIndex = nextGTreeIndex;
+
+            const next = new GTreeNode(child, checkBox, pElement, null);
+            buildGTreeAlt(child, nextGTreeIndex, subListElement, next);
+            return next;
+        });
 }
 
 async function openFile()
