@@ -12,6 +12,7 @@ const listElement = document.getElementById("list");
 
 let currentFilePath = null;
 let numSelected: number = 0;
+let checkBoxList: HTMLInputElement[] = [];
 
 
 function getGTree(element: SVGGElement | SVGSVGElement, gTreeIndex: string, list: HTMLOListElement, parents: SVGGElement[]): any
@@ -43,6 +44,8 @@ function getGTree(element: SVGGElement | SVGSVGElement, gTreeIndex: string, list
 
             const childResults = getGTree(child, newGTreeIndex, subListElement, [ ...parents, child ]);
             const allElements: SVGGElement[] = [ ...(childResults.reduce((total, current) => [ ...total, ...current.allElements ], [])), child ];
+
+            checkBox.dataset.gTreeIndex = newGTreeIndex;
 
             checkBox.addEventListener("input", () =>
             {
@@ -97,7 +100,11 @@ function getGTree(element: SVGGElement | SVGSVGElement, gTreeIndex: string, list
             return {
                 element: child,
                 allElements: allElements,
-                children: childResults
+                children: childResults,
+                checkBoxes: [
+                    ...(childResults.reduce((total, current) => [ ...total, ...current.checkBoxes ], [])),
+                    checkBox
+                ]
             };
         });
 }
@@ -158,7 +165,8 @@ async function openFile()
                 const previewText = js2xml(previewResult);
                 svgElement.innerHTML = previewText;
 
-                console.log(getGTree(svgElement, "", <HTMLOListElement>document.getElementById("list--root"), []));
+                checkBoxList = getGTree(svgElement, "", <HTMLOListElement>document.getElementById("list--root"), [])
+                    .reduce((total, current) => [ ...total, ...current.checkBoxes ], []);
             })();
         }
     }
@@ -170,6 +178,10 @@ async function openFile()
 
 async function onImport()
 {
+    const subObjects = checkBoxList
+        .filter(checkBox => checkBox.checked)
+        .map(checkBox => checkBox.dataset.gTreeIndex);
+
     const name = (<HTMLInputElement>document.getElementById("name-field")).value;
     let errorOutput = document.getElementById("error-output");
     errorOutput.innerHTML = "";
@@ -195,7 +207,8 @@ async function onImport()
     const ipcResult = await ipcRenderer.invoke("import-svg",
         {
             name: name,
-            filePath: currentFilePath
+            filePath: currentFilePath,
+            subObjects: subObjects
         });
 
     if (!ipcResult.success)

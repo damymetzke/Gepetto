@@ -12,6 +12,7 @@ interface SvgImportData
 {
     name: string;
     filePath: string;
+    subObjects: string[];
 }
 
 type ImportResult =
@@ -51,11 +52,7 @@ export class DrawObjectManager
         return convertSvg({
             sourcePath: importData.filePath,
             name: importData.name,
-            subObjects: [
-                "0.0.0",
-                "0.0.1",
-                "0.1"
-            ]
+            subObjects: importData.subObjects
         })
             .then((names) =>
             {
