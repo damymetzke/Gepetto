@@ -62,9 +62,54 @@ class GTreeNode
         ];
     }
 
+    setupLogic()
+    {
+        const descendants: GTreeNode[] = _.flatten(
+            this.children
+                .map(child => child.getSelfAndDescendants())
+        );
+        const ancestors =
+            this.parent === null
+                ? []
+                : this.parent.getSelfAndAncestors();
+
+        const ancestorsAndDescendants = [
+            ...descendants,
+            ...ancestors
+        ];
+
+        const allConnected = [
+            ...ancestorsAndDescendants,
+            this
+        ];
+
+        this.checkBox.addEventListener("input", () => onCheckbox(
+            allConnected.map(value => value.gElement),
+            this.checkBox,
+            ancestorsAndDescendants.map(value => value.checkBox)
+        ));
+
+        this.children.forEach(child => child.setupLogic());
+
+        this.listItemContent.addEventListener("mouseenter", () =>
+        {
+            allConnected
+                .map(focusElement => focusElement.gElement)
+                .forEach(focusElement => focusElement.classList.add("focussed"));
+            listElement.classList.add("any-hovered");
+        });
+        this.listItemContent.addEventListener("mouseleave", () =>
+        {
+            allConnected
+                .map(focusElement => focusElement.gElement)
+                .forEach(focusElement => focusElement.classList.remove("focussed"));
+            listElement.classList.remove("any-hovered");
+        });
+    }
+
 }
 
-function buildGTreeAlt(element: SVGGElement, gTreeIndex: string, list: HTMLOListElement, node: GTreeNode): void
+function buildGTree(element: SVGGElement, gTreeIndex: string, list: HTMLOListElement, node: GTreeNode): void
 {
     list.innerHTML = "";
 
@@ -91,7 +136,7 @@ function buildGTreeAlt(element: SVGGElement, gTreeIndex: string, list: HTMLOList
             checkBox.dataset.gTreeIndex = nextGTreeIndex;
 
             const next = node.addChild(child, checkBox, pElement);
-            buildGTreeAlt(child, nextGTreeIndex, subListElement, next);
+            buildGTree(child, nextGTreeIndex, subListElement, next);
         });
 
 }
@@ -109,7 +154,7 @@ function getListEntry()
     `;
 }
 
-function onCheckbox(elements: SVGGElement[], checkBox: HTMLInputElement)
+function onCheckbox(elements: SVGGElement[], checkBox: HTMLInputElement, toDisable: HTMLInputElement[])
 {
     elements.forEach(selectElement =>
     {
@@ -132,6 +177,27 @@ function onCheckbox(elements: SVGGElement[], checkBox: HTMLInputElement)
         }
     });
 
+    toDisable.forEach(selectElement =>
+    {
+        const previous = selectElement.dataset.numSelected
+            ? parseInt(selectElement.dataset.numSelected)
+            : 0;
+
+        const next = checkBox.checked
+            ? previous + 1
+            : previous - 1;
+
+        selectElement.dataset.numSelected = String(next);
+        if (next === 0)
+        {
+            selectElement.disabled = false;
+        }
+        else
+        {
+            selectElement.disabled = true;
+        }
+    });
+
     numSelected += checkBox.checked
         ? 1
         : -1;
@@ -144,65 +210,6 @@ function onCheckbox(elements: SVGGElement[], checkBox: HTMLInputElement)
     {
         listElement.classList.add("any-selected");
     }
-}
-
-function buildGTree(element: SVGGElement | SVGSVGElement, gTreeIndex: string, list: HTMLOListElement, parents: SVGGElement[]): any
-{
-    list.innerHTML = "";
-    return Array.from(element.children)
-        .filter(child => child.tagName === "g")
-        .map((child: SVGGElement, index: number) =>
-        {
-            //setup child
-            /////////////
-            const newGTreeIndex = gTreeIndex
-                ? `${gTreeIndex}.${String(index)}`
-                : String(index);
-
-            child.classList.add("g-tree-element");
-            child.dataset.index = newGTreeIndex;
-
-            //setup list item
-            /////////////////
-            const listEntry = document.createElement("li");
-            listEntry.innerHTML = getListEntry();
-
-            const [ pElement, subListElement ] = <[ HTMLElement, HTMLOListElement ]>Array.from(listEntry.children);
-            const [ checkBox ] = <[ HTMLInputElement ]>Array.from(pElement.children);
-
-            checkBox.dataset.gTreeIndex = newGTreeIndex;
-
-            const childResults = buildGTree(child, newGTreeIndex, subListElement, [ ...parents, child ]);
-            const allElements: SVGGElement[] = [ ...(childResults.reduce((total, current) => [ ...total, ...current.allElements ], [])), ...parents, child ];
-
-            //event listners for displaying in the preview based on select/hover state
-            //////////////////////////////////////////////////////////////////////////
-            checkBox.addEventListener("input", () => onCheckbox(allElements, checkBox));
-            pElement.addEventListener("mouseenter", () =>
-            {
-                allElements.forEach(focusElement => focusElement.classList.add("focussed"));
-                listElement.classList.add("any-hovered");
-            });
-            pElement.addEventListener("mouseleave", () =>
-            {
-                allElements.forEach(focusElement => focusElement.classList.remove("focussed"));
-                listElement.classList.remove("any-hovered");
-            });
-
-            //done
-            //////
-            list.appendChild(listEntry);
-
-            return {
-                element: child,
-                allElements: allElements,
-                children: childResults,
-                checkBoxes: [
-                    ...(childResults.reduce((total, current) => [ ...total, ...current.checkBoxes ], [])),
-                    checkBox
-                ]
-            };
-        });
 }
 
 async function previewSvg()
@@ -238,36 +245,39 @@ async function previewSvg()
     const previewText = js2xml(previewResult);
     svgElement.innerHTML = previewText;
 
-    checkBoxList = buildGTree(svgElement, "", <HTMLOListElement>document.getElementById("list--root"), [])
-        .reduce((total, current) => [ ...total, ...current.checkBoxes ], []);
+    document.getElementById("list--root").innerHTML = "";
+    checkBoxList = _.flatten(
+        Array.from(svgElement.children)
+            .filter(child => child.tagName === "g")
+            .map((child: SVGGElement, index) =>
+            {
+                //setup child
+                /////////////
+                const nextGTreeIndex = String(index);
 
-    const gTree = Array.from(svgElement.children)
-        .filter(child => child.tagName === "g")
-        .map((child: SVGGElement, index) =>
-        {
-            //setup child
-            /////////////
-            const nextGTreeIndex = String(index);
+                child.classList.add("g-tree-element");
+                child.dataset.index = nextGTreeIndex;
 
-            child.classList.add("g-tree-element");
-            child.dataset.index = nextGTreeIndex;
+                //setup list item
+                /////////////////
+                const listEntry = document.createElement("li");
+                listEntry.innerHTML = getListEntry();
 
-            //setup list item
-            /////////////////
-            const listEntry = document.createElement("li");
-            listEntry.innerHTML = getListEntry();
+                document.getElementById("list--root").appendChild(listEntry);
 
-            document.getElementById("list--root").appendChild(listEntry);
+                const [ pElement, subListElement ] = <[ HTMLElement, HTMLOListElement ]>Array.from(listEntry.children);
+                const [ checkBox ] = <[ HTMLInputElement ]>Array.from(pElement.children);
 
-            const [ pElement, subListElement ] = <[ HTMLElement, HTMLOListElement ]>Array.from(listEntry.children);
-            const [ checkBox ] = <[ HTMLInputElement ]>Array.from(pElement.children);
+                checkBox.dataset.gTreeIndex = nextGTreeIndex;
 
-            checkBox.dataset.gTreeIndex = nextGTreeIndex;
+                const next = new GTreeNode(child, checkBox, pElement, null);
+                buildGTree(child, nextGTreeIndex, subListElement, next);
+                next.setupLogic();
+                return next.getSelfAndDescendants().map(value => value.checkBox);
+            })
+    );
 
-            const next = new GTreeNode(child, checkBox, pElement, null);
-            buildGTreeAlt(child, nextGTreeIndex, subListElement, next);
-            return next;
-        });
+    console.log(checkBoxList);
 }
 
 async function openFile()
@@ -365,5 +375,3 @@ openFile();
 document.getElementById("svg-open-file-button").addEventListener("click", openFile);
 document.getElementById("import-button").addEventListener("click", onImport);
 document.getElementById("sub-object-button").addEventListener("click", onSubObject);
-
-console.log("😊");
