@@ -1,4 +1,4 @@
-import { GTreeNode, getListEntry, buildGTree } from "./gTree.js";
+import { GTreeNode, getListEntry, buildGTree, buildGTreeNode } from "./gTree.js";
 
 const { dialog, getCurrentWindow } = require("electron").remote;
 const { ipcRenderer } = require("electron");
@@ -52,28 +52,12 @@ async function previewSvg()
             .filter(child => child.tagName === "g")
             .map((child: SVGGElement, index) =>
             {
-                //setup child
-                /////////////
-                const nextGTreeIndex = String(index);
+                const next = buildGTreeNode(
+                    child,
+                    String(index),
+                    <HTMLOListElement>document.getElementById("list--root")
+                );
 
-                child.classList.add("g-tree-element");
-                child.dataset.index = nextGTreeIndex;
-
-                //setup list item
-                /////////////////
-                const listEntry = document.createElement("li");
-                const childId = child.id;
-                listEntry.innerHTML = getListEntry(childId);
-
-                document.getElementById("list--root").appendChild(listEntry);
-
-                const [ pElement, subListElement ] = <[ HTMLElement, HTMLOListElement ]>Array.from(listEntry.children);
-                const [ checkBox ] = <[ HTMLInputElement ]>Array.from(pElement.children);
-
-                checkBox.dataset.gTreeIndex = nextGTreeIndex;
-
-                const next = new GTreeNode(child, checkBox, pElement, null);
-                buildGTree(child, nextGTreeIndex, subListElement, next);
                 next.setupLogic();
                 return next.getSelfAndDescendants().map(value => value.checkBox);
             })

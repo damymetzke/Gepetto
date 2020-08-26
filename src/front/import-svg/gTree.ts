@@ -168,6 +168,32 @@ function onCheckbox(elements: SVGGElement[], checkBox: HTMLInputElement, toDisab
     }
 }
 
+export function buildGTreeNode(element: SVGGElement | SVGSVGElement, index: string, list: HTMLOListElement, node?: GTreeNode)
+{
+
+    element.classList.add("g-tree-element");
+    element.dataset.index = index;
+
+    //setup list item
+    /////////////////
+    const listEntry = document.createElement("li");
+    const childId = element.id;
+    listEntry.innerHTML = getListEntry(childId);
+    list.appendChild(listEntry);
+
+    const [ pElement, subListElement ] = <[ HTMLElement, HTMLOListElement ]>Array.from(listEntry.children);
+    const [ checkBox ] = <[ HTMLInputElement ]>Array.from(pElement.children);
+
+    checkBox.dataset.gTreeIndex = index;
+
+    const next = node
+        ? node.addChild(element, checkBox, pElement)
+        : new GTreeNode(element, checkBox, pElement, null);
+    buildGTree(element, index, subListElement, next);
+
+    return next;
+}
+
 export function buildGTree(element: SVGGElement, gTreeIndex: string, list: HTMLOListElement, node: GTreeNode): void
 {
     list.innerHTML = "";
@@ -176,26 +202,11 @@ export function buildGTree(element: SVGGElement, gTreeIndex: string, list: HTMLO
         .filter(child => child.tagName === "g")
         .forEach((child: SVGGElement, index: number) =>
         {
-            //setup child
-            /////////////
-            const nextGTreeIndex = `${gTreeIndex}.${String(index)}`;
-
-            child.classList.add("g-tree-element");
-            child.dataset.index = nextGTreeIndex;
-
-            //setup list item
-            /////////////////
-            const listEntry = document.createElement("li");
-            const childId = child.id;
-            listEntry.innerHTML = getListEntry(childId);
-            list.appendChild(listEntry);
-
-            const [ pElement, subListElement ] = <[ HTMLElement, HTMLOListElement ]>Array.from(listEntry.children);
-            const [ checkBox ] = <[ HTMLInputElement ]>Array.from(pElement.children);
-
-            checkBox.dataset.gTreeIndex = nextGTreeIndex;
-
-            const next = node.addChild(child, checkBox, pElement);
-            buildGTree(child, nextGTreeIndex, subListElement, next);
+            buildGTreeNode(
+                child,
+                `${gTreeIndex}.${String(index)}`,
+                list,
+                node
+            );
         });
 }
