@@ -349,7 +349,9 @@ export async function convertSvg(input: svgConvertInput): Promise<string[]>
 {
     const { sourcePath, name, subObjects } = input;
     const data = await fs.readFile(sourcePath);
-    const xml = <Element>xml2js(data.toString());
+    const xml = <Element>xml2js(data.toString(), {
+        ignoreComment: true
+    });
     const topElements = xml.elements.filter(element => element.type === "element" && element.name === "svg");
     if (topElements.length !== 1)
     {

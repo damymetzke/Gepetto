@@ -17,8 +17,8 @@ const TAB_COLLECTION = new TabCollection(document.getElementById("tabs"), docume
 function ImportSvg()
 {
     let win = new BrowserWindow({
-        width: 300,
-        height: 260,
+        width: 1,
+        height: 1,
         webPreferences: {
             nodeIntegration: true
         },

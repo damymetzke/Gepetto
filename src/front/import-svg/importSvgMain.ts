@@ -1,4 +1,4 @@
-import { GTreeNode, getListEntry, buildGTree, buildGTreeNode } from "./gTree.js";
+import { GTreeNode, getListEntry, buildGTree, buildGTreeNode, setupLogic } from "./gTree.js";
 
 const { dialog, getCurrentWindow } = require("electron").remote;
 const { ipcRenderer } = require("electron");
@@ -27,8 +27,13 @@ async function previewSvg()
         svgRequest.send();
     });
 
-    const jsonSvg = xml2js(svgRequest.response);
+    const jsonSvg = xml2js(svgRequest.response, { ignoreComment: true });
+    //get the root elements, which is expected to be an svg element
     const [ rootElement ] = jsonSvg.elements.filter(element => element.type === "element" && element.name === "svg");
+    if (!rootElement)
+    {
+        throw "No svg root element found";
+    }
 
     if (!("attributes" in rootElement) || !("viewBox" in rootElement.attributes))
     {
@@ -46,6 +51,10 @@ async function previewSvg()
     const previewText = js2xml(previewResult);
     svgElement.innerHTML = previewText;
 
+    //build the g-tree
+    //this will walk through the imported svg data and build a tree out of just the 'g' elements.
+    //it will then build this structure in the list, where the structure will be visible and sub-objects can be selected.
+    //hovering and selecting will now result in updates for the svg preview window.
     document.getElementById("list--root").innerHTML = "";
     checkBoxList = _.flatten(
         Array.from(svgElement.children)
@@ -58,12 +67,12 @@ async function previewSvg()
                     <HTMLOListElement>document.getElementById("list--root")
                 );
 
-                next.setupLogic();
+                setupLogic(next);
                 return next.getSelfAndDescendants().map(value => value.checkBox);
             })
     );
 
-    console.log(checkBoxList);
+    checkBoxList.sort();
 }
 
 async function openFile()
@@ -146,18 +155,37 @@ async function onImport()
 
 }
 
-function onSubObject()
+let isAdvanced: boolean = false;
+
+function onAdvanced()
 {
-    currentWindow.setBounds({
-        width: 900,
-        height: 600
-    });
+    if (isAdvanced)
+    {
+        currentWindow.setBounds({
+            width: 300,
+            height: 300
+        });
+    }
+    else
+    {
+        currentWindow.setBounds({
+            width: 900,
+            height: 600
+        });
+    }
+
+    isAdvanced = !isAdvanced;
 }
 
 //execution starts here
+currentWindow.setBounds({
+    width: 300,
+    height: 300
+});
+
 openFile();
 
 
 document.getElementById("svg-open-file-button").addEventListener("click", openFile);
 document.getElementById("import-button").addEventListener("click", onImport);
-document.getElementById("sub-object-button").addEventListener("click", onSubObject);
+document.getElementById("advanced-button").addEventListener("click", onAdvanced);

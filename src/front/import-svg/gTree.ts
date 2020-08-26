@@ -4,6 +4,21 @@ const _ = require("lodash");
 
 let numSelected: number = 0;
 
+/**
+ * this class is responsible for holding the information that connects the g-elements in the svg preview window with the corresponding list item.
+ * 
+ * when previewing a new import the user should be able to select sub-objects.
+ * For this the g-tree should be parsed and a corresponding list should be created.
+ * This happens in 2 steps:
+ * 1. parse the svg data while building a similar structure using lists.
+ * 2. bind hover and select events in order to display the desired parts of the svg data.
+ * 
+ * in order to do the second step both the list item *and* the corresponing g element should be known, which is the responsibility of this class.
+ * 
+ * @see svgConvertInput
+ * @see buildGTree
+ * @see setupLogic
+ */
 export class GTreeNode
 {
     gElement: SVGGElement;
@@ -49,51 +64,6 @@ export class GTreeNode
                 ? []
                 : this.parent.getSelfAndAncestors())
         ];
-    }
-
-    setupLogic()
-    {
-        const descendants: GTreeNode[] = _.flatten(
-            this.children
-                .map(child => child.getSelfAndDescendants())
-        );
-        const ancestors =
-            this.parent === null
-                ? []
-                : this.parent.getSelfAndAncestors();
-
-        const ancestorsAndDescendants = [
-            ...descendants,
-            ...ancestors
-        ];
-
-        const allConnected = [
-            ...ancestorsAndDescendants,
-            this
-        ];
-
-        this.checkBox.addEventListener("input", () => onCheckbox(
-            allConnected.map(value => value.gElement),
-            this.checkBox,
-            ancestorsAndDescendants.map(value => value.checkBox)
-        ));
-
-        this.children.forEach(child => child.setupLogic());
-
-        this.listItemContent.addEventListener("mouseenter", () =>
-        {
-            allConnected
-                .map(focusElement => focusElement.gElement)
-                .forEach(focusElement => focusElement.classList.add("focussed"));
-            listElement.classList.add("any-hovered");
-        });
-        this.listItemContent.addEventListener("mouseleave", () =>
-        {
-            allConnected
-                .map(focusElement => focusElement.gElement)
-                .forEach(focusElement => focusElement.classList.remove("focussed"));
-            listElement.classList.remove("any-hovered");
-        });
     }
 
 }
@@ -209,4 +179,49 @@ export function buildGTree(element: SVGGElement, gTreeIndex: string, list: HTMLO
                 node
             );
         });
+}
+
+export function setupLogic(node: GTreeNode)
+{
+    const descendants: GTreeNode[] = _.flatten(
+        node.children
+            .map(child => child.getSelfAndDescendants())
+    );
+    const ancestors =
+        node.parent === null
+            ? []
+            : node.parent.getSelfAndAncestors();
+
+    const ancestorsAndDescendants = [
+        ...descendants,
+        ...ancestors
+    ];
+
+    const allConnected = [
+        ...ancestorsAndDescendants,
+        node
+    ];
+
+    node.checkBox.addEventListener("input", () => onCheckbox(
+        allConnected.map(value => value.gElement),
+        node.checkBox,
+        ancestorsAndDescendants.map(value => value.checkBox)
+    ));
+
+    node.children.forEach(child => setupLogic(child));
+
+    node.listItemContent.addEventListener("mouseenter", () =>
+    {
+        allConnected
+            .map(focusElement => focusElement.gElement)
+            .forEach(focusElement => focusElement.classList.add("focussed"));
+        listElement.classList.add("any-hovered");
+    });
+    node.listItemContent.addEventListener("mouseleave", () =>
+    {
+        allConnected
+            .map(focusElement => focusElement.gElement)
+            .forEach(focusElement => focusElement.classList.remove("focussed"));
+        listElement.classList.remove("any-hovered");
+    });
 }
