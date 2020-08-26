@@ -6,6 +6,7 @@ import { dialog, app, BrowserWindow } from "electron";
 
 import * as path from "path";
 import { file } from "@babel/types";
+import { ProjectResourceManager } from "./project/ProjectResourceManager.js";
 
 const USER_CONFIG_PATH = path.join(app.getPath("userData"), "config.json");
 
@@ -15,13 +16,19 @@ export class ProjectManager
 
     project: Project;
 
+    drawObjectTree: ProjectResourceManager;
+
     window: BrowserWindow;
 
     constructor (projectPath: string = "", drawObjectTree: DrawObjectTreeEditorWrapper = null, window: BrowserWindow = null)
     {
         this.projectPath = projectPath;
-        this.project = new Project(drawObjectTree);
+        this.project = new Project();
         this.window = window;
+
+        this.drawObjectTree = new ProjectResourceManager("DrawObjects.gpa",
+            drawObjectTree
+        );
     }
 
     save(): void
@@ -45,6 +52,8 @@ export class ProjectManager
                     title: "Error saving project!"
                 });
             });
+
+        this.drawObjectTree.save(this.projectPath);
 
     }
 
@@ -101,6 +110,8 @@ export class ProjectManager
                     title: "Error opening project!"
                 });
             });
+
+        this.drawObjectTree.open(this.projectPath);
     }
 
     openFrom(): void
