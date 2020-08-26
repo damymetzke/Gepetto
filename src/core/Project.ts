@@ -27,15 +27,17 @@ export class Project implements Serializable
     {
         return {
             tree: this.drawObjectTree.serialize(),
-            projectName: this.projectName
+            projectName: this.projectName,
+            fileVersion: this.fileVersion
         };
     }
     deserialize(serialized: SerializedProject): this
     {
-        const { tree, projectName } = serialized;
+        const { tree, projectName, fileVersion } = serialized;
 
         this.drawObjectTree.deserialize(tree);
         this.projectName = projectName;
+        this.fileVersion = <GepettoFileVersion>fileVersion;
 
         return this;
     }
