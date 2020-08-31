@@ -2,29 +2,34 @@ import { Serializable } from "../core/core.js";
 
 import * as path from "path";
 import { promises as fs } from "fs";
+import { ProjectManager } from "../ProjectManager.js";
 
 export class ProjectResourceManager
 {
     resourcePath: string;
     resource: Serializable;
+    project: ProjectManager;
 
-    constructor (resourcePath: string, resource: Serializable)
+    constructor (resourcePath: string, resource: Serializable, project: Project)
     {
         this.resourcePath = resourcePath;
         this.resource = resource;
+        this.project = project;
     }
 
-    async save(projectPath: string): Promise<void>
+    async save(): Promise<void>
     {
         const serialized = this.resource.serialize();
         const raw = JSON.stringify(serialized, null, 2);
 
-        const resourcePath = path.join(path.dirname(projectPath), this.resourcePath);
+        console.log(path.join(path.dirname(this.project.projectPath), this.resourcePath));
+
+        const resourcePath = path.join(path.dirname(this.project.projectPath), this.resourcePath);
         await fs.writeFile(resourcePath, raw);
     };
-    async open(projectPath: string): Promise<void>
+    async open(): Promise<void>
     {
-        const resourcePath = path.join(path.dirname(projectPath), this.resourcePath);
+        const resourcePath = path.join(path.dirname((this.project.projectPath, this.resourcePath);
         const raw = await fs.readFile(resourcePath);
 
         const serialized = JSON.parse(raw.toString());

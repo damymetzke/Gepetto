@@ -5,7 +5,6 @@ import { promises as fs } from "fs";
 import { dialog, app, BrowserWindow } from "electron";
 
 import * as path from "path";
-import { file } from "@babel/types";
 import { ProjectResourceManager } from "./project/ProjectResourceManager.js";
 
 const USER_CONFIG_PATH = path.join(app.getPath("userData"), "config.json");
@@ -26,9 +25,7 @@ export class ProjectManager
         this.project = new Project();
         this.window = window;
 
-        this.drawObjectTree = new ProjectResourceManager("DrawObjects.gpa",
-            drawObjectTree
-        );
+        this.drawObjectTree = new ProjectResourceManager("DrawObjects.gpa", drawObjectTree, this);
     }
 
     save(): void
@@ -53,7 +50,7 @@ export class ProjectManager
                 });
             });
 
-        this.drawObjectTree.save(this.projectPath);
+        this.drawObjectTree.save();
 
     }
 
@@ -111,7 +108,7 @@ export class ProjectManager
                 });
             });
 
-        this.drawObjectTree.open(this.projectPath);
+        this.drawObjectTree.open();
     }
 
     openFrom(): void
