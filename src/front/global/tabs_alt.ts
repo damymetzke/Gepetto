@@ -42,17 +42,17 @@ export interface TabContentImplementation
     /**
      * called whenever the tab is created.
      */
-    onInit: (root: SubDoc, name: string) => void;
+    onInit: (root: SubDoc, name: string, tab: Tab) => void;
 
     /**
      * called whenever the tab is closed.
      */
-    onDestroy: (root: SubDoc, name: string) => void;
+    onDestroy: (root: SubDoc, name: string, tab: Tab) => void;
 
     /**
      * called whenever the tab is saved.
      */
-    onSave: (root: SubDoc, name: string) => void;
+    onSave: (root: SubDoc, name: string, tab: Tab) => void;
 
     enableSave: boolean;
 }
@@ -65,6 +65,35 @@ export class Tab
     name: string;
     implementation: TabContentImplementation;
 
+    _dirty: boolean;
+
+    setDirty()
+    {
+        if (this._dirty)
+        {
+            return; //already dirty, do nothing
+        }
+
+        this._dirty = true;
+        const [ header ] = Array.from(this.tabElement.children);
+        header.innerHTML = `${this.name}*`;
+        header.classList.add("dirty");
+    }
+
+    save()
+    {
+        if (this._dirty)
+        {
+            this._dirty = false;
+            const [ header ] = Array.from(this.tabElement.children);
+            header.innerHTML = this.name;
+            header.classList.remove("dirty");
+        }
+
+        //save anyway, even if not dirty. Just to be sure.
+        this.implementation.onSave(this.content, this.name, this);
+    }
+
     contextMenu: menuType;
     setActive(value: boolean): void
     {
@@ -73,7 +102,7 @@ export class Tab
 
     destroy(): void
     {
-        this.implementation.onDestroy(this.content, this.name);
+        this.implementation.onDestroy(this.content, this.name, this);
         this.content.destroy(true);
         this.tabElement.parentElement.removeChild(this.tabElement);
         this.owner.destroyTabImplementation(this);
@@ -91,6 +120,8 @@ export class Tab
      */
     constructor (owner: TabCollection, tabParent: HTMLUListElement, contentParent: HTMLUListElement, name: string, subdocPath: string, implementation: TabContentImplementation, onReady: () => void = () => { })
     {
+        this._dirty = false;
+
         this.owner = owner;
         this.name = name;
 
@@ -108,7 +139,7 @@ export class Tab
                 label: "Save",
                 click: () =>
                 {
-                    this.implementation.onSave(this.content, this.name);
+                    this.save();
                 }
             }));
         }
@@ -129,7 +160,7 @@ export class Tab
                 return;
             }
 
-            this.implementation.onDestroy(this.content, this.name);
+            this.implementation.onDestroy(this.content, this.name, this);
             this.content.destroy(true);
             this.tabElement.parentElement.removeChild(this.tabElement);
             this.owner.destroyTabImplementation(this);
@@ -148,7 +179,7 @@ export class Tab
 
         this.content = new SubDoc(subdocPath, contentElement, () =>
         {
-            implementation.onInit(this.content, name);
+            implementation.onInit(this.content, name, this);
             onReady();
         });
 

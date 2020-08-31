@@ -15,6 +15,11 @@ $selected-tab: mix($highlight-color, $s1-color, 50%);
     {
         font-size: 20px;
         color: black;
+
+        &.dirty
+        {
+            font-style: italic;
+        }
     }
 
     li

@@ -1,6 +1,6 @@
 import { DrawObjectTreeEditorWrapper, DrawObject, TransformCommand, SyncOrganizerType } from "../core/core.js";
 import { SubDoc } from "../global/subdoc_alt.js";
-import { TabContentImplementation } from "../global/tabs_alt.js";
+import { TabContentImplementation, Tab } from "../global/tabs_alt.js";
 import { SyncConnector_Front } from "../global/SyncConnector_Front.js";
 import { OnScriptLoad as loadDropdown } from "../global/dropdown.js";
 import { updateTextTree, updateTransformCommands } from "./Updates.js";
@@ -11,6 +11,16 @@ const { ipcRenderer } = require("electron");
 
 const REGEX_XML_CONTENT = /^<root>([^]*)<\/root>$/i;
 const REGEX_REPLACE_SPACES = / /g;
+
+const DIRTY_TAB_BY_ACTION = new Set([
+    "AddObject",
+    "AddObjectToRoot",
+    "FromPureObject",
+    "renameObject",
+    "deserialize",
+    "addTransformCommand",
+    "updateTransformCommandField",
+]);
 
 const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "AddObject",
@@ -129,7 +139,7 @@ export class ObjectEditor implements TabContentImplementation
         this.enableSave = true;
     }
 
-    onInit(root: SubDoc, name: string)
+    onInit(root: SubDoc, name: string, tab: Tab)
     {
         this.connector = new SyncConnector_Front("draw-object-tree");
         this.drawObjectTree = new DrawObjectTreeEditorWrapper(SyncOrganizerType.SUBSCRIBER, this.connector);
@@ -158,6 +168,16 @@ export class ObjectEditor implements TabContentImplementation
             }
 
             onRename(event, nameInput, this.drawObjectTree);
+        });
+
+        this.drawObjectTree.under.addAllActionCallback((action) =>
+        {
+            if (!DIRTY_TAB_BY_ACTION.has(action))
+            {
+                return;
+            }
+
+            tab.setDirty();
         });
 
         this.drawObjectTree.under.addAllActionCallback((action, under, argumentList: [ string ]) =>
