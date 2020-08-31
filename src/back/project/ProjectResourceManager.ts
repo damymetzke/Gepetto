@@ -10,7 +10,7 @@ export class ProjectResourceManager
     resource: Serializable;
     project: ProjectManager;
 
-    constructor (resourcePath: string, resource: Serializable, project: Project)
+    constructor (resourcePath: string, resource: Serializable, project: ProjectManager)
     {
         this.resourcePath = resourcePath;
         this.resource = resource;
@@ -29,10 +29,12 @@ export class ProjectResourceManager
     };
     async open(): Promise<void>
     {
-        const resourcePath = path.join(path.dirname((this.project.projectPath, this.resourcePath);
+        console.log("🎆");
+        const resourcePath = path.join(path.dirname(this.project.projectPath), this.resourcePath);
         const raw = await fs.readFile(resourcePath);
 
         const serialized = JSON.parse(raw.toString());
         this.resource.deserialize(serialized);
+        console.log("🎇");
     }
 }

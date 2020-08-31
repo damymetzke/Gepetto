@@ -2,12 +2,22 @@ import { Project, DrawObjectTreeEditorWrapper } from "./core/core.js";
 
 import { promises as fs } from "fs";
 
-import { dialog, app, BrowserWindow } from "electron";
+import { dialog, app, BrowserWindow, ipcMain } from "electron";
 
 import * as path from "path";
 import { ProjectResourceManager } from "./project/ProjectResourceManager.js";
 
 const USER_CONFIG_PATH = path.join(app.getPath("userData"), "config.json");
+
+type SaveTabData =
+    {
+        type: "draw-object-tree";
+    }
+    |
+    {
+        type: "key-frame" | "animation";
+        name: string;
+    };
 
 export class ProjectManager
 {
@@ -26,6 +36,17 @@ export class ProjectManager
         this.window = window;
 
         this.drawObjectTree = new ProjectResourceManager("DrawObjects.gpa", drawObjectTree, this);
+
+        ipcMain.on("save-tab", (_event, data: SaveTabData) =>
+        {
+            switch (data.type)
+            {
+                case "draw-object-tree":
+                    console.log("saving draw-object-tree");
+                    this.drawObjectTree.save();
+                    break;
+            }
+        });
     }
 
     save(): void

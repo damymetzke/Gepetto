@@ -314,7 +314,9 @@ export class ObjectEditor implements TabContentImplementation
     }
     onSave(root: SubDoc, name: string)
     {
-        ipcRenderer.send("saveProject", {});
+        ipcRenderer.send("save-tab", {
+            type: "draw-object-tree"
+        });
     }
 
 
