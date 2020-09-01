@@ -25,6 +25,7 @@ export class ProjectManager
 
     project: Project;
 
+    drawObjectTreeUnder: DrawObjectTreeEditorWrapper;
     drawObjectTree: ProjectResourceManager;
 
     window: BrowserWindow;
@@ -35,7 +36,8 @@ export class ProjectManager
         this.project = new Project();
         this.window = window;
 
-        this.drawObjectTree = new ProjectResourceManager("DrawObjects.gpa", drawObjectTree, this);
+        this.drawObjectTreeUnder = drawObjectTree;
+        this.drawObjectTree = null;
 
         ipcMain.on("save-tab", (_event, data: SaveTabData) =>
         {
@@ -46,6 +48,15 @@ export class ProjectManager
                     this.drawObjectTree.save();
                     break;
             }
+        });
+
+        ipcMain.on("open-object-editor", () =>
+        {
+            this.openObjectEditor();
+        });
+        ipcMain.on("close-object-editor", () =>
+        {
+            this.closeObjectEditor();
         });
     }
 
@@ -71,7 +82,10 @@ export class ProjectManager
                 });
             });
 
-        this.drawObjectTree.save();
+        if (this.drawObjectTree)
+        {
+            this.drawObjectTree.save();
+        }
 
     }
 
@@ -128,8 +142,6 @@ export class ProjectManager
                     title: "Error opening project!"
                 });
             });
-
-        this.drawObjectTree.open();
     }
 
     openFrom(): void
@@ -195,5 +207,16 @@ export class ProjectManager
             {
                 console.error(`error in project manager:\n${error}`);
             });
+    }
+
+    openObjectEditor()
+    {
+        this.drawObjectTree = new ProjectResourceManager("DrawObjects.gpa", this.drawObjectTreeUnder, this);
+        this.drawObjectTree.open();
+    }
+
+    closeObjectEditor()
+    {
+
     }
 }

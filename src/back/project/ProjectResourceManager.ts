@@ -29,12 +29,10 @@ export class ProjectResourceManager
     };
     async open(): Promise<void>
     {
-        console.log("🎆");
         const resourcePath = path.join(path.dirname(this.project.projectPath), this.resourcePath);
         const raw = await fs.readFile(resourcePath);
 
         const serialized = JSON.parse(raw.toString());
         this.resource.deserialize(serialized);
-        console.log("🎇");
     }
 }

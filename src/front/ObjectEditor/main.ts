@@ -32,6 +32,11 @@ const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "--fullSync"
 ]);
 
+const UPDATE_ALL_BY_ACTIONS = new Set([
+    "--fullSync",
+    "deserialize"
+]);
+
 const UPDATE_TRANSFORM_COMMANDS_BY_ACTIONS = new Set([
     "selectObject",
     "addTransformCommand",
@@ -296,8 +301,12 @@ export class ObjectEditor implements TabContentImplementation
             delete this.displayedObjects[ oldName ];
         });
         const self = this;
-        this.drawObjectTree.under.addActionCallback("--fullSync", (under) =>
+        this.drawObjectTree.under.addAllActionCallback((action, under) =>
         {
+            if (!UPDATE_ALL_BY_ACTIONS.has(action))
+            {
+                return;
+            }
             function displayInitialObjects()
             {
                 root.getElementBySid("main--svg--content").innerHTML = "";
@@ -327,10 +336,13 @@ export class ObjectEditor implements TabContentImplementation
                 displayInitialObjects();
             });
         });
+        ipcRenderer.send("open-object-editor", {});
     }
     onDestroy(root: SubDoc, name: string)
     {
+        ipcRenderer.send("close-object-editor", {});
         this.connector.onDestroy();
+
     }
     onSave(root: SubDoc, name: string)
     {

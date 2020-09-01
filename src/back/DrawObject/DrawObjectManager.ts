@@ -80,7 +80,6 @@ export class DrawObjectManager
     {
         this.drawObjectTree = new DrawObjectTreeEditorWrapper(SyncOrganizerType.OWNER, new SyncConnector_Back("draw-object-tree", window));
 
-
         ipcMain.handle("import-svg", (_event, importData: SvgImportData) =>
         {
             return this.onImportSvg(importData);
