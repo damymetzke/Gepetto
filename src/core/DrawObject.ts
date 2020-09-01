@@ -154,4 +154,12 @@ export class DrawObject implements Serializable
     {
         return this.FromPureObject(serialized);
     }
+    reset(): void
+    {
+        this.name = "";
+        this.parent = null;
+        this.transformCommands = [];
+        this._relativeTransform = Transform.identity();
+        this._transformDirty = false;
+    }
 }

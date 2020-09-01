@@ -35,4 +35,12 @@ export class ProjectResourceManager
         const serialized = JSON.parse(raw.toString());
         this.resource.deserialize(serialized);
     }
+
+    close()
+    {
+        if (this.resource.reset)
+        {
+            this.resource.reset();
+        }
+    }
 }

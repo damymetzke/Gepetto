@@ -12,4 +12,5 @@ export interface Serializable
 {
     serialize(): SerializeObject;
     deserialize(serialized: SerializeObject): this;
+    reset?(): void;
 }

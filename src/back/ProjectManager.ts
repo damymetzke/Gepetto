@@ -217,6 +217,12 @@ export class ProjectManager
 
     closeObjectEditor()
     {
+        if (this.drawObjectTree)
+        {
+            this.drawObjectTree.close();
+        }
 
+        this.drawObjectTree = null;
+        console.log("closed!");
     }
 }

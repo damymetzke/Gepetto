@@ -227,4 +227,9 @@ export class TransformCommand implements Serializable
     {
         return this.FromPureObject(serialized);
     }
+    reset(): void
+    {
+        this.typeIndex = TransformCommandType.TRANSLATE;
+        this.fields = FIELD_DEFAULTS.TRANSLATE;
+    }
 }

@@ -110,6 +110,11 @@ export class DrawObjectTree implements Serializable
     {
         return this.FromPureObject(<any>serialized);
     }
+    reset(): void
+    {
+        this.rootObjects = [];
+        this.objects = {};
+    }
 }
 
 export class DrawObjectTreeWrapper implements DrawObjectTreeInterface

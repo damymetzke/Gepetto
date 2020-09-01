@@ -22,7 +22,20 @@ export class Transform
 {
     matrix: Matrix = [ 1, 0, 0, 1, 0, 0 ];
 
+    /**
+     * @deprecated use {@link Transform.identity} (lower case i) instead.
+     */
     static Identity = new Transform();
+
+    static identity(): Transform
+    {
+        return new Transform();
+    }
+
+    static zero(): Transform
+    {
+        return new Transform([ 0, 0, 0, 0, 0, 0 ]);
+    }
 
     Lerp(target: Transform, progress: number): Transform
     {
