@@ -10,9 +10,8 @@
     "clean": "b-script clean",
     "package": "b-script package",
     "distribute": "b-script distribute",
-    "old:build-typedoc": "node ./node_scripts/wrap_command.js \".\\node_modules\\.bin\\typedoc ./intermediate/typedoc_src/ --out {build_config:directoryMaps.typedoc.to} --tsconfig ./config/tsconfig.json --exclude ./src/front/core --exclude ./src/back/core --exclude ./src/test/core\"",
     "old:prepare-typedoc": "node ./node_scripts/move-typedoc-source.js",
-    "old:clean": "node ./node_scripts/clean.js",
+    "old:clean": "node ./node_scripts/clean.js"
   },
   "repository": {
     "type": "git",

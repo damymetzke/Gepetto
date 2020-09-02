@@ -95,7 +95,13 @@ module.exports = {
                 (async () =>
                 {
                     LOGGER.log("Building typedoc documentation...");
-                    runNpm("old:build-typedoc"); //todo: run bin
+                    await runBin("typedoc", [
+                        "./intermediate/typedoc_src",
+                        "--out", "./documentation/build/typedoc-output",
+                        "--tsconfig", "./config/tsconfig.json",
+                        "--exclude", "./src/front/core",
+                        "--exclude", "./src/back/core",
+                        "--exclude", "./src/test/core" ]);
                     LOGGER.log("Completed building typedoc documentation.");
                 })(),
                 buildDocs
