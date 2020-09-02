@@ -67,28 +67,43 @@ export class Tab
 
     _dirty: boolean;
 
-    setDirty()
+    set dirty(value: boolean)
     {
-        if (this._dirty)
+        if (value === this._dirty)
         {
             return; //already dirty, do nothing
         }
 
-        this._dirty = true;
-        const [ header ] = Array.from(this.tabElement.children);
-        header.innerHTML = `${this.name}*`;
-        header.classList.add("dirty");
-    }
+        this._dirty = value;
 
-    save()
-    {
-        if (this._dirty)
+        if (value)
         {
-            this._dirty = false;
+            const [ header ] = Array.from(this.tabElement.children);
+            header.innerHTML = `${this.name}*`;
+            header.classList.add("dirty");
+        }
+        else
+        {
             const [ header ] = Array.from(this.tabElement.children);
             header.innerHTML = this.name;
             header.classList.remove("dirty");
         }
+
+    }
+
+    get dirty(): boolean
+    {
+        return this._dirty;
+    }
+
+    setDirty()
+    {
+        this.dirty = true;
+    }
+
+    save()
+    {
+        this.dirty = false;
 
         //save anyway, even if not dirty. Just to be sure.
         this.implementation.onSave(this.content, this.name, this);

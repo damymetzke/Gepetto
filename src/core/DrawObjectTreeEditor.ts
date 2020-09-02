@@ -33,22 +33,62 @@ export interface DrawObjectTreeEditorInterface extends Serializable
     validateName(testName: string): verifyResult;
     renameObject(object: string, newName: string): void;
     updateTransformCommandField(object: string, command: number, field: string, value: number): void;
+    notifySave(): void;
 }
 
 export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTreeEditorInterface
 {
     selectedObject: string;
+    _dirty: boolean;
+
+    onDirty?: () => void;
+    onClean?: () => void;
+
+    set dirty(value: boolean)
+    {
+        console.log(String(this._dirty), " => ", String(value));
+        if (value === this._dirty)
+        {
+            return;
+        }
+
+        this._dirty = value;
+
+        if (value)
+        {
+            console.log("onDirty: ", this.onDirty);
+            if (this.onDirty)
+            {
+                this.onDirty();
+            }
+        }
+        else
+        {
+            console.log("onClean: ", this.onClean);
+            if (this.onClean)
+            {
+                this.onClean();
+            }
+        };
+    }
+
+    get dirty(): boolean
+    {
+        return this._dirty;
+    }
 
     AddObject(object: DrawObject): void
     {
         super.AddObject(object);
         this.selectedObject = object.name;
+        this.dirty = true;
     }
 
     AddObjectToRoot(object: DrawObject): void
     {
         super.AddObjectToRoot(object);
         this.selectedObject = object.name;
+        this.dirty = true;
     }
 
     addTransformCommand(object: string, command: TransformCommand): void
@@ -59,6 +99,7 @@ export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTr
         }
 
         this.objects[ object ].AddTransformCommand(command);
+        this.dirty = true;
     }
 
     selectObject(object: string)
@@ -117,6 +158,7 @@ export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTr
         {
             this.selectedObject = newName;
         }
+        this.dirty = true;
     }
 
     updateTransformCommandField(object: string, command: number, field: string, value: number): void
@@ -136,11 +178,30 @@ export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTr
         const targetCommand = targetObject.transformCommands[ command ];
 
         targetCommand.fields[ field ] = value;
+        this.dirty = true;
     }
 
     constructor (rootObject: DrawObject[] = [])
     {
         super(rootObject);
+        this._dirty = false;
+    }
+
+    notifySave()
+    {
+        this.dirty = false;
+    }
+
+    deserialize(serialized: SerializeObject): this
+    {
+        this.dirty = false;
+        return super.deserialize(serialized);
+    }
+
+    reset(): void
+    {
+        this.dirty = false;
+        super.reset();
     }
 }
 
@@ -212,6 +273,10 @@ export class DrawObjectTreeEditorWrapper implements DrawObjectTreeEditorInterfac
                 ConvertFromSend: argumentList => [ argumentList[ 0 ], new TransformCommand().FromPureObject(argumentList[ 1 ]) ]
             }
         });
+    }
+    notifySave(): void
+    {
+        this.under.runAction({ action: "notifySave", argumentList: [] });
     }
     serialize(): SerializeObject
     {

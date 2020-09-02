@@ -45,7 +45,11 @@ export class ProjectManager
             {
                 case "draw-object-tree":
                     console.log("saving draw-object-tree");
-                    this.drawObjectTree.save();
+                    this.drawObjectTree.save()
+                        .then(() =>
+                        {
+                            this.drawObjectTreeUnder.notifySave();
+                        });
                     break;
             }
         });
@@ -86,6 +90,7 @@ export class ProjectManager
         {
             this.drawObjectTree.save();
         }
+        this.drawObjectTreeUnder.notifySave();
 
     }
 

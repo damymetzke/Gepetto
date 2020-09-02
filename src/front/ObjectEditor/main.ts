@@ -175,14 +175,24 @@ export class ObjectEditor implements TabContentImplementation
             onRename(event, nameInput, this.drawObjectTree);
         });
 
-        this.drawObjectTree.under.addAllActionCallback((action) =>
+        this.drawObjectTree.under.under.onDirty = () =>
         {
-            if (!DIRTY_TAB_BY_ACTION.has(action))
+            tab.dirty = true;
+        };
+        this.drawObjectTree.under.under.onClean = () =>
+        {
+            tab.dirty = false;
+        };
+        this.drawObjectTree.under.addActionCallback("--fullSync", (under) =>
+        {
+            under.onDirty = () =>
             {
-                return;
-            }
-
-            tab.setDirty();
+                tab.setDirty();
+            };
+            under.onClean = () =>
+            {
+                tab.dirty = false;
+            };
         });
 
         this.drawObjectTree.under.addAllActionCallback((action, under, argumentList: [ string ]) =>
@@ -349,6 +359,7 @@ export class ObjectEditor implements TabContentImplementation
         ipcRenderer.send("save-tab", {
             type: "draw-object-tree"
         });
+        this.drawObjectTree.under.under.dirty = false;
     }
 
 
