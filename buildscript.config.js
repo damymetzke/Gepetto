@@ -1,4 +1,4 @@
-const { LOGGER, runParallelScript, runNpm, stdLib, runScript } = require("node-build-util");
+const { LOGGER, runParallelScript, runNpm, stdLib, runScript, runBin } = require("node-build-util");
 
 const path = require("path");
 
@@ -52,13 +52,13 @@ module.exports = {
             ]);
 
             await Promise.all([
-                runNpm("old:typescript-front"), //todo: run bin
-                runNpm("old:typescript-back"),  //todo: run bin
+                runBin("tsc", [ "-p", "./config/front.tsconfig.json" ]),
+                runBin("tsc", [ "-p", "./config/back.tsconfig.json" ]),
                 ...htmlAndSass
             ]);
 
             LOGGER.log("Compilation complete, starting Electron instance.");
-            await runNpm("old:start"); //todo: run bin
+            await runBin("electron", [ "." ]);
             LOGGER.log("Electron instance closed.");
         },
         test: async () =>
@@ -68,8 +68,8 @@ module.exports = {
 
             const [ source, target ] = DEFAULT_PATHS.coreTest;
             await stdLib.fileSystem.copyFolder(source, target);
-            await runNpm("old:typescript-test"); //todo: run bin
-            await runNpm("old:test"); //todo: run bin
+            await runBin("tsc", [ "-p", "./config/test.tsconfig.json" ]);
+            await runBin("jest", []);
             LOGGER.log("Tests completed successfully.");
         },
         buildDocs: async () =>
@@ -117,8 +117,8 @@ module.exports = {
                 {
                     const [ source, target ] = DEFAULT_PATHS.coreTest;
                     await stdLib.fileSystem.copyFolder(source, target);
-                    await runNpm("old:typescript-test"); //todo: run bin
-                    await runNpm("old:test"); //todo: run bin
+                    await runBin("tsc", [ "-p", "./config/test.tsconfig.json" ]);
+                    await runBin("jest", []);
                 })(),
                 (async () => //build app
                 {
@@ -133,14 +133,14 @@ module.exports = {
                     ]);
 
                     await Promise.all([
-                        runNpm("old:typescript-front"), //todo: run bin
-                        runNpm("old:typescript-back"), //todo: run bin
+                        runBin("tsc", [ "-p", "./config/front.tsconfig.json" ]),
+                        runBin("tsc", [ "-p", "./config/back.tsconfig.json" ]),
                         ...htmlAndSass
                     ]);
                 })()
             ]);
 
-            await runNpm("old:pack"); //todo: run bin
+            await runBin("electron-builder", [ "--dir" ]);
         },
         distribute: async () =>
         {
@@ -153,8 +153,8 @@ module.exports = {
                 {
                     const [ source, target ] = DEFAULT_PATHS.coreTest;
                     await stdLib.fileSystem.copyFolder(source, target);
-                    await runNpm("old:typescript-test"); //todo: run bin
-                    await runNpm("old:test"); //todo: run bin
+                    await runBin("tsc", [ "-p", "./config/test.tsconfig.json" ]);
+                    await runBin("jest", []);
                 })(),
                 (async () => //build app
                 {
@@ -169,14 +169,14 @@ module.exports = {
                     ]);
 
                     await Promise.all([
-                        runNpm("old:typescript-front"), //todo: run bin
-                        runNpm("old:typescript-back"), //todo: run bin
+                        runBin("tsc", [ "-p", "./config/front.tsconfig.json" ]),
+                        runBin("tsc", [ "-p", "./config/back.tsconfig.json" ]),
                         ...htmlAndSass
                     ]);
                 })()
             ]);
 
-            await runNpm("old:dist"); //todo: run bin
+            await runBin("electron-builder", [ "--dir" ]);
         }
     }
 };
