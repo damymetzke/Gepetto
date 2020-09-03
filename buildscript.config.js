@@ -31,7 +31,8 @@ const DEFAULT_PATHS = {
 
 const SCRIPT = {
     md: path.join(__dirname, "scripts/buildMd.js"),
-    sass: path.join(__dirname, "scripts/compileSass.js")
+    sass: path.join(__dirname, "scripts/compileSass.js"),
+    prepareTypedoc: path.join(__dirname, "scripts/prepareTypedoc.js")
 };
 
 module.exports = {
@@ -89,7 +90,7 @@ module.exports = {
                 runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreTest)
             ]);
 
-            await runNpm("old:prepare-typedoc");
+            await runParallelScript(SCRIPT.prepareTypedoc);
 
             await Promise.all([
                 (async () =>
