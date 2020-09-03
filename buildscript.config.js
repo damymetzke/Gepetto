@@ -1,4 +1,5 @@
-const { LOGGER, runParallelScript, runNpm, stdLib, runScript, runBin } = require("node-build-util");
+const { LOGGER, runParallelScript, runNpm, stdLib, runScript, runBin, runBuildScript } = require("node-build-util");
+const _ = require("lodash");
 
 const path = require("path");
 
@@ -35,6 +36,89 @@ const SCRIPT = {
     prepareTypedoc: path.join(__dirname, "scripts/prepareTypedoc.js")
 };
 
+//scripts
+/////////
+const copyHtml = _.bind(
+    runParallelScript, null,
+    "std:fileSystem/copyFolder.js",
+
+    path.join(__dirname, "html"),
+    path.join(__dirname, "out"));
+
+const compileSass = _.bind(
+    runParallelScript, null,
+    path.join(__dirname, "scripts/compileSass.js"),
+
+    path.join(__dirname, "style"),
+    path.join(__dirname, "out/style")
+);
+
+function makePrepare(from, to)
+{
+    return _.bind(
+        runParallelScript, null,
+        "std:fileSystem/copyFolder.js",
+
+        from, to
+    );
+}
+const prepareFront = makePrepare("./src/core", "./src/front/core");
+const prepareBack = makePrepare("./src/core", "./src/back/core");
+const prepareTest = makePrepare("./src/core", "./src/test/core");
+
+function makeCompileTs(tsconfigPath)
+{
+    return _.bind(
+        runBin, null,
+        "tsc",
+
+        [ "-p", tsconfigPath ]
+    );
+}
+
+const compileTsFront = makeCompileTs("./config/front.tsconfig.json");
+const compileTsBack = makeCompileTs("./config/back.tsconfig.json");
+const compileTsTest = makeCompileTs("./config/test.tsconfig.json");
+
+const run = _.bind(
+    runBin, null,
+    "electron",
+
+    [ "." ]
+);
+
+const test = _.bind(
+    runBin, null,
+    "jest",
+
+    []
+);
+
+const renderMd = _.bind(
+    runParallelScript, null,
+    path.join(__dirname, "scripts/buildMd.js"),
+
+    path.join(__dirname, "documentation/md"),
+    path.join(__dirname, "documentation/build/md")
+);
+
+const renderTypeDoc = _.bind(
+    runBin, null,
+    "typedoc",
+
+    [
+        "./intermediate/typedoc_src",
+        "--out", "./documentation/build/typedoc-output",
+        "--tsconfig", "./config/tsconfig.json",
+        "--exclude", "./src/front/core",
+        "--exclude", "./src/back/core",
+        "--exclude", "./src/test/core"
+    ]
+
+);
+
+//export
+////////
 module.exports = {
     buildScripts: {
         start: async () =>
@@ -43,23 +127,23 @@ module.exports = {
             LOGGER.log("Compiling...");
 
             const htmlAndSass = [
-                runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.html),
-                runParallelScript(SCRIPT.sass, ...DEFAULT_PATHS.sass)
+                copyHtml(),
+                compileSass()
             ];
 
             await Promise.all([
-                runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreFront),
-                runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreBack),
+                prepareFront(),
+                prepareBack()
             ]);
 
             await Promise.all([
-                runBin("tsc", [ "-p", "./config/front.tsconfig.json" ]),
-                runBin("tsc", [ "-p", "./config/back.tsconfig.json" ]),
+                compileTsFront(),
+                compileTsBack(),
                 ...htmlAndSass
             ]);
 
             LOGGER.log("Compilation complete, starting Electron instance.");
-            await runBin("electron", [ "." ]);
+            await run();
             LOGGER.log("Electron instance closed.");
         },
         test: async () =>
@@ -67,10 +151,9 @@ module.exports = {
             LOGGER.log("Running script: 'test'");
             LOGGER.log("Running tests using jest framework.");
 
-            const [ source, target ] = DEFAULT_PATHS.coreTest;
-            await stdLib.fileSystem.copyFolder(source, target);
-            await runBin("tsc", [ "-p", "./config/test.tsconfig.json" ]);
-            await runBin("jest", []);
+            await prepareTest();
+            await compileTsTest();
+            await test();
             LOGGER.log("Tests completed successfully.");
         },
         buildDocs: async () =>
@@ -80,15 +163,9 @@ module.exports = {
             const buildDocs = (async () =>
             {
                 LOGGER.log("Building markdown documentation...");
-                await runScript(SCRIPT.md, ...DEFAULT_PATHS.markdown);
+                await renderMd();
                 LOGGER.log("Completed building markdown documentation.");
             })();
-
-            await Promise.all([
-                runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreFront),
-                runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreBack),
-                runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreTest)
-            ]);
 
             await runParallelScript(SCRIPT.prepareTypedoc);
 
@@ -96,13 +173,7 @@ module.exports = {
                 (async () =>
                 {
                     LOGGER.log("Building typedoc documentation...");
-                    await runBin("typedoc", [
-                        "./intermediate/typedoc_src",
-                        "--out", "./documentation/build/typedoc-output",
-                        "--tsconfig", "./config/tsconfig.json",
-                        "--exclude", "./src/front/core",
-                        "--exclude", "./src/back/core",
-                        "--exclude", "./src/test/core" ]);
+                    await renderTypeDoc();
                     LOGGER.log("Completed building typedoc documentation.");
                 })(),
                 buildDocs
@@ -122,28 +193,31 @@ module.exports = {
             await Promise.all([
                 (async () => //testing
                 {
-                    const [ source, target ] = DEFAULT_PATHS.coreTest;
-                    await stdLib.fileSystem.copyFolder(source, target);
-                    await runBin("tsc", [ "-p", "./config/test.tsconfig.json" ]);
-                    await runBin("jest", []);
+                    await prepareTest();
+                    await compileTsTest();
+                    await test();
                 })(),
                 (async () => //build app
                 {
                     const htmlAndSass = [
-                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.html),
-                        runParallelScript(SCRIPT.sass, ...DEFAULT_PATHS.sass)
+                        copyHtml(),
+                        compileSass()
                     ];
 
                     await Promise.all([
-                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreFront),
-                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreBack),
+                        prepareFront(),
+                        prepareBack()
                     ]);
 
                     await Promise.all([
-                        runBin("tsc", [ "-p", "./config/front.tsconfig.json" ]),
-                        runBin("tsc", [ "-p", "./config/back.tsconfig.json" ]),
+                        compileTsFront(),
+                        compileTsBack(),
                         ...htmlAndSass
                     ]);
+                })(),
+                (async () => //build docs
+                {
+                    runBuildScript("buildDocs");
                 })()
             ]);
 
@@ -158,28 +232,31 @@ module.exports = {
             await Promise.all([
                 (async () => //testing
                 {
-                    const [ source, target ] = DEFAULT_PATHS.coreTest;
-                    await stdLib.fileSystem.copyFolder(source, target);
-                    await runBin("tsc", [ "-p", "./config/test.tsconfig.json" ]);
-                    await runBin("jest", []);
+                    await prepareTest();
+                    await compileTsTest();
+                    await test();
                 })(),
                 (async () => //build app
                 {
                     const htmlAndSass = [
-                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.html),
-                        runParallelScript(SCRIPT.sass, ...DEFAULT_PATHS.sass)
+                        copyHtml(),
+                        compileSass()
                     ];
 
                     await Promise.all([
-                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreFront),
-                        runParallelScript("std:fileSystem/copyFolder.js", ...DEFAULT_PATHS.coreBack),
+                        prepareFront(),
+                        prepareBack()
                     ]);
 
                     await Promise.all([
-                        runBin("tsc", [ "-p", "./config/front.tsconfig.json" ]),
-                        runBin("tsc", [ "-p", "./config/back.tsconfig.json" ]),
+                        compileTsFront(),
+                        compileTsBack(),
                         ...htmlAndSass
                     ]);
+                })(),
+                (async () => //build docs
+                {
+                    runBuildScript("buildDocs");
                 })()
             ]);
 
