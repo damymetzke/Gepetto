@@ -6,6 +6,7 @@
   "scripts": {
     "start": "b-script start",
     "test": "b-script test",
+    "compile-app": "b-script compileApp",
     "build-docs": "b-script buildDocs",
     "clean": "b-script clean",
     "package": "b-script package",

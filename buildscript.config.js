@@ -3,33 +3,6 @@ const _ = require("lodash");
 
 const path = require("path");
 
-const DEFAULT_PATHS = {
-    html: [
-        path.join(__dirname, "html"),
-        path.join(__dirname, "out")
-    ],
-    coreFront: [
-        "./src/core",
-        "./src/front/core"
-    ],
-    coreBack: [
-        "./src/core",
-        "./src/back/core"
-    ],
-    coreTest: [
-        "./src/core",
-        "./src/test/core"
-    ],
-    markdown: [
-        path.join(__dirname, "documentation/md"),
-        path.join(__dirname, "documentation/build/md")
-    ],
-    sass: [
-        path.join(__dirname, "style"),
-        path.join(__dirname, "out/style")
-    ]
-};
-
 const SCRIPT = {
     md: path.join(__dirname, "scripts/buildMd.js"),
     sass: path.join(__dirname, "scripts/compileSass.js"),
@@ -155,6 +128,26 @@ module.exports = {
             await compileTsTest();
             await test();
             LOGGER.log("Tests completed successfully.");
+        },
+        compileApp: async () =>
+        {
+            LOGGER.log("Compiling app...");
+            const htmlAndSass = [
+                copyHtml(),
+                compileSass()
+            ];
+
+            await Promise.all([
+                prepareFront(),
+                prepareBack()
+            ]);
+
+            await Promise.all([
+                compileTsFront(),
+                compileTsBack(),
+                ...htmlAndSass
+            ]);
+            LOGGER.log("Finished compiling app");
         },
         buildDocs: async () =>
         {
