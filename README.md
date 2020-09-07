@@ -1,3 +1,5 @@
+https://github.com/damymetzke/Gepetto/workflows/Jest%20automatic%20test/badge.svg
+
 # Gepetto
 Gepetto is a personal project.
 It's on GitHub primarily to share with peers, however it isn't licenced because it is not the intention to share this with the general public (but feel free to look through it, I don't mind).
