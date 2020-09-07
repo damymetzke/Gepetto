@@ -1,5 +1,6 @@
 # Gepetto
-Gepetto is a personal project. It's on github primarily to share with peers, however it isn't licenced because it is not the intention to share this with the general public (but feel free to look through it, I don't mind).
+Gepetto is a personal project.
+It's on GitHub primarily to share with peers, however it isn't licenced because it is not the intention to share this with the general public (but feel free to look through it, I don't mind).
 
 This project has build information for Visual Studio Code, but should work with other editors with some extra setup (untested).
 
@@ -7,40 +8,48 @@ This project has build information for Visual Studio Code, but should work with 
 Prerequisites:
 
 - [nodejs](https://nodejs.org/en/download/) + npm
-- an editor, I recommend '[Visual Studio Code](https://code.visualstudio.com/Download)' (vsc); The project also contains vsc-specific setup files.
+- an editor, I recommend '[Visual Studio Code](https://code.visualstudio.com/Download)' (VS Code); The project also contains vsc-specific setup files.
 
-### Step 1: install node packages
-when in the root folder open a terminal and run `npm install`. This will automatically install all packages in `package.json`
+### Step 1: install Node packages
+When in the root folder open a terminal and run `npm install`.
+This will automatically install all packages in `package.json`
 
 ## Running
 There are 2 ways of running the code:
 
-- npm start:
-this is guarenteed to work in all environments that support node.
-- debug mode:
-on vsc simply press f5, or go to [Run -> Start Debugging]. This has the benefit of allowing breakpoints, stepping and more. For other editors manual setup is probably required; view more information about this [here](https://nodejs.org/en/docs/guides/debugging-getting-started/).
+- `npm start`:
+This is guaranteed to work in all environments that support Node.
+- debug mode: in VS Code press the F5 function key, or go to [Run -> Start Debugging].
+This has the benefit of allowing breakpoints, stepping and more.
+For other editors manual setup is probably required; read more information [here](https://nodejs.org/en/docs/guides/debugging-getting-started/).
 
-*when debugging in another editor make sure to call the npm script `compile:all`, using the command `npm run compile:all`, in order to compile the project.*
+*When debugging in another editor make sure to call the npm script `compile:all`, using the command `npm run compile:all`, in order to compile the project.*
 
 ## Testing
-This project comes with the jest testing framework. Right now only the files under `src/core/` are tested. The test scripts are under `src/test/`. To run the tests simply run `npm test`.
+This project comes with the Jest testing framework.
+Right now only the files under `src/core/` are tested.
+The test scripts are under `src/test/`.
+To run the tests simply run `npm test`.
 
 ## Build Documentation
 This project comes with 2 types of documentation:
 - [typedoc](https://typedoc.org/)
 - [markdown](https://en.wikipedia.org/wiki/Markdown)
 
-in order to build the documentation simply run the npm script `build:docs` using `npm run build:docs`. This will put the output in './documentation/build/'
+In order to build the documentation simply run the npm script `build:docs` using `npm run build:docs`.
+This will put the output in `./documentation/build/`
 
 ## Npm Scripts
-There are quite a lot of npm scripts. To understand all of them you must first understand how the names are setup:
+There are quite a lot of npm scripts.
+To understand all of them you must first understand how the names are setup:
 Any name before a colon `:` is a category (e.g. `build:*`). right now there are 3 categories:
 
 - `setup` will setup files in such a way compilation can begin.
 - `compile` will transform the source files into a working program.
 - `build` will do any other tasks that are not required for the core program to work.
 
-Any pound sign `#` signifies a sub-script (e.g. `compile:app#*`). these should not be called on their own by the user, and are to be called by their owning script (in this example `compile:app`).
+Any pound sign `#` signifies a sub-script (e.g. `compile:app#*`).
+These should not be called on their own by the user, and are to be called by their owning script (in this example `compile:app`).
 
 There are 2 js files that have special meaning in the context of scripts:
 
