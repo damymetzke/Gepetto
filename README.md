@@ -1,4 +1,4 @@
-https://github.com/damymetzke/Gepetto/workflows/Jest%20automatic%20test/badge.svg
+![Jest automatic test](https://github.com/damymetzke/Gepetto/workflows/Jest%20automatic%20test/badge.svg)
 
 # Gepetto
 Gepetto is a personal project.
