@@ -2,8 +2,6 @@ import { DrawObjectTreeEditorWrapper, SyncOrganizerType, DrawObject } from "../c
 
 import { SyncConnector_Back } from "../SyncConnector_Back";
 import { BrowserWindow, ipcMain } from "electron";
-import * as fs from "fs";
-import { SvgToObjectXml } from "../draw-object-xmlhandler";
 import { convertSvg } from "../Svg/SvgConverter";
 
 const REGEX_VALIDATE_IMPORT_NAME = /^[a-z][a-z0-9_#]*$/i;
