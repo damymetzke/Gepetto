@@ -33,7 +33,6 @@ async function walk(sourceDirectory, outDirectory)
                 path.join(sourceDirectory)
             ]
         });
-        console.log("😊😊");
 
         const outFile = path.join(outDirectory, file.replace(REGEX_ROOT_SASS_FILE, (_match, name) => `${name}.css`));
         const outMapFile = path.join(outDirectory, file.replace(REGEX_ROOT_SASS_FILE, (_match, name) => `${name}.map.css`));

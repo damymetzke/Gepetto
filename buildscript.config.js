@@ -3,12 +3,6 @@ const _ = require("lodash");
 
 const path = require("path");
 
-const SCRIPT = {
-    md: path.join(__dirname, "scripts/buildMd.js"),
-    sass: path.join(__dirname, "scripts/compileSass.js"),
-    prepareTypedoc: path.join(__dirname, "scripts/prepareTypedoc.js")
-};
-
 //scripts
 /////////
 const copyHtml = _.bind(
@@ -73,6 +67,11 @@ const renderMd = _.bind(
 
     path.join(__dirname, "documentation/md"),
     path.join(__dirname, "documentation/build/md")
+);
+
+const prepareTypedoc = _.bind(
+    runParallelScript, null,
+    path.join(__dirname, "scripts/prepareTypedoc.js")
 );
 
 const renderTypeDoc = _.bind(
@@ -160,7 +159,7 @@ module.exports = {
                 LOGGER.log("Completed building markdown documentation.");
             })();
 
-            await runParallelScript(SCRIPT.prepareTypedoc);
+            await prepareTypedoc();
 
             await Promise.all([
                 (async () =>
