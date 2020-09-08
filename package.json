@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "gepetto - SVG animation tool",
   "main": "./out/src/back/main.js",
+  "private": true,
   "scripts": {
     "start": "b-script start",
     "test": "b-script test",
@@ -29,7 +30,6 @@
     "electron-builder": "^22.8.0",
     "jest": "^26.4.2",
     "jsdoc": "^3.6.5",
-    "markdown": "^0.5.0",
     "marked": "^1.1.1",
     "node-build-util": "^0.2.0",
     "npm-sass": "^2.3.0",
