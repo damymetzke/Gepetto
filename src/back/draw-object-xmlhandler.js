@@ -1,4 +1,4 @@
-const xml = require("xml2js");
+// const xml = require("xml2js");
 const fs = require("fs");
 
 let ResourceDirectory = "./saved/objects/";
@@ -34,54 +34,6 @@ let ResourceDirectory = "./saved/objects/";
 function SvgToObjectXml(svgContent)
 {
     let result = null;
-
-    xml.parseString(svgContent, { async: false }, function (error, content)
-    {
-        if (error)
-        {
-            result = {
-                success: false,
-                error: error
-            };
-            return;
-        }
-
-        let innerContent = content.svg;
-        if (innerContent === undefined || innerContent === null)
-        {
-            result = {
-                success: false,
-                error: "xml file is not properly formatted for svg"
-            };
-            return;
-        }
-
-        //todo: transform all values into normalized coordinates (from -1 to 1)
-        delete innerContent[ "$" ];
-        innerContent = { root: innerContent };
-        let builder = new xml.Builder({
-            headless: true,
-            normalize: true,
-            normalizeTags: true,
-            renderOpts: {
-                pretty: false
-            },
-        });
-        try
-        {
-            result = {
-                success: true,
-                content: builder.buildObject(innerContent)
-            };
-        }
-        catch (error)
-        {
-            return {
-                success: false,
-                error: "error when rebuilding svg content:\n" + error
-            };
-        }
-    });
 
     return result;
 }
