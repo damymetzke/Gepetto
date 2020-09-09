@@ -27,7 +27,9 @@ rules:
   brace-style: error
   callback-return: error
   camelcase: error
-  capitalized-comments: error
+  capitalized-comments:
+    - error
+    - never
   class-methods-use-this: error
   comma-dangle: error
   comma-spacing: error
@@ -61,7 +63,7 @@ rules:
   handle-callback-err: error
   id-match:
     - warn
-    - "^[a-z_][a-zA-Z0-9]*$|^[A-Z][A-Z_]+$"
+    - "^[a-zA-Z_][a-zA-Z0-9]*$|^[A-Z][A-Z_]+$"
     - ignoreDestructuring: true
   implicit-arrow-linebreak: error
   indent: error
@@ -163,7 +165,9 @@ rules:
   no-template-curly-in-string: error
   no-ternary: error
   no-throw-literal: error
-  no-trailing-spaces: error
+  no-trailing-spaces:
+    - error
+    - ignoreComments: true
   no-undef-init: error
   no-undefined: error
   no-underscore-dangle: error
@@ -181,7 +185,6 @@ rules:
   no-useless-return: error
   no-var: error
   no-void: error
-  no-warning-comments: error
   no-whitespace-before-property: error
   nonblock-statement-body-position: error
   object-curly-newline: error
@@ -237,7 +240,6 @@ rules:
   template-curly-spacing: error
   template-tag-spacing: error
   unicode-bom: error
-  valid-jsdoc: error
   vars-on-top: error
   wrap-iife: error
   wrap-regex: error
