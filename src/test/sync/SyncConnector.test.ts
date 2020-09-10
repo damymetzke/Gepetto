@@ -1,23 +1,25 @@
-import { SyncConnector_Direct, SyncMessage } from "../core/core";
+import {SyncConnector_Direct, SyncMessage} from "../core/core";
 
 const TARGET_FILE = "core/sync_alt/SyncConnector.ts";
 
-test(``, () =>
-{
-    let a = new SyncConnector_Direct();
-    let b = new SyncConnector_Direct(a);
+test("", () => {
 
-    let aResult: SyncMessage[] = [];
-    let bResult: SyncMessage[] = [];
+    const a = new SyncConnector_Direct();
+    const b = new SyncConnector_Direct(a);
 
-    a.onRecieve((message) =>
-    {
+    const aResult: SyncMessage[] = [];
+    const bResult: SyncMessage[] = [];
+
+    a.onRecieve((message) => {
+
         aResult.push(message);
+
     });
 
-    b.onRecieve((message) =>
-    {
+    b.onRecieve((message) => {
+
         bResult.push(message);
+
     });
 
     a.send({
@@ -30,7 +32,7 @@ test(``, () =>
     b.send({
         type: "action",
         action: "B",
-        argumentList: [ 1, 2, 3 ],
+        argumentList: [1, 2, 3],
         num: 1
     });
 
@@ -44,7 +46,7 @@ test(``, () =>
     a.send({
         type: "action",
         action: "A",
-        argumentList: [ "Hello", 42, "World!" ],
+        argumentList: ["Hello", 42, "World!"],
         num: 2
     });
 
@@ -71,7 +73,7 @@ test(``, () =>
         {
             type: "action",
             action: "B",
-            argumentList: [ 1, 2, 3 ],
+            argumentList: [1, 2, 3],
             num: 1
         },
         {
@@ -95,7 +97,7 @@ test(``, () =>
         {
             type: "action",
             action: "A",
-            argumentList: [ "Hello", 42, "World!" ],
+            argumentList: ["Hello", 42, "World!"],
             num: 2
         },
         {
@@ -111,4 +113,5 @@ test(``, () =>
             object: "Hello World!"
         }
     ]);
+
 });

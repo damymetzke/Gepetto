@@ -1,7 +1,13 @@
-import { SyncOrganizer, SyncOrganizerType, SyncOrganizer_Owner, SyncOrganizer_Subscriber, SyncAction } from "./SyncOrganizer.js";
-import { SyncConnector } from "./SyncConnector.js";
-type ActionCallbackFunction<UnderType> = ((under: UnderType, argumentList: any[]) => void);
-type ActionAllCallbackFunction<UnderType> = ((action: string, under: UnderType, argumentList: any[]) => void);
+import {SyncAction,
+    SyncOrganizer,
+    SyncOrganizerType,
+    SyncOrganizer_Owner,
+    SyncOrganizer_Subscriber} from "./SyncOrganizer.js";
+import {SyncConnector} from "./SyncConnector.js";
+type ActionCallbackFunction<UnderType> =
+    ((under: UnderType, argumentList: any[]) => void);
+type ActionAllCallbackFunction<UnderType> =
+    ((action: string, under: UnderType, argumentList: any[]) => void);
 
 export type SyncConverter =
     {
@@ -9,10 +15,12 @@ export type SyncConverter =
         ConvertFromSend(recieved): any[];
     };
 
-export class SyncObject<UnderType>
-{
+export class SyncObject<UnderType> {
+
     under: UnderType;
+
     organizer: SyncOrganizer;
+
     conversions: { [ action: string ]: SyncConverter; };
 
     callbacks: {
@@ -21,74 +29,113 @@ export class SyncObject<UnderType>
 
     allCallbacks: ActionAllCallbackFunction<UnderType>[];
 
-    runAction(action: SyncAction)
-    {
-        if (action.action in this.conversions)
-        {
-            this.organizer.send({ action: action.action, argumentList: this.conversions[ action.action ].ConvertToSend(action.argumentList) });
-        }
-        else
-        {
+    runAction (action: SyncAction) {
+
+        if (action.action in this.conversions) {
+
+            this.organizer.send({action: action.action,
+                argumentList: this.conversions[action.action]
+                    .ConvertToSend(action.argumentList)});
+
+        } else {
+
             this.organizer.send(action);
+
         }
+
     }
 
-    onRecieve(action: SyncAction)
-    {
-        if (!this.under)
-        {
-            return; //under is invalid
+    onRecieve (action: SyncAction) {
+
+        if (!this.under) {
+
+            // under is invalid
+            return;
+
         }
-        if (!(action.action in this.under))
-        {
-            return; //action does not exist
+        if (!(action.action in this.under)) {
+
+            // action does not exist
+            return;
+
         }
 
-        if (typeof this.under[ action.action ] !== "function")
-        {
-            return; //action is not a function
+        if (typeof this.under[action.action] !== "function") {
+
+            // action is not a function
+            return;
+
         }
 
-        const argumentList = (action.action in this.conversions) ? this.conversions[ action.action ].ConvertFromSend(action.argumentList) : action.argumentList;
+        const argumentList = (action.action in this.conversions)
+            ? this.conversions[action.action]
+                .ConvertFromSend(action.argumentList)
+            : action.argumentList;
 
-        const targetFunction: (...argumentList: any) => any = this.under[ action.action ];
+        const targetFunction: (...recieveArgumentList: any) => any
+        = this.under[action.action];
+
         targetFunction.call(this.under, ...argumentList);
 
-        if (action.action in this.callbacks)
-        {
-            this.callbacks[ action.action ].forEach(callback => callback(this.under, argumentList));
+        if (action.action in this.callbacks) {
+
+            this.callbacks[action.action]
+                .forEach((callback) => callback(this.under, argumentList));
+
         }
-        this.allCallbacks.forEach(callback => callback(action.action, this.under, argumentList));
+        this.allCallbacks
+            .forEach((callback) => callback(
+                action.action,
+                this.under,
+                argumentList
+            ));
+
     }
 
-    addActionCallback(action: string, callback: ActionCallbackFunction<UnderType>)
-    {
-        if (!(action in this.callbacks))
-        {
-            this.callbacks[ action ] = [];
+    addActionCallback (
+        action: string,
+        callback: ActionCallbackFunction<UnderType>
+    ): void {
+
+        if (!(action in this.callbacks)) {
+
+            this.callbacks[action] = [];
+
         }
-        this.callbacks[ action ].push(callback);
+        this.callbacks[action].push(callback);
+
     }
 
-    addAllActionCallback(callback: ActionAllCallbackFunction<UnderType>)
-    {
+    addAllActionCallback (callback: ActionAllCallbackFunction<UnderType>):
+    void {
+
         this.allCallbacks.push(callback);
+
     }
 
-    constructor (organizerType: SyncOrganizerType, connector: SyncConnector, under: UnderType, toFullSync: (under: UnderType) => any, fromFullSync: (recieved: any) => UnderType, conversions: { [ action: string ]: SyncConverter; } = {})
-    {
-        switch (organizerType)
-        {
-            case SyncOrganizerType.OWNER:
-                this.organizer = new SyncOrganizer_Owner(connector);
-                break;
+    constructor (
+        organizerType: SyncOrganizerType,
+        connector: SyncConnector,
+        under: UnderType,
+        toFullSync: (fullSyncUnder: UnderType) => any,
+        fromFullSync: (recieved: any) => UnderType,
+        conversions: { [ action: string ]: SyncConverter; } = {}
+    ) {
 
-            case SyncOrganizerType.SUBSCRIBER:
-                this.organizer = new SyncOrganizer_Subscriber(connector);
-                break;
+        switch (organizerType) {
 
-            default:
-                throw ("no valid organizer type"); //todo: add null type
+        case SyncOrganizerType.OWNER:
+            this.organizer = new SyncOrganizer_Owner(connector);
+            break;
+
+        case SyncOrganizerType.SUBSCRIBER:
+            this.organizer = new SyncOrganizer_Subscriber(connector);
+            break;
+
+        default:
+            // todo: add null type
+            throw new Error("no valid organizer type");
+
         }
 
         this.under = under;
@@ -96,25 +143,32 @@ export class SyncObject<UnderType>
         this.allCallbacks = [];
         this.conversions = conversions;
 
-        this.organizer.onRecieve(action => { this.onRecieve(action); });
-        this.organizer.onFullSync(recieved =>
-        {
+        this.organizer.onRecieve((action) => {
+
+            this.onRecieve(action);
+
+        });
+        this.organizer.onFullSync((recieved) => {
+
             this.under = fromFullSync(recieved);
-            this.allCallbacks.forEach(callback =>
-            {
+            this.allCallbacks.forEach((callback) => {
+
                 callback("--fullSync", this.under, []);
+
             });
-            if ("--fullSync" in this.callbacks)
-            {
-                this.callbacks[ "--fullSync" ].forEach(callback =>
-                {
+            if ("--fullSync" in this.callbacks) {
+
+                this.callbacks["--fullSync"].forEach((callback) => {
+
                     callback(this.under, []);
+
                 });
+
             }
+
         });
-        this.organizer.getFullSyncData(() =>
-        {
-            return toFullSync(this.under);
-        });
+        this.organizer.getFullSyncData(() => toFullSync(this.under));
+
     }
+
 }

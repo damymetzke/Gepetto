@@ -1,7 +1,6 @@
-const { app, BrowserWindow, ipcMain, Menu, MenuItem } = require("electron");
-const { Init } = require("./draw-object-manager");
-const { DrawObjectManager } = require("./DrawObject/DrawObjectManager");
-const { ProjectManager } = require("./ProjectManager");
+const {app, BrowserWindow, ipcMain, Menu, MenuItem} = require("electron");
+const {DrawObjectManager} = require("./DrawObject/DrawObjectManager");
+const {ProjectManager} = require("./ProjectManager");
 
 const path = require("path");
 const fs = require("fs").promises;
@@ -10,15 +9,13 @@ const indexFilePath = `file://${__dirname}/../../index.html`;
 
 const USER_CONFIG_PATH = path.join(app.getPath("userData"), "config.json");
 
-const { SynchronizedTree, SynchronizedObject, SynchronizedTransformCommand, SynchronizedTreeLog: SynchronizedTreeLog, TransformCommandType } = require("./core/core");
-
 let window = null;
 let DrawObjectTreeManager = null;
 let projectManager = null;
 let configData = {};
 
-function createWindow()
-{
+function createWindow () {
+
     window = new BrowserWindow({
         width: 1000,
         height: 800,
@@ -31,30 +28,36 @@ function createWindow()
         useContentSize: true
     });
 
-    const projectPath = (process.argv.length >= 3) ? process.argv[ 2 ] : "";
+    const projectPath = (process.argv.length >= 3)
+        ? process.argv[2]
+        : "";
+
     window.loadURL(indexFilePath)
-        .then(() =>
-        {
+        .then(() => {
+
             window.webContents.send("open-start-tab", !projectPath);
+
         });
     window.maximize();
 
 
-    // Init(window);
+    // init(window);
     DrawObjectTreeManager = new DrawObjectManager(window);
-    projectManager = new ProjectManager(projectPath, DrawObjectTreeManager.drawObjectTree, window);
+    projectManager = new ProjectManager(
+        projectPath,
+        DrawObjectTreeManager.drawObjectTree,
+        window
+    );
 
     const recentDocuments = ("recentDocuments" in configData)
-        ? configData.recentDocuments.map(recentDocument =>
-        {
-            return new MenuItem({
-                label: path.basename(recentDocument),
-                click: () =>
-                {
-                    projectManager.open(recentDocument);
-                }
-            });
-        })
+        ? configData.recentDocuments.map((recentDocument) => new MenuItem({
+            label: path.basename(recentDocument),
+            click: () => {
+
+                projectManager.open(recentDocument);
+
+            }
+        }))
         : [];
 
     const applicationSubMenu_File = new MenuItem({
@@ -63,9 +66,10 @@ function createWindow()
         submenu: [
             new MenuItem({
                 label: "Open Project",
-                click: () =>
-                {
+                click: () => {
+
                     projectManager.openFrom();
+
                 },
                 accelerator: "CommandOrControl+O"
             }),
@@ -75,49 +79,61 @@ function createWindow()
                     ...recentDocuments,
                     new MenuItem({
                         label: "Clear Recent",
-                        click: () =>
-                        {
+                        click: () => {
+
                             fs.readFile(USER_CONFIG_PATH)
-                                .then(data =>
-                                {
-                                    let configData;
-                                    try
-                                    {
-                                        configData = JSON.parse(data.toString());
-                                    }
-                                    catch (_error)
-                                    {
-                                        configData = {};
+                                .then((data) => {
+
+                                    let userConfigData = {};
+
+                                    try {
+
+                                        // eslint-disable-next-line max-len
+                                        userConfigData = JSON.parse(data.toString());
+
+                                    } catch (_error) {
+
+                                        userConfigData = {};
+
                                     }
 
-                                    if ("recentDocuments" in configData && configData.recentDocuments.length > 0)
-                                    {
-                                        delete configData[ "recentDocuments" ];
-                                        return fs.writeFile(USER_CONFIG_PATH, JSON.stringify(configData));
+                                    // eslint-disable-next-line max-len
+                                    if ("recentDocuments" in userConfigData && userConfigData.recentDocuments.length > 0) {
+
+                                        delete userConfigData.recentDocuments;
+
+                                        // eslint-disable-next-line max-len
+                                        fs.writeFile(USER_CONFIG_PATH, JSON.stringify(userConfigData));
+
                                     }
 
                                 })
-                                .catch(error =>
-                                {
+                                .catch((error) => {
+
+                                    // eslint-disable-next-line max-len
                                     console.error(`error clearing recent documents:\n${error}`);
+
                                 });
+
                         }
                     })
                 ]
             }),
             new MenuItem({
                 label: "Save Project",
-                click: () =>
-                {
+                click: () => {
+
                     projectManager.save();
+
                 },
                 accelerator: "CommandOrControl+Alt+S"
             }),
             new MenuItem({
                 label: "Save As",
-                click: () =>
-                {
+                click: () => {
+
                     projectManager.saveAs();
+
                 },
                 accelerator: "CommandOrControl+Shift+S"
             })
@@ -130,9 +146,10 @@ function createWindow()
         submenu: [
             new MenuItem({
                 label: "Toggle Developer Tools",
-                click: () =>
-                {
+                click: () => {
+
                     window.webContents.openDevTools();
+
                 },
                 accelerator: "CommandOrControl+Shift+I"
             })
@@ -140,46 +157,55 @@ function createWindow()
     });
 
     const applicationMenu = new Menu();
+
     applicationMenu.append(applicationSubMenu_File);
     applicationMenu.append(applicationSubMenu_Developer);
 
 
     window.setMenu(applicationMenu);
 
-    ipcMain.on("saveProject", () =>
-    {
+    ipcMain.on("saveProject", () => {
+
         projectManager.save();
+
     });
 
-    ipcMain.on("open-project-from", () =>
-    {
+    ipcMain.on("open-project-from", () => {
+
         projectManager.openFrom();
+
     });
 
-    ipcMain.on("open-project", (_event, { path }) =>
-    {
-        if (!path)
-        {
+    ipcMain.on("open-project", (_event, {path: openProjectPath}) => {
+
+        if (!path) {
+
             return;
+
         }
-        projectManager.open(path);
+        projectManager.open(openProjectPath);
+
     });
 
     projectManager.open();
+
 }
 
 fs.readFile(USER_CONFIG_PATH)
-    .then((data) =>
-    {
+    .then((data) => {
+
         configData = JSON.parse(data.toString());
-        ipcMain.handle("request-recents", () =>
-        {
-            return ("recentDocuments" in configData)
+        ipcMain.handle(
+            "request-recents",
+            () => (("recentDocuments" in configData)
                 ? configData.recentDocuments
-                : [];
-        });
+                : [])
+        );
         app.whenReady().then(createWindow());
-    }).catch(() =>
-    {
+
+    })
+    .catch(() => {
+
         app.whenReady().then(createWindow());
+
     });

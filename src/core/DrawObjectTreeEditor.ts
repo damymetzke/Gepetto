@@ -1,12 +1,12 @@
-import { DrawObjectTree, SerializedDrawObjectTree } from "./DrawObjectTree.js";
-import { TransformCommand } from "./TransformCommand.js";
-import { DrawObject } from "./DrawObject.js";
-import { SyncObject } from "./sync/SyncObject.js";
-import { SyncOrganizerType } from "./sync/SyncOrganizer.js";
-import { SyncConnector } from "./sync/SyncConnector.js";
-import { Serializable, SerializeObject } from "./Serializable.js";
+import {DrawObjectTree, SerializedDrawObjectTree} from "./DrawObjectTree.js";
+import {Serializable, SerializeObject} from "./Serializable.js";
+import {DrawObject} from "./DrawObject.js";
+import {SyncConnector} from "./sync/SyncConnector.js";
+import {SyncObject} from "./sync/SyncObject.js";
+import {SyncOrganizerType} from "./sync/SyncOrganizer.js";
+import {TransformCommand} from "./TransformCommand.js";
 
-const REGEX_VALIDATE_IMPORT_NAME = /^[a-z][a-z0-9_]*$/i;
+const REGEX_VALIDATE_IMPORT_NAME = /^[a-z][a-z0-9_]*$/iu;
 
 type verifyResult =
     {
@@ -32,177 +32,219 @@ export interface DrawObjectTreeEditorInterface extends Serializable
     selectObject(object: string): void;
     validateName(testName: string): verifyResult;
     renameObject(object: string, newName: string): void;
-    updateTransformCommandField(object: string, command: number, field: string, value: number): void;
+    updateTransformCommandField(object: string,
+         command: number, field: string,
+          value: number): void;
     notifySave(): void;
 }
 
-export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTreeEditorInterface
-{
+export class DrawObjectTreeEditor
+    extends DrawObjectTree
+    implements DrawObjectTreeEditorInterface {
+
     selectedObject: string;
+
     _dirty: boolean;
 
     onDirty?: () => void;
+
     onClean?: () => void;
 
-    set dirty(value: boolean)
-    {
+    set dirty (value: boolean) {
+
         console.log(String(this._dirty), " => ", String(value));
-        if (value === this._dirty)
-        {
+        if (value === this._dirty) {
+
             return;
+
         }
 
         this._dirty = value;
 
-        if (value)
-        {
+        if (value) {
+
             console.log("onDirty: ", this.onDirty);
-            if (this.onDirty)
-            {
+            if (this.onDirty) {
+
                 this.onDirty();
+
             }
-        }
-        else
-        {
+
+        } else {
+
             console.log("onClean: ", this.onClean);
-            if (this.onClean)
-            {
+            if (this.onClean) {
+
                 this.onClean();
+
             }
-        };
+
+        }
+
     }
 
-    get dirty(): boolean
-    {
+    get dirty (): boolean {
+
         return this._dirty;
+
     }
 
-    AddObject(object: DrawObject): void
-    {
+    AddObject (object: DrawObject): void {
+
         super.AddObject(object);
         this.selectedObject = object.name;
         this.dirty = true;
+
     }
 
-    AddObjectToRoot(object: DrawObject): void
-    {
+    AddObjectToRoot (object: DrawObject): void {
+
         super.AddObjectToRoot(object);
         this.selectedObject = object.name;
         this.dirty = true;
+
     }
 
-    addTransformCommand(object: string, command: TransformCommand): void
-    {
-        if (!(object in this.objects))
-        {
-            console.warn(`attempt to add command to DrawObjectTreeController failed because ${object} does not exist`);
+    addTransformCommand (object: string, command: TransformCommand): void {
+
+        if (!(object in this.objects)) {
+
+            console.warn("attempt to add command to DrawObjectTreeController"
+            + `failed because ${object} does not exist`);
+
         }
 
-        this.objects[ object ].AddTransformCommand(command);
+        this.objects[object].AddTransformCommand(command);
         this.dirty = true;
+
     }
 
-    selectObject(object: string)
-    {
+    selectObject (object: string) {
+
         this.selectedObject = object;
+
     }
 
-    validateName(testName: string): verifyResult
-    {
-        if (!testName)
-        {
+    validateName (testName: string): verifyResult {
+
+        if (!testName) {
+
             return {
                 success: false,
                 message: "Name cannot be empty"
             };
+
         }
 
-        if (!REGEX_VALIDATE_IMPORT_NAME.test(testName))
-        {
+        if (!REGEX_VALIDATE_IMPORT_NAME.test(testName)) {
+
             return {
                 success: false,
-                message: "Name can only contain alphanumerical characters and underscore('_')\nName should always start with an alphabetic character (a-z)"
+                message: "Name can only contain alphanumerical"
+                + "characters and underscore('_')\n"
+                + "Name should always start with an alphabetic character (a-z)"
             };
+
         }
 
-        if (this.HasObject(testName))
-        {
+        if (this.HasObject(testName)) {
+
             return {
                 success: false,
                 message: "Name is already in use"
             };
+
         }
 
         return {
             success: true
         };
+
     }
 
-    renameObject(object: string, newName: string): void
-    {
-        if (object === newName)
-        {
+    renameObject (object: string, newName: string): void {
+
+        if (object === newName) {
+
             return;
+
         }
 
-        if (!this.validateName(newName).success)
-        {
+        if (!this.validateName(newName).success) {
+
             return;
+
         }
 
-        this.objects[ object ].name = newName;
-        this.objects[ newName ] = this.objects[ object ];
-        delete this.objects[ object ];
+        this.objects[object].name = newName;
+        this.objects[newName] = this.objects[object];
+        delete this.objects[object];
 
-        if (this.selectedObject === object)
-        {
+        if (this.selectedObject === object) {
+
             this.selectedObject = newName;
+
         }
         this.dirty = true;
+
     }
 
-    updateTransformCommandField(object: string, command: number, field: string, value: number): void
-    {
-        if (!(object in this.objects))
-        {
+    updateTransformCommandField (
+        object: string,
+        command: number,
+        field: string,
+        value: number
+    ): void {
+
+        if (!(object in this.objects)) {
+
             return;
+
         }
 
-        const targetObject = this.objects[ object ];
+        const targetObject = this.objects[object];
 
-        if (command >= targetObject.transformCommands.length)
-        {
+        if (command >= targetObject.transformCommands.length) {
+
             return;
+
         }
 
-        const targetCommand = targetObject.transformCommands[ command ];
+        const targetCommand = targetObject.transformCommands[command];
 
-        targetCommand.fields[ field ] = value;
+        targetCommand.fields[field] = value;
         this.dirty = true;
+
     }
 
-    constructor (rootObject: DrawObject[] = [])
-    {
+    constructor (rootObject: DrawObject[] = []) {
+
         super(rootObject);
         this._dirty = false;
+
     }
 
-    notifySave()
-    {
+    notifySave () {
+
         this.dirty = false;
+
     }
 
-    deserialize(serialized: SerializeObject): this
-    {
+    deserialize (serialized: SerializeObject): this {
+
         this.dirty = false;
+
         return super.deserialize(serialized);
+
     }
 
-    reset(): void
-    {
+    reset (): void {
+
         this.dirty = false;
         super.reset();
+
     }
+
 }
 
 /**
@@ -211,80 +253,144 @@ export class DrawObjectTreeEditor extends DrawObjectTree implements DrawObjectTr
  * @see DrawObjectTreeEditor
  * @see SyncObject
  */
-export class DrawObjectTreeEditorWrapper implements DrawObjectTreeEditorInterface
-{
+export class DrawObjectTreeEditorWrapper
+implements DrawObjectTreeEditorInterface {
+
     under: SyncObject<DrawObjectTreeEditor>;
 
-    AddObject(object: DrawObject): void
-    {
-        this.under.runAction({ action: "AddObject", argumentList: [ object ] });
+    AddObject (object: DrawObject): void {
+
+        this.under.runAction({action: "AddObject",
+            argumentList: [object]});
+
     }
-    AddObjectToRoot(object: DrawObject): void
-    {
-        this.under.runAction({ action: "AddObjectToRoot", argumentList: [ object ] });
+
+    AddObjectToRoot (object: DrawObject): void {
+
+        this.under.runAction({action: "AddObjectToRoot",
+            argumentList: [object]});
+
     }
-    HasObject(name: string): boolean
-    {
+
+    HasObject (name: string): boolean {
+
         return this.under.under.HasObject(name);
+
     }
-    ToPureObject(): SerializedDrawObjectTree
-    {
+
+    ToPureObject (): SerializedDrawObjectTree {
+
         return this.under.under.ToPureObject();
+
     }
-    FromPureObject(object: SerializedDrawObjectTree): DrawObjectTree
-    {
-        this.under.runAction({ action: "FromPureObject", argumentList: [ object ] });
+
+    FromPureObject (object: SerializedDrawObjectTree): DrawObjectTree {
+
+        this.under.runAction({action: "FromPureObject",
+            argumentList: [object]});
+
         return this.under.under;
+
     }
 
-    addTransformCommand(object: string, command: TransformCommand): void
-    {
-        this.under.runAction({ action: "addTransformCommand", argumentList: [ object, command ] });
-    }
-    selectObject(object: string): void
-    {
-        this.under.runAction({ action: "selectObject", argumentList: [ object ] });
+    addTransformCommand (object: string, command: TransformCommand): void {
+
+        this.under.runAction({action: "addTransformCommand",
+            argumentList: [object, command]});
+
     }
 
-    validateName(testName: string): verifyResult
-    {
+    selectObject (object: string): void {
+
+        this.under.runAction({action: "selectObject",
+            argumentList: [object]});
+
+    }
+
+    validateName (testName: string): verifyResult {
+
         return this.under.under.validateName(testName);
+
     }
 
-    renameObject(object: string, newName: string): void
-    {
-        this.under.runAction({ action: "renameObject", argumentList: [ object, newName ] });
+    renameObject (object: string, newName: string): void {
+
+        this.under.runAction({action: "renameObject",
+            argumentList: [object, newName]});
+
     }
 
-    updateTransformCommandField(object: string, command: number, field: string, value: number): void
-    {
-        this.under.runAction({ action: "updateTransformCommandField", argumentList: [ object, command, field, value ] });
+    updateTransformCommandField (
+        object: string,
+        command: number,
+        field: string,
+        value: number
+    ): void {
+
+        this.under.runAction({action: "updateTransformCommandField",
+            argumentList: [object, command, field, value]});
+
     }
 
-    constructor (organizerType: SyncOrganizerType, connector: SyncConnector, drawObjectTree: DrawObjectTreeEditor = new DrawObjectTreeEditor())
-    {
-        this.under = new SyncObject<DrawObjectTreeEditor>(organizerType, connector, drawObjectTree, under => under.ToPureObject(), recieved => <DrawObjectTreeEditor>(new DrawObjectTreeEditor().FromPureObject(recieved)), {
-            "AddObjectToRoot": {
-                ConvertToSend: argumentList => [ (<DrawObject>argumentList[ 0 ]).ToPureObject() ],
-                ConvertFromSend: argumentList => [ new DrawObject().FromPureObject(argumentList[ 0 ]) ]
-            },
-            "addTransformCommand": {
-                ConvertToSend: argumentList => [ argumentList[ 0 ], (<TransformCommand>argumentList[ 1 ]).ToPureObject() ],
-                ConvertFromSend: argumentList => [ argumentList[ 0 ], new TransformCommand().FromPureObject(argumentList[ 1 ]) ]
+    constructor (
+        organizerType: SyncOrganizerType,
+        connector: SyncConnector,
+        drawObjectTree: DrawObjectTreeEditor = new DrawObjectTreeEditor()
+    ) {
+
+        this.under = new SyncObject<DrawObjectTreeEditor>(
+            organizerType,
+            connector,
+            drawObjectTree,
+            (under) => under.ToPureObject(),
+            (recieved) => <DrawObjectTreeEditor>(new DrawObjectTreeEditor()
+                .FromPureObject(recieved)),
+            {
+                AddObjectToRoot: {
+                    ConvertToSend: (argumentList) => [
+                        (<DrawObject>argumentList[0])
+                            .ToPureObject()
+                    ],
+                    ConvertFromSend: (argumentList) => [
+                        new DrawObject()
+                            .FromPureObject(argumentList[0])
+                    ]
+                },
+                addTransformCommand: {
+                    ConvertToSend: (argumentList) => [
+                        argumentList[0], (<TransformCommand>argumentList[1])
+                            .ToPureObject()
+                    ],
+                    ConvertFromSend: (argumentList) => [
+                        argumentList[0], new TransformCommand()
+                            .FromPureObject(argumentList[1])
+                    ]
+                }
             }
-        });
+        );
+
     }
-    notifySave(): void
-    {
-        this.under.runAction({ action: "notifySave", argumentList: [] });
+
+    notifySave (): void {
+
+        this.under.runAction({action: "notifySave",
+            argumentList: []});
+
     }
-    serialize(): SerializeObject
-    {
+
+    serialize (): SerializeObject {
+
         return this.under.under.serialize();
+
     }
-    deserialize(serialized: SerializeObject): this
-    {
-        this.under.runAction({ action: "deserialize", argumentList: [ serialized ] });
+
+    deserialize (serialized: SerializeObject): this {
+
+        this.under.runAction({action: "deserialize",
+            argumentList: [serialized]});
+
         return this;
+
     }
+
 }

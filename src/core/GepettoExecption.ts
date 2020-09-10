@@ -4,14 +4,17 @@ export enum GepettoExceptionType
     TRANSFORM_COMMAND_TYPE_ERROR
 }
 
-export class GepettoException
-{
-    type: GepettoExceptionType = GepettoExceptionType.NONE;
-    message: string = "";
+export class GepettoException {
 
-    constructor(type: GepettoExceptionType, message: string)
-    {
+    type: GepettoExceptionType = GepettoExceptionType.NONE;
+
+    message = "";
+
+    constructor (type: GepettoExceptionType, message: string) {
+
         this.type = type;
         this.message = message;
+
     }
+
 }

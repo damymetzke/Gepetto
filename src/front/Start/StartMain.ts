@@ -1,54 +1,67 @@
-import { TabContentImplementation } from "../global/tabs_alt";
-import { SubDoc } from "../global/subdoc_alt";
+import {SubDoc} from "../global/subdoc_alt";
+import {TabContentImplementation} from "../global/tabs_alt";
 
-const { ipcRenderer } = require("electron");
+const {ipcRenderer} = require("electron");
 
-export class StartMenu implements TabContentImplementation
-{
+export class StartMenu implements TabContentImplementation {
 
     newProjectCallback: () => void;
+
     enableSave: boolean;
 
-    constructor (newProjectCallback: () => void = () => { })
-    {
+    constructor (newProjectCallback: () => void = () => { }) {
+
         this.newProjectCallback = newProjectCallback;
         this.enableSave = false;
+
     }
 
-    onInit(root: SubDoc, name: string): void
-    {
-        root.getElementBySid("start--open-project").addEventListener("click", () =>
-        {
-            ipcRenderer.send("open-project-from", {});
-        });
+    onInit (root: SubDoc, name: string): void {
 
-        root.getElementBySid("start--new-project").addEventListener("click", () =>
-        {
-            this.newProjectCallback();
-        });
+        root.getElementBySid("start--open-project")
+            .addEventListener("click", () => {
+
+                ipcRenderer.send("open-project-from", {});
+
+            });
+
+        root.getElementBySid("start--new-project")
+            .addEventListener("click", () => {
+
+                this.newProjectCallback();
+
+            });
 
         ipcRenderer.invoke("request-recents", {})
-            .then((recents: string[]) =>
-            {
+            .then((recents: string[]) => {
+
                 const recentList = root.getElementBySid("start--recent-list");
-                recents.forEach((path) =>
-                {
+
+                recents.forEach((path) => {
+
                     const recentProjectElement = document.createElement("li");
+
                     recentProjectElement.innerText = path;
-                    recentProjectElement.addEventListener("click", () =>
-                    {
-                        ipcRenderer.send("open-project", { path: path });
+                    recentProjectElement.addEventListener("click", () => {
+
+                        ipcRenderer.send("open-project", {path});
+
                     });
                     recentList.appendChild(recentProjectElement);
+
                 });
+
             });
-    }
-    onDestroy(root: SubDoc, name: string): void
-    {
 
     }
-    onSave(root: SubDoc, name: string): void
-    {
+
+    // eslint-disable-next-line class-methods-use-this
+    onDestroy (root: SubDoc, name: string): void {
+
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    onSave (root: SubDoc, name: string): void {
 
     }
 

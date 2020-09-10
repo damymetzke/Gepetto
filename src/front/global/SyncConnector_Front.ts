@@ -1,37 +1,45 @@
-import { SyncConnector, SyncMessage } from "../core/core";
+import {SyncConnector, SyncMessage} from "../core/core";
 
-const { ipcRenderer } = require("electron");
+const {ipcRenderer} = require("electron");
 
-export class SyncConnector_Front implements SyncConnector
-{
+export class SyncConnector_Front implements SyncConnector {
+
     callback: (message: SyncMessage) => void;
+
     ipcChannel: string;
 
-    send(message: SyncMessage)
-    {
+    send (message: SyncMessage) {
+
         ipcRenderer.send(this.ipcChannel, message);
+
     }
-    onRecieve(callback: (message: SyncMessage) => void)
-    {
+
+    onRecieve (callback: (message: SyncMessage) => void) {
+
         this.callback = callback;
+
     }
 
-    onDestroy()
-    {
+    onDestroy () {
+
         ipcRenderer.removeAllListeners(this.ipcChannel);
+
     }
 
-    constructor (ipcChannel: string)
-    {
+    constructor (ipcChannel: string) {
+
         this.ipcChannel = ipcChannel;
 
-        ipcRenderer.on(this.ipcChannel, (_event, message: SyncMessage) =>
-        {
-            if (this.callback)
-            {
+        ipcRenderer.on(this.ipcChannel, (_event, message: SyncMessage) => {
+
+            if (this.callback) {
+
                 this.callback(message);
+
             }
+
         });
+
     }
 
 }

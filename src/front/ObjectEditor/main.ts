@@ -1,16 +1,19 @@
-import { DrawObjectTreeEditorWrapper, DrawObject, TransformCommand, SyncOrganizerType } from "../core/core.js";
-import { SubDoc } from "../global/subdoc_alt.js";
-import { TabContentImplementation, Tab } from "../global/tabs_alt.js";
-import { SyncConnector_Front } from "../global/SyncConnector_Front.js";
-import { OnScriptLoad as loadDropdown } from "../global/dropdown.js";
-import { updateTextTree, updateTransformCommands } from "./Updates.js";
+import {DrawObject,
+    DrawObjectTreeEditorWrapper,
+    SyncOrganizerType,
+    TransformCommand} from "../core/core.js";
+import {Tab, TabContentImplementation} from "../global/tabs_alt.js";
+import {updateTextTree, updateTransformCommands} from "./Updates.js";
+import {SubDoc} from "../global/subdoc_alt.js";
+import {SyncConnector_Front} from "../global/SyncConnector_Front.js";
+import {OnScriptLoad as loadDropdown} from "../global/dropdown.js";
 
-const dialog = require("electron").remote.dialog;
+const {dialog} = require("electron").remote;
 const currentWindow = require("electron").remote.getCurrentWindow();
-const { ipcRenderer } = require("electron");
+const {ipcRenderer} = require("electron");
 
-const REGEX_XML_CONTENT = /^<root>([^]*)<\/root>$/i;
-const REGEX_REPLACE_SPACES = / /g;
+const REGEX_XML_CONTENT = /^<root>([^]*)<\/root>$/iu;
+const REGEX_REPLACE_SPACES = / /gu;
 
 const DIRTY_TAB_BY_ACTION = new Set([
     "AddObject",
@@ -19,7 +22,7 @@ const DIRTY_TAB_BY_ACTION = new Set([
     "renameObject",
     "deserialize",
     "addTransformCommand",
-    "updateTransformCommandField",
+    "updateTransformCommandField"
 ]);
 
 const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
@@ -64,303 +67,428 @@ const SINGLE_TRANSFORM_UPDATE = new Set([
     "updateTransformCommandField"
 ]);
 
-function sidToUniqueId(name: string, sid: string)
-{
-    return `---${name.toLowerCase().replace(REGEX_REPLACE_SPACES, "-")}--${sid}`;
+function sidToUniqueId (name: string, sid: string) {
+
+    return `---${
+        name.toLowerCase().replace(REGEX_REPLACE_SPACES, "-")
+    }--${
+        sid}`;
+
 }
 
-function onChangeName(root: SubDoc, name: string)
-{
+function onChangeName (root: SubDoc, name: string) {
+
     (<HTMLElement>root.getElementBySid("property--name")).innerText = name;
-    (<HTMLInputElement>root.getElementBySid("property--name-input")).value = name;
+    (<HTMLInputElement>root
+        .getElementBySid("property--name-input")).value = name;
+
 }
 
-function onRename(event: KeyboardEvent, nameInput: HTMLInputElement, tree: DrawObjectTreeEditorWrapper)
-{
+function onRename (
+    event: KeyboardEvent,
+    nameInput: HTMLInputElement,
+    tree: DrawObjectTreeEditorWrapper
+) {
+
     const validateResult = tree.validateName(nameInput.value);
-    if (!validateResult.success)
-    {
+
+    if (!validateResult.success) {
+
         dialog.showMessageBox(currentWindow, {
             type: "warning",
             message: (<any>validateResult).message
         });
+
         return;
+
     }
 
     tree.renameObject(tree.under.under.selectedObject, nameInput.value);
-};
 
-function loadXmlObject(newObject: DrawObject, root: SubDoc, resourceDirectory: string, name: string): Promise<SVGGElement>
-{
+}
+
+function loadXmlObject (
+    newObject: DrawObject,
+    root: SubDoc,
+    resourceDirectory: string,
+    name: string
+): Promise<SVGGElement> {
+
     const resourceLoaction = `${resourceDirectory}/${newObject.name}.xml`;
-    let objectRequest = new window.XMLHttpRequest();
+    const objectRequest = new window.XMLHttpRequest();
+
     objectRequest.open("GET", resourceLoaction);
 
-    return new Promise((resolve, reject) =>
-    {
-        objectRequest.onload = () =>
-        {
-            // const match = REGEX_XML_CONTENT.exec(objectRequest.response);
-            // if (!match)
-            // {
-            //     const errorMessage = `could not load object '${newObject.name}' svg data at resource location '${resourceLoaction}'`;
-            //     console.error(errorMessage);
-            //     reject(errorMessage);
-            // }
+    return new Promise((resolve, reject) => {
 
-            // const [ , svgContent ] = match;
+        objectRequest.onload = () => {
 
             const svgContent = objectRequest.response;
 
-            let newGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            const newGroup
+            = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
             newGroup.innerHTML = svgContent;
 
-            newGroup.setAttribute("transform", newObject.WorldTransform().svgString());
+            newGroup.setAttribute(
+                "transform",
+                newObject.WorldTransform().svgString()
+            );
 
             root.getElementBySid("main--svg--content").appendChild(newGroup);
             resolve(newGroup);
+
         };
         objectRequest.send();
+
     });
 
 
 }
 
-export class ObjectEditor implements TabContentImplementation
-{
+export class ObjectEditor implements TabContentImplementation {
+
     drawObjectTree: DrawObjectTreeEditorWrapper;
+
     resourceDirectory: string;
+
     displayedObjects: { [ name: string ]: SVGGElement; };
+
     currentDisplayedAsSelected: SVGGElement;
+
     connector: SyncConnector_Front;
 
     enableSave: boolean;
 
-    constructor ()
-    {
+    constructor () {
+
         this.resourceDirectory = "../saved/objects";
         this.displayedObjects = {};
         this.currentDisplayedAsSelected = null;
         this.enableSave = true;
+
     }
 
-    onInit(root: SubDoc, name: string, tab: Tab)
-    {
+    // todo: shorten function
+    // eslint-disable-next-line max-lines-per-function
+    onInit (root: SubDoc, name: string, tab: Tab) {
+
         this.connector = new SyncConnector_Front("draw-object-tree");
-        this.drawObjectTree = new DrawObjectTreeEditorWrapper(SyncOrganizerType.SUBSCRIBER, this.connector);
+        this.drawObjectTree = new DrawObjectTreeEditorWrapper(
+            SyncOrganizerType.SUBSCRIBER,
+            this.connector
+        );
         this.drawObjectTree.under.organizer.requestSync();
 
         loadDropdown(root.root);
 
-        root.getElementBySid("filter--selected-svg-object").id = sidToUniqueId(name, "filter--selected-svg-object");
+        root.getElementBySid("filter--selected-svg-object").id
+         = sidToUniqueId(name, "filter--selected-svg-object");
 
-        Array.from(root.getElementBySid("property--transform-add-controls").children).forEach((child: HTMLButtonElement) =>
-        {
-            child.addEventListener("click", () =>
-            {
-                this.drawObjectTree.addTransformCommand(this.drawObjectTree.under.under.selectedObject, new TransformCommand(child.dataset.transformCommandType));
+        const addControlsElement
+        = root.getElementBySid("property--transform-add-controls");
+
+        Array.from(addControlsElement.children)
+            .forEach((child: HTMLButtonElement) => {
+
+                child.addEventListener("click", () => {
+
+                    this.drawObjectTree.addTransformCommand(
+                        this.drawObjectTree.under.under.selectedObject,
+                        new TransformCommand(child.dataset.transformCommandType)
+                    );
+
+                });
+
             });
-        });
 
 
-        const nameInput = <HTMLInputElement>root.getElementBySid("property--name-input");
+        const nameInput
+        = <HTMLInputElement>root.getElementBySid("property--name-input");
 
-        nameInput.addEventListener("keydown", (event: KeyboardEvent) =>
-        {
-            if (event.key !== "Enter")
-            {
+        nameInput.addEventListener("keydown", (event: KeyboardEvent) => {
+
+            if (event.key !== "Enter") {
+
                 return;
+
             }
 
             onRename(event, nameInput, this.drawObjectTree);
+
         });
 
-        this.drawObjectTree.under.under.onDirty = () =>
-        {
+        this.drawObjectTree.under.under.onDirty = () => {
+
             tab.dirty = true;
+
         };
-        this.drawObjectTree.under.under.onClean = () =>
-        {
+        this.drawObjectTree.under.under.onClean = () => {
+
             tab.dirty = false;
+
         };
-        this.drawObjectTree.under.addActionCallback("--fullSync", (under) =>
-        {
-            under.onDirty = () =>
-            {
+        this.drawObjectTree.under.addActionCallback("--fullSync", (under) => {
+
+            under.onDirty = () => {
+
                 tab.setDirty();
+
             };
-            under.onClean = () =>
-            {
+            under.onClean = () => {
+
                 tab.dirty = false;
+
             };
+
         });
 
-        this.drawObjectTree.under.addAllActionCallback((action, under, argumentList: [ string ]) =>
-        {
-            const [ object ] = argumentList;
-            if (!UPDATE_TRANSFORM_BY_ACTIONS.has(action))
-            {
-                return;
-            }
+        this.drawObjectTree.under
+            .addAllActionCallback((action, under, argumentList: [ string ]) => {
 
-            const updateList = SINGLE_TRANSFORM_UPDATE.has(action)
-                ? [ object ]
-                : Object.keys(under.objects);
+                const [object] = argumentList;
 
+                if (!UPDATE_TRANSFORM_BY_ACTIONS.has(action)) {
 
-            updateList.forEach((targetObject) =>
-            {
-                if (!(targetObject in this.displayedObjects))
-                {
                     return;
-                }
-                this.displayedObjects[ targetObject ].setAttribute("transform", under.objects[ targetObject ].WorldTransform().svgString());
-            });
-        });
 
-        this.drawObjectTree.under.addAllActionCallback((action, under) =>
-        {
-            if (this.currentDisplayedAsSelected)
-            {
+                }
+
+                const updateList = SINGLE_TRANSFORM_UPDATE.has(action)
+                    ? [object]
+                    : Object.keys(under.objects);
+
+
+                updateList.forEach((targetObject) => {
+
+                    if (!(targetObject in this.displayedObjects)) {
+
+                        return;
+
+                    }
+                    this.displayedObjects[targetObject].setAttribute(
+                        "transform",
+                        under.objects[targetObject].WorldTransform().svgString()
+                    );
+
+                });
+
+            });
+
+        this.drawObjectTree.under.addAllActionCallback((action, under) => {
+
+            if (this.currentDisplayedAsSelected) {
+
                 this.currentDisplayedAsSelected.setAttribute("filter", "");
                 this.currentDisplayedAsSelected = null;
+
             }
 
-            if (!UPDATE_SELECTED_OBJECT_BY_ACTION.has(action))
-            {
+            if (!UPDATE_SELECTED_OBJECT_BY_ACTION.has(action)) {
+
                 return;
+
             }
 
-            if (!under.selectedObject)
-            {
+            if (!under.selectedObject) {
+
                 return;
+
             }
 
-            this.displayedObjects[ under.selectedObject ].setAttribute("filter", `url(#${sidToUniqueId(name, "filter--selected-svg-object")})`);
-            this.currentDisplayedAsSelected = this.displayedObjects[ under.selectedObject ];
+            this.displayedObjects[under.selectedObject].setAttribute(
+                "filter",
+                `url(#${sidToUniqueId(name, "filter--selected-svg-object")})`
+            );
+            this.currentDisplayedAsSelected
+            = this.displayedObjects[under.selectedObject];
+
         });
 
-        this.drawObjectTree.under.addAllActionCallback((action, under) =>
-        {
-            if (!UPDATE_TEXT_TREE_BY_ACTIONS.has(action))
-            {
+        this.drawObjectTree.under.addAllActionCallback((action, under) => {
+
+            if (!UPDATE_TEXT_TREE_BY_ACTIONS.has(action)) {
+
                 return;
+
             }
 
-            if (root.ready)
-            {
+            if (root.ready) {
+
                 updateTextTree(root, this.drawObjectTree, under);
+
                 return;
+
             }
 
-            root.onReady.push(() =>
-            {
+            root.onReady.push(() => {
+
                 updateTextTree(root, this.drawObjectTree, under);
+
             });
 
         });
 
-        this.drawObjectTree.under.addAllActionCallback((action, under) =>
-        {
-            if (!UPDATE_TRANSFORM_COMMANDS_BY_ACTIONS.has(action) || !this.drawObjectTree.under.under.selectedObject)
-            {
+        this.drawObjectTree.under.addAllActionCallback((action, under) => {
+
+            if (!UPDATE_TRANSFORM_COMMANDS_BY_ACTIONS.has(action)
+            || !this.drawObjectTree.under.under.selectedObject) {
+
                 return;
+
             }
 
-            if (root.ready)
-            {
+            if (root.ready) {
+
                 updateTransformCommands(root, this.drawObjectTree, under);
+
                 return;
+
             }
 
-            root.onReady.push(() =>
-            {
+            root.onReady.push(() => {
+
                 updateTransformCommands(root, this.drawObjectTree, under);
+
             });
 
         });
 
-        this.drawObjectTree.under.addActionCallback("selectObject", (under, argumentList) =>
-        {
-            onChangeName(root, under.selectedObject);
-        });
+        this.drawObjectTree.under.addActionCallback(
+            "selectObject",
+            (under, argumentList) => {
 
-        this.drawObjectTree.under.addActionCallback("AddObjectToRoot", (_under, argumentList: [ DrawObject ]) =>
-        {
-            loadXmlObject(argumentList[ 0 ], root, this.resourceDirectory, name).then((result) =>
-            {
-                this.displayedObjects[ argumentList[ 0 ].name ] = result;
-                result.setAttribute("filter", `url(#${sidToUniqueId(name, "filter--selected-svg-object")})`);
-                result.addEventListener("click", () =>
-                {
-                    this.drawObjectTree.selectObject(argumentList[ 0 ].name);
+                onChangeName(root, under.selectedObject);
+
+            }
+        );
+
+        this.drawObjectTree.under.addActionCallback(
+            "AddObjectToRoot",
+            (_under, argumentList: [ DrawObject ]) => {
+
+                loadXmlObject(
+                    argumentList[0],
+                    root,
+                    this.resourceDirectory,
+                    name
+                ).then((result) => {
+
+                    this.displayedObjects[argumentList[0].name] = result;
+                    result.setAttribute(
+                        "filter",
+                        `url(#${sidToUniqueId(
+                            name,
+                            "filter--selected-svg-object"
+                        )})`
+                    );
+                    result.addEventListener("click", () => {
+
+                        this.drawObjectTree.selectObject(argumentList[0].name);
+
+                    });
+
                 });
-            });
-        });
 
-        this.drawObjectTree.under.addActionCallback("renameObject", (_under, argumentList: [ string, string ]) =>
-        {
-            const [ oldName, newName ] = argumentList;
-            if (!(oldName in this.displayedObjects))
-            {
-                console.warn(`object '${oldName}' is not tracked for display`);
-                return;
             }
+        );
 
-            this.displayedObjects[ newName ] = this.displayedObjects[ oldName ];
-            delete this.displayedObjects[ oldName ];
-        });
+        this.drawObjectTree.under.addActionCallback(
+            "renameObject",
+            (_under, argumentList: [ string, string ]) => {
+
+                const [oldName, newName] = argumentList;
+
+                if (!(oldName in this.displayedObjects)) {
+
+                    console.warn(`object '${
+                        oldName}' is not tracked for display`);
+
+                    return;
+
+                }
+
+                this.displayedObjects[newName] = this.displayedObjects[oldName];
+                delete this.displayedObjects[oldName];
+
+            }
+        );
         const self = this;
-        this.drawObjectTree.under.addAllActionCallback((action, under) =>
-        {
-            if (!UPDATE_ALL_BY_ACTIONS.has(action))
-            {
+
+        this.drawObjectTree.under.addAllActionCallback((action, under) => {
+
+            if (!UPDATE_ALL_BY_ACTIONS.has(action)) {
+
                 return;
+
             }
-            function displayInitialObjects()
-            {
+            function displayInitialObjects () {
+
                 root.getElementBySid("main--svg--content").innerHTML = "";
                 self.displayedObjects = {};
 
-                for (const objectName in under.objects)
-                {
-                    loadXmlObject(under.objects[ objectName ], root, self.resourceDirectory, name).then((result) =>
-                    {
-                        self.displayedObjects[ objectName ] = result;
-                        result.addEventListener("click", () =>
-                        {
+                for (const objectName in under.objects) {
+
+                    if (!Object.prototype.hasOwnProperty
+                        .call(under.objects, objectName)) {
+
+                        continue;
+
+                    }
+                    loadXmlObject(
+                        under.objects[objectName],
+                        root,
+                        self.resourceDirectory,
+                        name
+                    ).then((result) => {
+
+                        self.displayedObjects[objectName] = result;
+                        result.addEventListener("click", () => {
+
                             self.drawObjectTree.selectObject(objectName);
+
                         });
+
                     });
+
                 }
+
             }
 
-            if (root.ready)
-            {
+            if (root.ready) {
+
                 displayInitialObjects();
+
                 return;
+
             }
 
-            root.onReady.push(() =>
-            {
+            root.onReady.push(() => {
+
                 displayInitialObjects();
+
             });
+
         });
         ipcRenderer.send("open-object-editor", {});
+
     }
-    onDestroy(root: SubDoc, name: string)
-    {
+
+    onDestroy (root: SubDoc, name: string) {
+
         ipcRenderer.send("close-object-editor", {});
         this.connector.onDestroy();
 
     }
-    onSave(root: SubDoc, name: string)
-    {
+
+    onSave (root: SubDoc, name: string) {
+
         ipcRenderer.send("save-tab", {
             type: "draw-object-tree"
         });
         this.drawObjectTree.under.under.dirty = false;
+
     }
 
 
-};;
+}

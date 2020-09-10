@@ -1,4 +1,6 @@
-import { SyncConnector_Direct, SyncObject, SyncOrganizerType } from "../core/core";
+import {SyncConnector_Direct,
+    SyncObject,
+    SyncOrganizerType} from "../core/core";
 
 const TARGET_FILE = "/core/sync_alt/SyncObject.ts";
 
@@ -9,65 +11,91 @@ interface DummyInterface
     addAPlusB: (a: number, b: number) => void;
 }
 
-class Dummy implements DummyInterface
-{
+class Dummy implements DummyInterface {
+
     target: number;
 
-    addOne()
-    {
+    addOne () {
+
         this.target++;
+
     }
 
-    addN(n: number)
-    {
+    addN (n: number) {
+
         this.target += n;
+
     }
 
-    addAPlusB(a: number, b: number)
-    {
+    addAPlusB (a: number, b: number) {
+
         this.target += a + b;
+
     }
 
-    constructor (target: number = 0)
-    {
+    constructor (target = 0) {
+
         this.target = target;
+
     }
+
 }
 
-class SyncDummyWrapper implements DummyInterface
-{
+class SyncDummyWrapper implements DummyInterface {
+
     syncObject: SyncObject<Dummy>;
 
-    addOne()
-    {
-        this.syncObject.runAction({ action: "addOne", argumentList: [] });
-    }
-    addN(n: number)
-    {
-        this.syncObject.runAction({ action: "addN", argumentList: [ n ] });
-    }
-    addAPlusB(a: number, b: number)
-    {
-        this.syncObject.runAction({ action: "addAPlusB", argumentList: [ a, b ] });
+    addOne () {
+
+        this.syncObject.runAction({action: "addOne",
+            argumentList: []});
+
     }
 
-    constructor (syncObject: SyncObject<Dummy>)
-    {
+    addN (n: number) {
+
+        this.syncObject.runAction({action: "addN",
+            argumentList: [n]});
+
+    }
+
+    addAPlusB (a: number, b: number) {
+
+        this.syncObject.runAction({action: "addAPlusB",
+            argumentList: [a, b]});
+
+    }
+
+    constructor (syncObject: SyncObject<Dummy>) {
+
         this.syncObject = syncObject;
+
     }
 
 }
 
-test(`CLASS SyncObject @ '${TARGET_FILE}'`, () =>
-{
-    let ownerConnector = new SyncConnector_Direct();
-    let subscriberConnector = new SyncConnector_Direct(ownerConnector);
+test(`CLASS SyncObject @ '${TARGET_FILE}'`, () => {
 
-    let ownerObject = new SyncObject<Dummy>(SyncOrganizerType.OWNER, ownerConnector, new Dummy(), under => { return { number: under.target }; }, recieved => new Dummy(recieved.number));
-    let subscriberObject = new SyncObject<Dummy>(SyncOrganizerType.SUBSCRIBER, subscriberConnector, new Dummy(), under => { return { number: under.target }; }, recieved => new Dummy(recieved.number));
+    const ownerConnector = new SyncConnector_Direct();
+    const subscriberConnector = new SyncConnector_Direct(ownerConnector);
 
-    let owner = new SyncDummyWrapper(ownerObject);
-    let subsciber = new SyncDummyWrapper(subscriberObject);
+    const ownerObject = new SyncObject<Dummy>(
+        SyncOrganizerType.OWNER,
+        ownerConnector,
+        new Dummy(),
+        (under) => ({number: under.target}),
+        (recieved) => new Dummy(recieved.number)
+    );
+    const subscriberObject = new SyncObject<Dummy>(
+        SyncOrganizerType.SUBSCRIBER,
+        subscriberConnector,
+        new Dummy(),
+        (under) => ({number: under.target}),
+        (recieved) => new Dummy(recieved.number)
+    );
+
+    const owner = new SyncDummyWrapper(ownerObject);
+    const subsciber = new SyncDummyWrapper(subscriberObject);
 
     subsciber.syncObject.organizer.requestSync();
 
@@ -88,4 +116,5 @@ test(`CLASS SyncObject @ '${TARGET_FILE}'`, () =>
 
     expect(owner.syncObject.under.target).toStrictEqual(14);
     expect(subsciber.syncObject.under.target).toStrictEqual(14);
+
 });

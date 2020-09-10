@@ -26,7 +26,7 @@ rules:
   block-spacing: error
   brace-style: error
   callback-return: error
-  camelcase: error
+  camelcase: warn
   capitalized-comments:
     - error
     - never
@@ -37,7 +37,9 @@ rules:
   complexity: error
   computed-property-spacing: error
   consistent-return: error
-  consistent-this: error
+  consistent-this:
+    - error
+    - self
   curly: error
   default-case: error
   default-case-last: error
@@ -52,14 +54,17 @@ rules:
   func-call-spacing: error
   func-name-matching: error
   func-names: error
-  func-style: error
+  func-style:
+    - error
+    - declaration
+    - allowArrowFunctions: true
   function-call-argument-newline:
     - error
     - consistent
   function-paren-newline: error
   generator-star-spacing: error
   getter-return: error
-  global-require: error
+  global-require: 0
   grouped-accessor-pairs: error
   guard-for-in: error
   handle-callback-err: error
@@ -69,7 +74,6 @@ rules:
     - ignoreDestructuring: true
   implicit-arrow-linebreak: error
   indent: error
-  indent-legacy: error
   init-declarations: error
   jsx-quotes: error
   key-spacing: error
@@ -79,14 +83,24 @@ rules:
   lines-around-comment: error
   lines-around-directive: error
   lines-between-class-members: error
-  max-classes-per-file: error
+  max-classes-per-file:
+    - error
+    - 4
   max-depth: error
   max-len: error
-  max-lines: error
-  max-lines-per-function: error
+  max-lines:
+    - error
+    - max: 600
+  max-lines-per-function:
+    - error
+    - max: 200
   max-nested-callbacks: error
-  max-params: error
-  max-statements: error
+  max-params:
+    - warn
+    - max: 4
+  max-statements:
+    - error
+    - max: 40
   max-statements-per-line: error
   multiline-comment-style: error
   multiline-ternary: error
@@ -118,7 +132,7 @@ rules:
   no-else-return: error
   no-empty: warn
   no-empty-character-class: error
-  no-empty-function: warn
+  no-empty-function: 0
   no-eq-null: error
   no-eval: error
   no-ex-assign: error
@@ -162,7 +176,6 @@ rules:
   no-octal-escape: error
   no-param-reassign: error
   no-path-concat: error
-  no-plusplus: error
   no-process-env: error
   no-process-exit: error
   no-promise-executor-return: error
@@ -178,24 +191,25 @@ rules:
   no-script-url: error
   no-self-compare: error
   no-sequences: error
-  no-shadow: error
+  no-shadow: 0
   no-spaced-func: error
-  no-sync: error
+  no-sync: 0
   no-tabs: error
   no-template-curly-in-string: error
-  no-ternary: error
   no-throw-literal: error
   no-trailing-spaces:
     - error
     - ignoreComments: true
   no-undef-init: error
   no-undefined: error
-  no-underscore-dangle: error
+  no-underscore-dangle:
+    - error
+    - allowAfterThis: true
   no-unmodified-loop-condition: error
   no-unneeded-ternary: error
   no-unreachable-loop: error
-  no-unused-expressions: error
-  no-use-before-define: error
+  no-unused-expressions: 0
+  no-use-before-define: 0
   no-useless-backreference: error
   no-useless-call: error
   no-useless-computed-key: error
@@ -216,18 +230,19 @@ rules:
     - never
   one-var-declaration-per-line: error
   operator-assignment: error
-  operator-linebreak: error
+  operator-linebreak:
+    - error
+    - before
   padded-blocks: error
   padding-line-between-statements: error
   prefer-arrow-callback: error
   prefer-const: error
-  prefer-destructuring: error
+  prefer-destructuring: 0
   prefer-exponentiation-operator: error
-  prefer-named-capture-group: error
+  prefer-named-capture-group: warn
   prefer-numeric-literals: error
   prefer-object-spread: error
   prefer-promise-reject-errors: error
-  prefer-reflect: error
   prefer-regex-literals: error
   prefer-rest-params: error
   prefer-spread: error
@@ -238,15 +253,13 @@ rules:
   quotes: error
   radix: error
   require-atomic-updates: error
-  require-await: error
-  require-jsdoc: error
+  require-await: warn
   require-unicode-regexp: error
   rest-spread-spacing: error
   semi: error
   semi-spacing: error
   semi-style: error
   sort-imports: error
-  sort-keys: error
   sort-vars: error
   space-before-blocks: error
   space-before-function-paren: error
@@ -265,3 +278,6 @@ rules:
   wrap-regex: error
   yield-star-spacing: error
   yoda: error
+  "@typescript-eslint/no-var-requires": "off"
+  "@typescript-eslint/no-empty-function": warn
+  "@typescript-eslint/no-this-alias": 0

@@ -1,4 +1,4 @@
-import { SyncConnector } from "./SyncConnector.js";
+import {SyncConnector} from "./SyncConnector.js";
 
 export type SyncAction = { action: string, argumentList: any[]; };
 
@@ -6,8 +6,10 @@ export type SyncAction = { action: string, argumentList: any[]; };
  * the type of organizer dictates the role it plays in synchronizing.
  * 
  * the owner is the authority of the object, the subscriber is not.
- * any full synchronization will be done from owner to subscriber, so the subscriber copies the owner's object.
- * the owner will send confirmation messages and the subscriber will use those to verify proper order.
+ * any full synchronization will be done from owner to subscriber,
+ * so the subscriber copies the owner's object.
+ * the owner will send confirmation messages
+ * and the subscriber will use those to verify proper order.
  */
 export enum SyncOrganizerType
 {
@@ -20,19 +22,23 @@ export enum SyncOrganizerType
  * interface for the object in charge of fixing errors during synchronization.
  * 
  * this object is in charge of avoiding race conditions.
- * given the potentially asychronous nature of 2 synchronized classes (e.g. synchronization between 2 servers), order is important.
- * if a situation is detected where the actions are taken in a different order this class is in charge of rectifying that mistake.
+ * given the potentially asychronous nature of 2 synchronized classes
+ * (e.g. synchronization between 2 servers), order is important.
+ * if a situation is detected where the actions are taken in a different order,
+ * this class is in charge of rectifying that mistake.
  * 
  * @see https://en.wikipedia.org/wiki/Race_condition
  */
 export interface SyncOrganizer
 {
+
     /**
      * send an action to the other object.
      * 
      * this will also call `onRecieve`.
      */
     send: (action: SyncAction) => void;
+
     /**
      * provide a callback function for when an action is recieved.
      */
@@ -41,7 +47,8 @@ export interface SyncOrganizer
     /**
      * provide a function that will be called whenever a full sync is requested.
      * 
-     * this data will be send to the other object, and `onFullSync` will be called using this data.
+     * this data will be send to the other object,
+     * and `onFullSync` will be called using this data.
      */
     getFullSyncData: (callback: () => any) => void;
 
@@ -55,10 +62,12 @@ export interface SyncOrganizer
     /**
      * call this to request a full synchronization.
      * 
-     * this will result in the other object sending its data to this object, after which the `onFullSync` callback will be called.
+     * this will result in the other object sending its data to this object,
+     * after which the `onFullSync` callback will be called.
      * 
      * @warning any actions before the sync request could be discarded.
-     * any actions after the sync request, but before the sync, will be queued untile the synchronization is complete.
+     * any actions after the sync request, but before the sync,
+     * will be queued untile the synchronization is complete.
      */
     requestSync: () => void;
 }
@@ -66,17 +75,18 @@ export interface SyncOrganizer
 /**
  * @see SyncOrganizerType
  */
-export class SyncOrganizer_Owner implements SyncOrganizer
-{
+export class SyncOrganizer_Owner implements SyncOrganizer {
+
     connector: SyncConnector;
+
     readyToRecieve: boolean;
 
     callback: (action: SyncAction) => void;
 
     getFullSyncCallback: () => any;
 
-    send(action: SyncAction)
-    {
+    send (action: SyncAction) {
+
         this.connector.send({
             type: "action",
             action: action.action,
@@ -85,89 +95,110 @@ export class SyncOrganizer_Owner implements SyncOrganizer
         });
 
         this.callback(action);
+
     }
-    onRecieve(callback: (action: SyncAction) => void)
-    {
+
+    onRecieve (callback: (action: SyncAction) => void) {
+
         this.callback = callback;
+
     }
 
-    getFullSyncData(callback: () => any)
-    {
+    getFullSyncData (callback: () => any) {
+
         this.getFullSyncCallback = callback;
-    }
-    onFullSync(callback: (data: any) => void)
-    {
-    }
-
-    requestSync()
-    {
 
     }
 
-    constructor (connector: SyncConnector)
-    {
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this
+    onFullSync (callback: (data: any) => void) {
+    }
+
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this
+    requestSync () {
+
+    }
+
+    constructor (connector: SyncConnector) {
+
         this.connector = connector;
         this.readyToRecieve = false;
-        this.connector.onRecieve((message) =>
-        {
-            switch (message.type)
-            {
-                case "action":
-                    if (!this.readyToRecieve)
-                    {
-                        break;
-                    }
-                    this.connector.send({
-                        type: "confirm",
-                        num: message.num
-                    });
-                    this.callback({ action: message.action, argumentList: message.argumentList });
+        this.connector.onRecieve((message) => {
+
+            switch (message.type) {
+
+            case "action":
+                if (!this.readyToRecieve) {
 
                     break;
 
-                case "request-sync":
-                    this.readyToRecieve = false;
-                    this.connector.send({
-                        type: "sync",
-                        object: this.getFullSyncCallback()
-                    });
-                    break;
+                }
+                this.connector.send({
+                    type: "confirm",
+                    num: message.num
+                });
+                this.callback({action: message.action,
+                    argumentList: message.argumentList});
 
-                case "start":
-                    this.readyToRecieve = true;
-                    this.connector.send({
-                        type: "confirm",
-                        num: message.num
-                    });
+                break;
+
+            case "request-sync":
+                this.readyToRecieve = false;
+                this.connector.send({
+                    type: "sync",
+                    object: this.getFullSyncCallback()
+                });
+                break;
+
+            case "start":
+                this.readyToRecieve = true;
+                this.connector.send({
+                    type: "confirm",
+                    num: message.num
+                });
+
+                break;
+            default:
+                break;
+
             }
+
         });
+
     }
+
 }
 
 /**
  * @see SyncOrganizerType
  */
-export class SyncOrganizer_Subscriber implements SyncOrganizer
-{
+export class SyncOrganizer_Subscriber implements SyncOrganizer {
+
     connector: SyncConnector;
 
     numSend: number;
+
     numConfirmed: number;
 
     waitForSync: boolean;
+
     queuedActions: SyncAction[];
 
     callback: (action: SyncAction) => void;
 
     fullSyncCallback: (data: any) => void;
 
-    send(action: SyncAction)
-    {
-        //queue action if we are currently syncing
-        if (this.waitForSync)
-        {
+    send (action: SyncAction) {
+
+        // queue action if we are currently syncing
+        if (this.waitForSync) {
+
             this.queuedActions.push();
+
             return;
+
         }
         this.connector.send({
             type: "action",
@@ -177,74 +208,91 @@ export class SyncOrganizer_Subscriber implements SyncOrganizer
         });
 
         this.callback(action);
+
     }
-    onRecieve(callback: (action: SyncAction) => void)
-    {
+
+    onRecieve (callback: (action: SyncAction) => void) {
+
         this.callback = callback;
+
     }
 
-    getFullSyncData(_callback: () => any)
-    {
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this
+    getFullSyncData (_callback: () => any) {
     }
-    onFullSync(callback: (data: any) => void)
-    {
+
+    onFullSync (callback: (data: any) => void) {
+
         this.fullSyncCallback = callback;
+
     }
 
-    requestSync()
-    {
+    requestSync () {
+
         this.waitForSync = true;
         this.connector.send({
             type: "request-sync"
         });
+
     }
 
-    constructor (connector: SyncConnector)
-    {
+    constructor (connector: SyncConnector) {
+
         this.numSend = 0;
         this.numConfirmed = 0;
         this.waitForSync = false;
         this.connector = connector;
         this.queuedActions = [];
 
-        this.connector.onRecieve((message) =>
-        {
-            switch (message.type)
-            {
-                case "action":
-                    if (this.numSend !== this.numConfirmed)
-                    {
-                        this.connector.send({
-                            type: "request-sync"
-                        });
-                        break;
-                    }
-                    this.callback({ action: message.action, argumentList: message.argumentList });
-                    break;
+        this.connector.onRecieve((message) => {
 
-                case "confirm":
-                    this.numConfirmed = Math.max(message.num, this.numConfirmed);
-                    break;
+            switch (message.type) {
 
-                case "sync":
-                    this.fullSyncCallback(message.object);
+            case "action":
+                if (this.numSend !== this.numConfirmed) {
+
                     this.connector.send({
-                        type: "start",
+                        type: "request-sync"
+                    });
+                    break;
+
+                }
+                this.callback({action: message.action,
+                    argumentList: message.argumentList});
+                break;
+
+            case "confirm":
+                this.numConfirmed = Math.max(message.num, this.numConfirmed);
+                break;
+
+            case "sync":
+                this.fullSyncCallback(message.object);
+                this.connector.send({
+                    type: "start",
+                    num: ++(this.numSend)
+                });
+                this.queuedActions.forEach((action) => {
+
+                    this.connector.send({
+                        type: "action",
+                        action: action.action,
+                        argumentList: action.argumentList,
                         num: ++(this.numSend)
                     });
-                    this.queuedActions.forEach(action =>
-                    {
-                        this.connector.send({
-                            type: "action",
-                            action: action.action,
-                            argumentList: action.argumentList,
-                            num: ++(this.numSend)
-                        });
-                    });
-                    this.queuedActions = [];
-                    this.waitForSync = false;
-                    break;
+
+                });
+                this.queuedActions = [];
+                this.waitForSync = false;
+                break;
+
+            default:
+                break;
+
             }
+
         });
+
     }
+
 }

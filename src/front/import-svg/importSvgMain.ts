@@ -1,11 +1,11 @@
-import { GTreeNode, getListEntry, buildGTree, buildGTreeNode, setupLogic } from "./gTree.js";
+import {buildGTreeNode, setupLogic} from "./gTree.js";
 
-const { dialog, getCurrentWindow } = require("electron").remote;
-const { ipcRenderer } = require("electron");
+const {dialog, getCurrentWindow} = require("electron").remote;
+const {ipcRenderer} = require("electron");
 
-const currentWindow = require('electron').remote.getCurrentWindow();
+const currentWindow = require("electron").remote.getCurrentWindow();
 
-const { xml2js, js2xml } = require("xml-js");
+const {xml2js, js2xml} = require("xml-js");
 const _ = require("lodash");
 
 const fileNameElement = document.getElementById("svg-file-name");
@@ -13,35 +13,46 @@ const fileNameElement = document.getElementById("svg-file-name");
 let currentFilePath = null;
 let checkBoxList: HTMLInputElement[] = [];
 
-async function previewSvg()
-{
+async function previewSvg () {
+
     const svgRequest = new window.XMLHttpRequest();
+
     svgRequest.open("GET", currentFilePath);
-    await new Promise(resolve =>
-    {
-        svgRequest.onload = () =>
-        {
+    await new Promise((resolve) => {
+
+        svgRequest.onload = () => {
+
             resolve();
+
         };
 
         svgRequest.send();
+
     });
 
-    const jsonSvg = xml2js(svgRequest.response, { ignoreComment: true });
-    //get the root elements, which is expected to be an svg element
-    const [ rootElement ] = jsonSvg.elements.filter(element => element.type === "element" && element.name === "svg");
-    if (!rootElement)
-    {
-        throw "No svg root element found";
+    const jsonSvg = xml2js(svgRequest.response, {ignoreComment: true});
+    // get the root elements, which is expected to be an svg element
+    const [rootElement] = jsonSvg.elements
+        .filter((element) => (element.type === "element")
+        && (element.name === "svg"));
+
+    if (!rootElement) {
+
+        throw new Error("No svg root element found");
+
     }
 
-    if (!("attributes" in rootElement) || !("viewBox" in rootElement.attributes))
-    {
+    if (!("attributes" in rootElement)
+    || !("viewBox" in rootElement.attributes)) {
+
         return;
-    }
-    const viewBox = rootElement.attributes.viewBox;
 
-    const svgElement = <SVGSVGElement><HTMLOrSVGElement>document.getElementById("viewport--svg");
+    }
+    const {viewBox} = rootElement.attributes;
+
+    const svgElement
+    = <SVGSVGElement><HTMLOrSVGElement>document.getElementById("viewport--svg");
+
     svgElement.setAttribute("viewBox", viewBox);
 
     const previewResult = {
@@ -49,103 +60,128 @@ async function previewSvg()
     };
 
     const previewText = js2xml(previewResult);
+
     svgElement.innerHTML = previewText;
 
-    //build the g-tree
-    //this will walk through the imported svg data and build a tree out of just the 'g' elements.
-    //it will then build this structure in the list, where the structure will be visible and sub-objects can be selected.
-    //hovering and selecting will now result in updates for the svg preview window.
+    /*
+     * build the g-tree
+     * this will walk through the imported svg data
+     * and build a tree out of just the 'g' elements.
+     * it will then build this structure in the list,
+     * where the structure will be visible and sub-objects can be selected.
+     * hovering and selecting will now result in updates
+     * for the svg preview window.
+     */
     document.getElementById("list--root").innerHTML = "";
-    checkBoxList = _.flatten(
-        Array.from(svgElement.children)
-            .filter(child => child.tagName === "g")
-            .map((child: SVGGElement, index) =>
-            {
-                const next = buildGTreeNode(
-                    child,
-                    String(index),
-                    <HTMLOListElement>document.getElementById("list--root")
-                );
+    checkBoxList = _.flatten(Array.from(svgElement.children)
+        .filter((child) => child.tagName === "g")
+        .map((child: SVGGElement, index) => {
 
-                setupLogic(next);
-                return next.getSelfAndDescendants().map(value => value.checkBox);
-            })
-    );
+            const next = buildGTreeNode(
+                child,
+                String(index),
+                    <HTMLOListElement>document.getElementById("list--root")
+            );
+
+            setupLogic(next);
+
+            return next.getSelfAndDescendants().map((value) => value.checkBox);
+
+        }));
 
     checkBoxList.sort();
+
 }
 
-async function openFile()
-{
-    try
-    {
+async function openFile () {
+
+    try {
+
         const dialogResult = await dialog.showOpenDialog(
             currentWindow,
             {
-                properties: [ 'openFile' ],
+                properties: ["openFile"],
                 filters:
-                    [
-                        { name: "Scalable Vector Graphics", extensions: [ "svg", "xml" ] },
-                        { name: "All File Types", extensions: [ "*" ] }
-                    ]
-            });
+                [
+                    {name: "Scalable Vector Graphics",
+                        extensions: ["svg", "xml"]},
+                    {name: "All File Types",
+                        extensions: ["*"]}
+                ]
+            }
+        );
 
-        if (dialogResult.filePaths.length > 0)
-        {
-            currentFilePath = dialogResult.filePaths[ 0 ];
-            const splitFilePath = currentFilePath.split(/\/|\\/);
-            const fileName = splitFilePath[ splitFilePath.length - 1 ];
+        if (dialogResult.filePaths.length > 0) {
+
+            currentFilePath = dialogResult.filePaths[0];
+            const splitFilePath = currentFilePath.split(/\/|\\/u);
+            const fileName = splitFilePath[splitFilePath.length - 1];
+
             fileNameElement.innerText = fileName;
 
             previewSvg();
+
         }
-    }
-    catch (error)
-    {
+
+    } catch (error) {
+
         console.warn("❌ Error during file dialog: ", error);
+
     }
+
 }
 
-async function onImport()
-{
-    const subObjects = checkBoxList
-        .filter(checkBox => checkBox.checked)
-        .map(checkBox => checkBox.dataset.gTreeIndex);
+async function onImport () {
 
-    const name = (<HTMLInputElement>document.getElementById("name-field")).value;
-    let errorOutput = document.getElementById("error-output");
+    const subObjects = checkBoxList
+        .filter((checkBox) => checkBox.checked)
+        .map((checkBox) => checkBox.dataset.gTreeIndex);
+
+    const name = (<HTMLInputElement>document
+        .getElementById("name-field")).value;
+    const errorOutput = document.getElementById("error-output");
+
     errorOutput.innerHTML = "";
 
     let invalidInput = false;
-    if (currentFilePath === null)
-    {
+
+    if (currentFilePath === null) {
+
         errorOutput.innerHTML += "Please select a file.<br>";
         invalidInput = true;
+
     }
-    if (name === "")
-    {
+    if (name === "") {
+
         errorOutput.innerHTML += "Please enter a name.<br>";
         invalidInput = true;
+
     }
 
-    if (invalidInput)
-    {
+    if (invalidInput) {
+
         return;
+
     }
 
     console.log(require("electron"));
-    const ipcResult = await ipcRenderer.invoke("import-svg",
+    const ipcResult = await ipcRenderer.invoke(
+        "import-svg",
         {
-            name: name,
+            name,
             filePath: currentFilePath,
-            subObjects: subObjects
-        });
+            subObjects
+        }
+    );
 
-    if (!ipcResult.success)
-    {
+    if (!ipcResult.success) {
+
         const convertedErrorMessage = ipcResult.message.replace("\n", "<br>");
+
         errorOutput.innerHTML += convertedErrorMessage;
+
         return;
+
     }
 
     ipcRenderer.invoke("select-object", {
@@ -155,29 +191,31 @@ async function onImport()
 
 }
 
-let isAdvanced: boolean = false;
+let isAdvanced = false;
 
-function onAdvanced()
-{
-    if (isAdvanced)
-    {
+function onAdvanced () {
+
+    if (isAdvanced) {
+
         currentWindow.setBounds({
             width: 300,
             height: 300
         });
-    }
-    else
-    {
+
+    } else {
+
         currentWindow.setBounds({
             width: 900,
             height: 600
         });
+
     }
 
     isAdvanced = !isAdvanced;
+
 }
 
-//execution starts here
+// execution starts here
 currentWindow.setBounds({
     width: 300,
     height: 300
@@ -186,6 +224,8 @@ currentWindow.setBounds({
 openFile();
 
 
-document.getElementById("svg-open-file-button").addEventListener("click", openFile);
+document.getElementById("svg-open-file-button")
+    .addEventListener("click", openFile);
 document.getElementById("import-button").addEventListener("click", onImport);
-document.getElementById("advanced-button").addEventListener("click", onAdvanced);
+document.getElementById("advanced-button")
+    .addEventListener("click", onAdvanced);
