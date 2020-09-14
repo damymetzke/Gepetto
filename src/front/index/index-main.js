@@ -21,7 +21,8 @@ function ImportSvg () {
         width: 1,
         height: 1,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            enableRemoteModule: true
         },
         useContentSize: true,
         resizable: false,

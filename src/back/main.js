@@ -50,6 +50,7 @@ function createWindow () {
     );
 
 
+    // todo: filter out deleted projects
     const recentDocuments = ("recentDocuments" in configData)
         ? configData.recentDocuments
             .filter((recentDocument) => typeof recentDocument === "string")

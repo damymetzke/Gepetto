@@ -76,9 +76,11 @@ export class DrawObjectManager {
                 };
 
             })
-            .catch((error) => <ImportResult>{
+            .catch((error: string | Error) => <ImportResult>{
                 success: false,
-                message: error
+                message: (typeof error === "string")
+                    ? error
+                    : error.message
             });
 
 
