@@ -1,63 +1,100 @@
-const {LOGGER, runParallelScript, runNpm, stdLib, runScript, runBin, runBuildScript} = require("node-build-util");
+const { LOGGER, runParallelScript, runNpm, stdLib, runScript, runBin, runBuildScript } = require("node-build-util");
 const _ = require("lodash");
 
 const path = require("path");
 
-// scripts
-// ///////
-const copyHtml = _.bind(runParallelScript, null, "std:fileSystem/copyFolder.js", path.join(__dirname, "html"), path.join(__dirname, "out"));
+//scripts
+/////////
+const copyHtml = _.bind(
+    runParallelScript, null,
+    "std:fileSystem/copyFolder.js",
 
-const compileSass = _.bind(runParallelScript, null, path.join(__dirname, "scripts/compileSass.js"), path.join(__dirname, "style"), path.join(__dirname, "out/style"));
+    path.join(__dirname, "html"),
+    path.join(__dirname, "out"));
 
-function makePrepare (from, to) {
+const compileSass = _.bind(
+    runParallelScript, null,
+    path.join(__dirname, "scripts/compileSass.js"),
 
-    return _.bind(runParallelScript, null, "std:fileSystem/copyFolder.js", from, to);
+    path.join(__dirname, "style"),
+    path.join(__dirname, "out/style")
+);
 
+function makePrepare(from, to)
+{
+    return _.bind(
+        runParallelScript, null,
+        "std:fileSystem/copyFolder.js",
+
+        from, to
+    );
 }
 const prepareFront = makePrepare("./src/core", "./src/front/core");
 const prepareBack = makePrepare("./src/core", "./src/back/core");
 const prepareTest = makePrepare("./src/core", "./src/test/core");
 
-const runLinter = _.bind(runBin, null, "eslint", [path.join(__dirname, "src/**")]);
+function makeCompileTs(tsconfigPath)
+{
+    return _.bind(
+        runBin, null,
+        "tsc",
 
-function makeCompileTs (tsconfigPath) {
-
-    return _.bind(runBin, null, "tsc", ["-p", tsconfigPath]);
-
+        [ "-p", tsconfigPath ]
+    );
 }
 
 const compileTsFront = makeCompileTs("./config/front.tsconfig.json");
 const compileTsBack = makeCompileTs("./config/back.tsconfig.json");
 const compileTsTest = makeCompileTs("./config/test.tsconfig.json");
 
-const run = _.bind(runBin, null, "electron", ["."]);
+const run = _.bind(
+    runBin, null,
+    "electron",
 
-const test = _.bind(runBin, null, "jest", []);
+    [ "." ]
+);
 
-const renderMd = _.bind(runParallelScript, null, path.join(__dirname, "scripts/buildMd.js"), path.join(__dirname, "documentation/md"), path.join(__dirname, "documentation/build/md"));
+const test = _.bind(
+    runBin, null,
+    "jest",
 
-const prepareTypedoc = _.bind(runParallelScript, null, path.join(__dirname, "scripts/prepareTypedoc.js"));
+    []
+);
 
-const renderTypeDoc = _.bind(runBin, null, "typedoc", [
-    "./intermediate/typedoc_src",
-    "--out",
-    "./documentation/build/typedoc-output",
-    "--tsconfig",
-    "./config/tsconfig.json",
-    "--exclude",
-    "./src/front/core",
-    "--exclude",
-    "./src/back/core",
-    "--exclude",
-    "./src/test/core"
-]);
+const renderMd = _.bind(
+    runParallelScript, null,
+    path.join(__dirname, "scripts/buildMd.js"),
 
-// export
-// //////
+    path.join(__dirname, "documentation/md"),
+    path.join(__dirname, "documentation/build/md")
+);
+
+const prepareTypedoc = _.bind(
+    runParallelScript, null,
+    path.join(__dirname, "scripts/prepareTypedoc.js")
+);
+
+const renderTypeDoc = _.bind(
+    runBin, null,
+    "typedoc",
+
+    [
+        "./intermediate/typedoc_src",
+        "--out", "./documentation/build/typedoc-output",
+        "--tsconfig", "./config/tsconfig.json",
+        "--exclude", "./src/front/core",
+        "--exclude", "./src/back/core",
+        "--exclude", "./src/test/core"
+    ]
+
+);
+
+//export
+////////
 module.exports = {
     buildScripts: {
-        start: async () => {
-
+        start: async () =>
+        {
             LOGGER.log("Running script: 'start'");
             LOGGER.log("Compiling...");
 
@@ -80,10 +117,9 @@ module.exports = {
             LOGGER.log("Compilation complete, starting Electron instance.");
             await run();
             LOGGER.log("Electron instance closed.");
-
         },
-        test: async () => {
-
+        test: async () =>
+        {
             LOGGER.log("Running script: 'test'");
             LOGGER.log("Running tests using jest framework.");
 
@@ -91,16 +127,9 @@ module.exports = {
             await compileTsTest();
             await test();
             LOGGER.log("Tests completed successfully.");
-
         },
-        lint: async () => {
-
-            LOGGER.log("Running script: 'lint'");
-            runLinter();
-
-        },
-        compileApp: async () => {
-
+        compileApp: async () =>
+        {
             LOGGER.log("Compiling app...");
             const htmlAndSass = [
                 copyHtml(),
@@ -118,58 +147,50 @@ module.exports = {
                 ...htmlAndSass
             ]);
             LOGGER.log("Finished compiling app");
-
         },
-        buildDocs: async () => {
-
+        buildDocs: async () =>
+        {
             LOGGER.log("Running script: 'buildDocs'");
 
-            const buildDocs = (async () => {
-
+            const buildDocs = (async () =>
+            {
                 LOGGER.log("Building markdown documentation...");
                 await renderMd();
                 LOGGER.log("Completed building markdown documentation.");
-
             })();
 
             await prepareTypedoc();
 
             await Promise.all([
-                (async () => {
-
+                (async () =>
+                {
                     LOGGER.log("Building typedoc documentation...");
                     await renderTypeDoc();
                     LOGGER.log("Completed building typedoc documentation.");
-
                 })(),
                 buildDocs
             ]);
             LOGGER.log("successfully build all documentation.");
-
         },
-        clean: async () => {
-
+        clean: async () =>
+        {
             LOGGER.log("Running script: 'clean'");
-            await runNpm("old:clean"); // todo: create script
-
+            await runNpm("old:clean"); //todo: create script
         },
-        package: async () => {
-
+        package: async () =>
+        {
             LOGGER.log("Running script: 'package'");
-            await runNpm("old:clean"); // todo: create script
+            await runNpm("old:clean"); //todo: create script
 
             await Promise.all([
-                (async () => // testing
+                (async () => //testing
                 {
-
                     await prepareTest();
                     await compileTsTest();
                     await test();
-
                 })(),
-                (async () => // build app
+                (async () => //build app
                 {
-
                     const htmlAndSass = [
                         copyHtml(),
                         compileSass()
@@ -185,37 +206,30 @@ module.exports = {
                         compileTsBack(),
                         ...htmlAndSass
                     ]);
-
                 })(),
-                (async () => // build docs
+                (async () => //build docs
                 {
-
                     runBuildScript("buildDocs");
-
                 })()
             ]);
 
-            await runBin("electron-builder", ["--dir"]);
-
+            await runBin("electron-builder", [ "--dir" ]);
         },
-        distribute: async () => {
-
+        distribute: async () =>
+        {
             LOGGER.log("Running script: 'distribute'");
 
-            await runNpm("old:clean"); // todo: create script
+            await runNpm("old:clean"); //todo: create script
 
             await Promise.all([
-                (async () => // testing
+                (async () => //testing
                 {
-
                     await prepareTest();
                     await compileTsTest();
                     await test();
-
                 })(),
-                (async () => // build app
+                (async () => //build app
                 {
-
                     const htmlAndSass = [
                         copyHtml(),
                         compileSass()
@@ -231,18 +245,14 @@ module.exports = {
                         compileTsBack(),
                         ...htmlAndSass
                     ]);
-
                 })(),
-                (async () => // build docs
+                (async () => //build docs
                 {
-
                     runBuildScript("buildDocs");
-
                 })()
             ]);
 
-            await runBin("electron-builder", ["--dir"]);
-
+            await runBin("electron-builder", [ "--dir" ]);
         }
     }
 };
