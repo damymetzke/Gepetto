@@ -121,17 +121,7 @@ export class DrawObject implements Serializable {
      */
     ToPureObject (): SerializedDrawObject {
 
-        const resultParent = (typeof this.parent === "string"
-            || this.parent === null)
-            ? <string> this.parent
-            : this.parent.name;
-
-        return {
-            name: this.name,
-            parent: resultParent,
-            transformCommands:
-            this.transformCommands.map((command) => command.ToPureObject())
-        };
+        return this.serialize();
 
     }
 
@@ -140,13 +130,7 @@ export class DrawObject implements Serializable {
      */
     FromPureObject (object: SerializedDrawObject): this {
 
-        this.name = object.name;
-        this.parent = object.parent;
-        this._transformDirty = true;
-        this.transformCommands = object.transformCommands
-            .map((command) => new TransformCommand().FromPureObject(command));
-
-        return this;
+        return this.deserialize(object);
 
     }
 
@@ -197,13 +181,29 @@ export class DrawObject implements Serializable {
 
     serialize (): SerializedDrawObject {
 
-        return this.ToPureObject();
+        const resultParent = (typeof this.parent === "string"
+            || this.parent === null)
+            ? <string> this.parent
+            : this.parent.name;
+
+        return {
+            name: this.name,
+            parent: resultParent,
+            transformCommands:
+            this.transformCommands.map((command) => command.ToPureObject())
+        };
 
     }
 
     deserialize (serialized: SerializedDrawObject): this {
 
-        return this.FromPureObject(serialized);
+        this.name = serialized.name;
+        this.parent = serialized.parent;
+        this._transformDirty = true;
+        this.transformCommands = serialized.transformCommands
+            .map((command) => new TransformCommand().deserialize(command));
+
+        return this;
 
     }
 

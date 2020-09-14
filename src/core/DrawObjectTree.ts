@@ -83,36 +83,8 @@ export class DrawObjectTree implements Serializable {
      */
     FromPureObject (object: SerializedDrawObjectTree): this {
 
-        for (const name in object.objects) {
 
-            if (!Object.prototype.hasOwnProperty
-                .call(this.objects, name)) {
-
-                continue;
-
-            }
-            this.objects[name] = new DrawObject()
-                .deserialize(object.objects[name]);
-
-        }
-        for (const name in object.objects) {
-
-            if (this.objects[name].parent === null) {
-
-                continue;
-
-            }
-
-            const currentObject = this.objects[name];
-
-            // assume string type
-            currentObject.parent = this.objects[<string>currentObject.parent];
-
-        }
-
-        this.rootObjects = object.rootObjects.map((name) => this.objects[name]);
-
-        return this;
+        return this.deserialize(<any>object);
 
     }
 
@@ -135,7 +107,43 @@ export class DrawObjectTree implements Serializable {
 
     deserialize (serialized: SerializeObject): this {
 
-        return this.FromPureObject(<any>serialized);
+        for (const name in (<any>serialized).objects) {
+
+            if (!Object.prototype.hasOwnProperty
+                .call(serialized.objects, name)) {
+
+                continue;
+
+            }
+            this.objects[name] = new DrawObject()
+                .deserialize(serialized.objects[name]);
+
+        }
+        for (const name in (<any>serialized).objects) {
+
+            if (!Object.prototype.hasOwnProperty
+                .call(serialized.objects, name)) {
+
+                continue;
+
+            }
+            if (this.objects[name].parent === null) {
+
+                continue;
+
+            }
+
+            const currentObject = this.objects[name];
+
+            // assume string type
+            currentObject.parent = this.objects[<string>currentObject.parent];
+
+        }
+
+        this.rootObjects
+        = (<any>serialized).rootObjects.map((name) => this.objects[name]);
+
+        return this;
 
     }
 
