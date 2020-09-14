@@ -1,0 +1,30 @@
+name: ESLint
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    name: Run ESLint
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: use Node.js ${{matrix.node-version}}
+        uses: actions/setup-node@v2.1.1
+        with:
+          node-version: ${{matrix.node-version}}
+
+      - name: install
+        run: npm install
+
+      - name: lint
+        run: npm run lint

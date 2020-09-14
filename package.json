@@ -7,7 +7,7 @@
   "scripts": {
     "start": "b-script start",
     "test": "b-script test",
-    "lint": "b-script lint",
+    "lint": "eslint -c .eslintrc.yml --max-warnings 0 src/**",
     "compile-app": "b-script compileApp",
     "build-docs": "b-script buildDocs",
     "clean": "b-script clean",
