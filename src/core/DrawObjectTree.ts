@@ -67,7 +67,7 @@ export class DrawObjectTree implements Serializable {
 
                     }
 
-                    result[name] = this.objects[name].ToPureObject();
+                    result[name] = this.objects[name].serialize();
 
                 }
 
@@ -92,7 +92,7 @@ export class DrawObjectTree implements Serializable {
 
             }
             this.objects[name] = new DrawObject()
-                .FromPureObject(object.objects[name]);
+                .deserialize(object.objects[name]);
 
         }
         for (const name in object.objects) {
@@ -129,13 +129,13 @@ export class DrawObjectTree implements Serializable {
 
     serialize (): SerializeObject {
 
-        return <any> this.ToPureObject();
+        return <any> this.serialize();
 
     }
 
     deserialize (serialized: SerializeObject): this {
 
-        return this.FromPureObject(<any>serialized);
+        return this.deserialize(<any>serialized);
 
     }
 

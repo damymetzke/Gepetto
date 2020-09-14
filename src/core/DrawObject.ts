@@ -195,7 +195,7 @@ export class DrawObject implements Serializable {
 
     }
 
-    serialize (): SerializeObject {
+    serialize (): SerializedDrawObject {
 
         return this.ToPureObject();
 
