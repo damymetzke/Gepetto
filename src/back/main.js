@@ -49,15 +49,18 @@ function createWindow () {
         window
     );
 
+
     const recentDocuments = ("recentDocuments" in configData)
-        ? configData.recentDocuments.map((recentDocument) => new MenuItem({
-            label: path.basename(recentDocument),
-            click: () => {
+        ? configData.recentDocuments
+            .filter((recentDocument) => typeof recentDocument === "string")
+            .map((recentDocument) => new MenuItem({
+                label: path.basename(recentDocument),
+                click: () => {
 
-                projectManager.open(recentDocument);
+                    projectManager.open(recentDocument);
 
-            }
-        }))
+                }
+            }))
         : [];
 
     const applicationSubMenu_File = new MenuItem({
@@ -201,11 +204,11 @@ fs.readFile(USER_CONFIG_PATH)
                 ? configData.recentDocuments
                 : [])
         );
-        app.whenReady().then(createWindow());
+        app.whenReady().then(createWindow);
 
     })
     .catch(() => {
 
-        app.whenReady().then(createWindow());
+        app.whenReady().then(createWindow);
 
     });
