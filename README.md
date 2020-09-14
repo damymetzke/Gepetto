@@ -1,4 +1,5 @@
 ![Jest automatic test](https://github.com/damymetzke/Gepetto/workflows/Jest%20automatic%20test/badge.svg)
+![ESLint](https://github.com/damymetzke/Gepetto/workflows/ESLint/badge.svg)
 
 # Gepetto
 Gepetto is a personal project.
