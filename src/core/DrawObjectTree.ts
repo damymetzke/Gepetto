@@ -129,13 +129,13 @@ export class DrawObjectTree implements Serializable {
 
     serialize (): SerializeObject {
 
-        return <any> this.serialize();
+        return <any> this.ToPureObject();
 
     }
 
     deserialize (serialized: SerializeObject): this {
 
-        return this.deserialize(<any>serialized);
+        return this.FromPureObject(<any>serialized);
 
     }
 

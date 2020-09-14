@@ -64,7 +64,7 @@ export function updateTransformCommands (
 
                     for (const key in command.fields) {
 
-                        if (Object.prototype.hasOwnProperty
+                        if (!Object.prototype.hasOwnProperty
                             .call(command.fields, key)) {
 
                             continue;
