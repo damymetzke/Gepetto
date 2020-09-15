@@ -1,7 +1,7 @@
-import * as Dropdown from "../global/dropdown.js";
 import {ObjectEditor} from "../ObjectEditor/main.js";
 import {StartMenu} from "../Start/StartMain.js";
 import {TabCollection} from "../global/tabs_alt.js";
+import {setupDropdowns} from "../global/dropdownAlt.js";
 
 const currentWindow = require("electron").remote.getCurrentWindow();
 const {BrowserWindow} = require("electron").remote;
@@ -90,7 +90,7 @@ function Run () {
 
     const root = document.getElementById("body");
 
-    Dropdown.OnScriptLoad(root);
+    setupDropdowns(root);
 
 
     document.getElementById("toolbar--buttons--import-object")
