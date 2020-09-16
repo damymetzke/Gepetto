@@ -281,3 +281,4 @@ rules:
   "@typescript-eslint/no-var-requires": "off"
   "@typescript-eslint/no-empty-function": warn
   "@typescript-eslint/no-this-alias": 0
+  "@typescript-eslint/no-explicit-any": error

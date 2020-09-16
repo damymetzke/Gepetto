@@ -59,7 +59,7 @@ test(`CLASS_FUNCTION TransformCommand.GetTransform @ '${TARGET_FILE}'`, () => {
     const rotateTransform = rotateCommand.GetTransform();
     const shearTransform = shearCommand.GetTransform();
 
-    (<any>expect(translateTransform)).toEqualTransform(new Transform([
+    expect(translateTransform).toEqualTransform(new Transform([
         1,
         0,
         0,
@@ -67,7 +67,7 @@ test(`CLASS_FUNCTION TransformCommand.GetTransform @ '${TARGET_FILE}'`, () => {
         2142,
         7854
     ]));
-    (<any>expect(scaleTransform)).toEqualTransform(new Transform([
+    expect(scaleTransform).toEqualTransform(new Transform([
         7384,
         0,
         0,
@@ -75,7 +75,7 @@ test(`CLASS_FUNCTION TransformCommand.GetTransform @ '${TARGET_FILE}'`, () => {
         0,
         0
     ]));
-    (<any>expect(rotateTransform)).toEqualTransform(new Transform([
+    expect(rotateTransform).toEqualTransform(new Transform([
         -0.139,
         0.990,
         -0.990,
@@ -83,7 +83,7 @@ test(`CLASS_FUNCTION TransformCommand.GetTransform @ '${TARGET_FILE}'`, () => {
         0,
         0
     ]));
-    (<any>expect(shearTransform)).toEqualTransform(new Transform([
+    expect(shearTransform).toEqualTransform(new Transform([
         1,
         0,
         4887,

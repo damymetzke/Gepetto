@@ -12,7 +12,7 @@ test("", () => {
 
     const ownerResult: SyncAction[] = [];
     const subscriberResult: SyncAction[] = [];
-    const subscriberFullSyncResult: any[] = [];
+    const subscriberFullSyncResult: unknown[] = [];
 
     owner.onRecieve((action) => {
 

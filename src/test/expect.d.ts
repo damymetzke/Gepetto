@@ -7,7 +7,9 @@ declare global {
     // bug: this is definitely used, maybe this is is an typescript-eslint bug?
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Matchers<R> {
-      toEqualTransform(expected: Transform): CustomMatcherResult
+      toEqualTransform(expected: Transform): CustomMatcherResult;
+      toBeTrueForAny(
+        test: ((recieved: unknown) => boolean)): CustomMatcherResult;
     }
   }
 }

@@ -76,8 +76,8 @@ expect.extend({
 
     },
     toBeTrueForAny (
-        recieved: any[],
-        test: ((recieved: any) => boolean)
+        recieved: unknown[],
+        test: ((recieved: unknown) => boolean)
     ): jest.CustomMatcherResult {
 
         const success = recieved.some((element) => test(element));

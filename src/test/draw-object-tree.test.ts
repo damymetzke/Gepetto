@@ -107,13 +107,13 @@ test(`CLASS_FUNCTION DrawObjectTree.FromPureObject @ '${TARGET_FILE}'`, () => {
     const drawObjectTree = new DrawObjectTree()
         .FromPureObject(drawObjectTreePure);
 
-    (<any>expect(drawObjectTree.rootObjects))
+    expect(drawObjectTree.rootObjects)
         .toBeTrueForAny((input: DrawObject) => input.name === "A");
 
-    (<any>expect(drawObjectTree.rootObjects))
+    expect(drawObjectTree.rootObjects)
         .toBeTrueForAny((input: DrawObject) => input.name === "B");
 
-    (<any>expect(drawObjectTree.rootObjects))
+    expect(drawObjectTree.rootObjects)
         .not.toBeTrueForAny((input: DrawObject) => input.name === "BA");
 
     const drawObjectTreeObjectKeys = Object.keys(drawObjectTree.objects);

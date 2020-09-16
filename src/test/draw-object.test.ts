@@ -93,7 +93,7 @@ test(`CLASS_FUNCTION DrawObject.WorldTransform @ '${TARGET_FILE}'`, () => {
             y: 1})
     ]);
 
-    (<any>expect(objectC.WorldTransform()))
+    expect(objectC.WorldTransform())
         .toEqualTransform(new Transform([
             1.06,
             1.06,
