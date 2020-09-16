@@ -85,7 +85,7 @@ function onChangeName (root: SubDoc, name: string) {
 }
 
 function onRename (
-    event: KeyboardEvent,
+    _event: KeyboardEvent,
     nameInput: HTMLInputElement,
     tree: DrawObjectTreeEditorWrapper
 ) {
@@ -96,7 +96,8 @@ function onRename (
 
         dialog.showMessageBox(currentWindow, {
             type: "warning",
-            message: (<any>validateResult).message
+            message: (<{ success: false; message: string; }>validateResult)
+                .message
         });
 
         return;

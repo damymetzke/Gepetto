@@ -84,7 +84,7 @@ export class DrawObjectTree implements Serializable {
     FromPureObject (object: SerializedDrawObjectTree): this {
 
 
-        return this.deserialize(<any>object);
+        return this.deserialize(<SerializeObject><unknown>object);
 
     }
 
@@ -101,7 +101,7 @@ export class DrawObjectTree implements Serializable {
 
     serialize (): SerializeObject {
 
-        return <any> this.ToPureObject();
+        return <SerializeObject><unknown> this.ToPureObject();
 
     }
 
@@ -215,7 +215,9 @@ export class DrawObjectTreeWrapper implements DrawObjectTreeInterface {
             connector,
             drawObjectTree,
             (under) => under.ToPureObject(),
-            (recieved) => (new DrawObjectTree().FromPureObject(recieved))
+            // todo: fix this mess
+            (recieved) => (new DrawObjectTree()
+                .FromPureObject(<SerializedDrawObjectTree>recieved))
         );
 
     }

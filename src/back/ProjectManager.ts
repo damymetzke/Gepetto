@@ -213,7 +213,7 @@ export class ProjectManager {
             })
             .then(([data, filePath]) => {
 
-                let configData: any = {};
+                let configData: {[key: string]: unknown} = {};
 
                 try {
 
@@ -230,11 +230,11 @@ export class ProjectManager {
 
                 }
 
-                if (configData.recentDocuments
+                if ((<string[]>configData.recentDocuments)
                     .every((existingFilePath) => existingFilePath
                       !== filePath)) {
 
-                    configData.recentDocuments.push(filePath);
+                    (<string[]>configData.recentDocuments).push(filePath);
 
                     return fs.writeFile(
                         USER_CONFIG_PATH,

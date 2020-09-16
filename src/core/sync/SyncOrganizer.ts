@@ -1,6 +1,6 @@
 import {SyncConnector} from "./SyncConnector.js";
 
-export type SyncAction = { action: string, argumentList: any[]; };
+export type SyncAction = { action: string, argumentList: unknown[]; };
 
 /**
  * the type of organizer dictates the role it plays in synchronizing.
@@ -50,14 +50,14 @@ export interface SyncOrganizer
      * this data will be send to the other object,
      * and `onFullSync` will be called using this data.
      */
-    getFullSyncData: (callback: () => any) => void;
+    getFullSyncData: (callback: () => unknown) => void;
 
     /**
      * provide a callback function for when a full sync is recieved.
      * 
      * data is retrieved using `getFullSyncData` from the other object.
      */
-    onFullSync: (callback: (data: any) => void) => void;
+    onFullSync: (callback: (data: unknown) => void) => void;
 
     /**
      * call this to request a full synchronization.
@@ -83,7 +83,7 @@ export class SyncOrganizer_Owner implements SyncOrganizer {
 
     callback: (action: SyncAction) => void;
 
-    getFullSyncCallback: () => any;
+    getFullSyncCallback: () => unknown;
 
     send (action: SyncAction) {
 
@@ -104,7 +104,7 @@ export class SyncOrganizer_Owner implements SyncOrganizer {
 
     }
 
-    getFullSyncData (callback: () => any) {
+    getFullSyncData (callback: () => unknown) {
 
         this.getFullSyncCallback = callback;
 
@@ -112,7 +112,7 @@ export class SyncOrganizer_Owner implements SyncOrganizer {
 
     // eslint-disable-next-line max-len
     // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this
-    onFullSync (callback: (data: any) => void) {
+    onFullSync (callback: (data: unknown) => void) {
     }
 
     // eslint-disable-next-line max-len
@@ -188,7 +188,7 @@ export class SyncOrganizer_Subscriber implements SyncOrganizer {
 
     callback: (action: SyncAction) => void;
 
-    fullSyncCallback: (data: any) => void;
+    fullSyncCallback: (data: unknown) => void;
 
     send (action: SyncAction) {
 
@@ -219,10 +219,10 @@ export class SyncOrganizer_Subscriber implements SyncOrganizer {
 
     // eslint-disable-next-line max-len
     // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this
-    getFullSyncData (_callback: () => any) {
+    getFullSyncData (_callback: () => unknown) {
     }
 
-    onFullSync (callback: (data: any) => void) {
+    onFullSync (callback: (data: unknown) => void) {
 
         this.fullSyncCallback = callback;
 

@@ -26,7 +26,7 @@ export type SyncMessage =
     {
         type: "action";
         action: string;
-        argumentList: any[];
+        argumentList: unknown[];
         num: number;
     }
     |
@@ -41,7 +41,7 @@ export type SyncMessage =
     |
     {
         type: "sync";
-        object: any;
+        object: unknown;
     };
 
 /**

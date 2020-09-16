@@ -5,14 +5,14 @@ import {SyncAction,
     SyncOrganizer_Subscriber} from "./SyncOrganizer.js";
 import {SyncConnector} from "./SyncConnector.js";
 type ActionCallbackFunction<UnderType> =
-    ((under: UnderType, argumentList: any[]) => void);
+    ((under: UnderType, argumentList: unknown[]) => void);
 type ActionAllCallbackFunction<UnderType> =
-    ((action: string, under: UnderType, argumentList: any[]) => void);
+    ((action: string, under: UnderType, argumentList: unknown[]) => void);
 
 export type SyncConverter =
     {
-        ConvertToSend(rawInput: any[]): any[];
-        ConvertFromSend(recieved): any[];
+        ConvertToSend(rawInput: unknown[]): unknown[];
+        ConvertFromSend(recieved): unknown[];
     };
 
 export class SyncObject<UnderType> {
@@ -72,7 +72,7 @@ export class SyncObject<UnderType> {
                 .ConvertFromSend(action.argumentList)
             : action.argumentList;
 
-        const targetFunction: (...recieveArgumentList: any) => any
+        const targetFunction: (...recieveArgumentList: unknown[]) => unknown
         = this.under[action.action];
 
         targetFunction.call(this.under, ...argumentList);
@@ -117,8 +117,8 @@ export class SyncObject<UnderType> {
         organizerType: SyncOrganizerType,
         connector: SyncConnector,
         under: UnderType,
-        toFullSync: (fullSyncUnder: UnderType) => any,
-        fromFullSync: (recieved: any) => UnderType,
+        toFullSync: (fullSyncUnder: UnderType) => unknown,
+        fromFullSync: (recieved: unknown) => UnderType,
         conversions: { [ action: string ]: SyncConverter; } = {}
     ) {
 

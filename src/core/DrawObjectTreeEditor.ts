@@ -343,8 +343,9 @@ implements DrawObjectTreeEditorInterface {
             connector,
             drawObjectTree,
             (under) => under.ToPureObject(),
+            // todo: fix this mess
             (recieved) => <DrawObjectTreeEditor>(new DrawObjectTreeEditor()
-                .FromPureObject(recieved)),
+                .FromPureObject(<SerializedDrawObjectTree>recieved)),
             {
                 AddObjectToRoot: {
                     ConvertToSend: (argumentList) => [
