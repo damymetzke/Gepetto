@@ -234,7 +234,7 @@ export class DrawObjectTreeEditor
 
         this.dirty = false;
 
-        return super.deserialize(serialized);
+        return super.deserialize(<SerializedDrawObjectTree>serialized);
 
     }
 

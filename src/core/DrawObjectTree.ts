@@ -4,7 +4,7 @@ import {SyncConnector} from "./sync/SyncConnector.js";
 import {SyncObject} from "./sync/SyncObject.js";
 import {SyncOrganizerType} from "./sync/SyncOrganizer.js";
 
-export interface SerializedDrawObjectTree
+export interface SerializedDrawObjectTree extends SerializeObject
 {
     rootObjects: string[];
     objects: { [ name: string ]: SerializedDrawObject; };
@@ -84,7 +84,7 @@ export class DrawObjectTree implements Serializable {
     FromPureObject (object: SerializedDrawObjectTree): this {
 
 
-        return this.deserialize(<SerializeObject><unknown>object);
+        return this.deserialize(<SerializedDrawObjectTree><unknown>object);
 
     }
 
@@ -105,9 +105,9 @@ export class DrawObjectTree implements Serializable {
 
     }
 
-    deserialize (serialized: SerializeObject): this {
+    deserialize (serialized: SerializedDrawObjectTree): this {
 
-        for (const name in (<any>serialized).objects) {
+        for (const name in serialized.objects) {
 
             if (!Object.prototype.hasOwnProperty
                 .call(serialized.objects, name)) {
@@ -119,7 +119,7 @@ export class DrawObjectTree implements Serializable {
                 .deserialize(serialized.objects[name]);
 
         }
-        for (const name in (<any>serialized).objects) {
+        for (const name in serialized.objects) {
 
             if (!Object.prototype.hasOwnProperty
                 .call(serialized.objects, name)) {
@@ -141,7 +141,7 @@ export class DrawObjectTree implements Serializable {
         }
 
         this.rootObjects
-        = (<any>serialized).rootObjects.map((name) => this.objects[name]);
+        = serialized.rootObjects.map((name) => this.objects[name]);
 
         return this;
 
