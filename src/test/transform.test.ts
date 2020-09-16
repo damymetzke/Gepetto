@@ -31,9 +31,9 @@ test(`CLASS_FUNCTION Transform.Lerp @ '${TARGET_FILE}'`, () => {
     const random = a.Lerp(b, 0.277);
 
     // test
-    (<any>expect(min)).toEqualTransform(a);
-    (<any>expect(max)).toEqualTransform(b);
-    (<any>expect(random)).toEqualTransform(new Transform([
+    expect(min).toEqualTransform(a);
+    expect(max).toEqualTransform(b);
+    expect(random).toEqualTransform(new Transform([
         8136.281,
         907.626,
         4634.129,
@@ -54,7 +54,7 @@ test(`CLASS_FUNCTION Transform.Add @ '${TARGET_FILE}'`, () => {
     const added = first.Add(last);
 
     // test
-    (<any>expect(added)).toEqualTransform(new Transform([
+    expect(added).toEqualTransform(new Transform([
         53470861,
         73066164,
         69574021,
@@ -88,7 +88,7 @@ test(`CLASS_FUNCTION Transform.InnerMatrix @ '${TARGET_FILE}'`, () => {
     const inner = transform.InnerMatrix();
 
     // test
-    (<any>expect(inner)).toEqualTransform(new Transform([
+    expect(inner).toEqualTransform(new Transform([
         8189,
         4878,
         5721,
@@ -108,7 +108,7 @@ test(`CLASS_FUNCTION Transform.PositionMatrix @ '${TARGET_FILE}'`, () => {
     const position = transform.PositionMatrix();
 
     // test
-    (<any>expect(position)).toEqualTransform(new Transform([
+    expect(position).toEqualTransform(new Transform([
         1,
         0,
         0,
@@ -128,7 +128,7 @@ test(`CLASS_FUNCTION Transform.Inverse @ '${TARGET_FILE}'`, () => {
     const inverse = transform.Inverse();
 
     // test
-    (<any>expect(inverse)).toEqualTransform(new Transform([
+    expect(inverse).toEqualTransform(new Transform([
         -0,
         0.01,
         0.02,
