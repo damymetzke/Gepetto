@@ -2,7 +2,7 @@ import {SyncConnector, SyncMessage} from "../core/core";
 
 const {ipcRenderer} = require("electron");
 
-export class SyncConnector_Front implements SyncConnector {
+export class SyncConnectorFront implements SyncConnector {
 
     callback: (message: SyncMessage) => void;
 

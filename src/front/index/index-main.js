@@ -32,7 +32,7 @@ function ImportSvg () {
         show: false
     });
 
-    const svgImportSubMenu_Developer = new MenuItem({
+    const svgImportSubMenuDeveloper = new MenuItem({
         type: "submenu",
         label: "Developer",
         submenu: [
@@ -50,7 +50,7 @@ function ImportSvg () {
 
     const svgImportMenu = new Menu();
 
-    svgImportMenu.append(svgImportSubMenu_Developer);
+    svgImportMenu.append(svgImportSubMenuDeveloper);
 
     win.setMenu(svgImportMenu);
 

@@ -64,7 +64,7 @@ function createWindow () {
             }))
         : [];
 
-    const applicationSubMenu_File = new MenuItem({
+    const applicationSubMenuFile = new MenuItem({
         type: "submenu",
         label: "File",
         submenu: [
@@ -144,7 +144,7 @@ function createWindow () {
         ]
     });
 
-    const applicationSubMenu_Developer = new MenuItem({
+    const applicationSubMenuDeveloper = new MenuItem({
         type: "submenu",
         label: "Developer",
         submenu: [
@@ -162,8 +162,8 @@ function createWindow () {
 
     const applicationMenu = new Menu();
 
-    applicationMenu.append(applicationSubMenu_File);
-    applicationMenu.append(applicationSubMenu_Developer);
+    applicationMenu.append(applicationSubMenuFile);
+    applicationMenu.append(applicationSubMenuDeveloper);
 
 
     window.setMenu(applicationMenu);
