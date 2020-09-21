@@ -1,11 +1,11 @@
-import {SyncConnector_Direct, SyncMessage} from "../core/core";
+import {SyncConnectorDirect, SyncMessage} from "../core/core";
 
 const TARGET_FILE = "core/sync_alt/SyncConnector.ts";
 
 test("", () => {
 
-    const a = new SyncConnector_Direct();
-    const b = new SyncConnector_Direct(a);
+    const a = new SyncConnectorDirect();
+    const b = new SyncConnectorDirect(a);
 
     const aResult: SyncMessage[] = [];
     const bResult: SyncMessage[] = [];

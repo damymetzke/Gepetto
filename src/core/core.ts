@@ -20,13 +20,13 @@ import {SerializedTransformCommand,
 import {SyncAction,
     SyncOrganizer,
     SyncOrganizerType} from "./sync/SyncOrganizer.js";
-import {SyncOrganizerOwner} from "./sync/SyncOrganizerOwner.js";
-import {SyncOrganizerSubscriber} from "./sync/SyncOrganizerSubscriber.js";
 import {SyncConnector,
-    SyncConnector_Direct,
-    SyncConnector_Null,
     SyncMessage} from "./sync/SyncConnector.js";
 import {SyncConverter, SyncObject} from "./sync/SyncObject.js";
+import {SyncConnectorDirect} from "./sync/SyncConnectorDirect.js";
+import {SyncConnectorNull} from "./sync/SyncConnectorNull.js";
+import {SyncOrganizerOwner} from "./sync/SyncOrganizerOwner.js";
+import {SyncOrganizerSubscriber} from "./sync/SyncOrganizerSubscriber.js";
 
 export
 {
@@ -41,7 +41,7 @@ export
     DrawObjectTreeEditorInterface, DrawObjectTreeEditor,
     DrawObjectTreeEditorWrapper,
 
-    SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessage,
+    SyncConnector, SyncConnectorDirect, SyncConnectorNull, SyncMessage,
     SyncOrganizer, SyncOrganizerOwner,
     SyncOrganizerSubscriber, SyncAction, SyncOrganizerType,
     SyncObject, SyncConverter,

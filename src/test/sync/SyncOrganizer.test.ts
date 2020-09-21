@@ -1,14 +1,14 @@
 import {SyncAction,
-    SyncConnector_Direct,
-    SyncOrganizer_Owner,
-    SyncOrganizer_Subscriber} from "../core/core";
+    SyncConnectorDirect,
+    SyncOrganizerOwner,
+    SyncOrganizerSubscriber} from "../core/core";
 
 test("", () => {
 
-    const ownerConnector = new SyncConnector_Direct();
-    const subscriberConnector = new SyncConnector_Direct(ownerConnector);
-    const owner = new SyncOrganizer_Owner(ownerConnector);
-    const subscriber = new SyncOrganizer_Subscriber(subscriberConnector);
+    const ownerConnector = new SyncConnectorDirect();
+    const subscriberConnector = new SyncConnectorDirect(ownerConnector);
+    const owner = new SyncOrganizerOwner(ownerConnector);
+    const subscriber = new SyncOrganizerSubscriber(subscriberConnector);
 
     const ownerResult: SyncAction[] = [];
     const subscriberResult: SyncAction[] = [];

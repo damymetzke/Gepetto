@@ -1,4 +1,4 @@
-import {SyncConnector_Direct,
+import {SyncConnectorDirect,
     SyncObject,
     SyncOrganizerType} from "../core/core";
 
@@ -74,24 +74,29 @@ class SyncDummyWrapper implements DummyInterface {
 
 }
 
+interface FullSyncDataDummy
+{
+    number: number;
+}
+
 test(`CLASS SyncObject @ '${TARGET_FILE}'`, () => {
 
-    const ownerConnector = new SyncConnector_Direct();
-    const subscriberConnector = new SyncConnector_Direct(ownerConnector);
+    const ownerConnector = new SyncConnectorDirect();
+    const subscriberConnector = new SyncConnectorDirect(ownerConnector);
 
     const ownerObject = new SyncObject<Dummy>(
         SyncOrganizerType.OWNER,
         ownerConnector,
         new Dummy(),
-        (under) => ({number: under.target}),
-        (recieved) => new Dummy(recieved.number)
+        (under): FullSyncDataDummy => ({number: under.target}),
+        (recieved: FullSyncDataDummy) => new Dummy(recieved.number)
     );
     const subscriberObject = new SyncObject<Dummy>(
         SyncOrganizerType.SUBSCRIBER,
         subscriberConnector,
         new Dummy(),
-        (under) => ({number: under.target}),
-        (recieved) => new Dummy(recieved.number)
+        (under): FullSyncDataDummy => ({number: under.target}),
+        (recieved: FullSyncDataDummy) => new Dummy(recieved.number)
     );
 
     const owner = new SyncDummyWrapper(ownerObject);
