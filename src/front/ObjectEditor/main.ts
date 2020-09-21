@@ -5,7 +5,7 @@ import {DrawObject,
 import {Tab, TabContentImplementation} from "../global/tabs_alt.js";
 import {updateTextTree, updateTransformCommands} from "./Updates.js";
 import {SubDoc} from "../global/subdoc_alt.js";
-import {SyncConnector_Front} from "../global/SyncConnector_Front.js";
+import {SyncConnectorFront} from "../global/SyncConnector_Front.js";
 import {OnScriptLoad as loadDropdown} from "../global/dropdown.js";
 
 const {dialog} = require("electron").remote;
@@ -157,7 +157,7 @@ export class ObjectEditor implements TabContentImplementation {
 
     currentDisplayedAsSelected: SVGGElement;
 
-    connector: SyncConnector_Front;
+    connector: SyncConnectorFront;
 
     enableSave: boolean;
 
@@ -174,7 +174,7 @@ export class ObjectEditor implements TabContentImplementation {
     // eslint-disable-next-line max-lines-per-function
     onInit (root: SubDoc, name: string, tab: Tab) {
 
-        this.connector = new SyncConnector_Front("draw-object-tree");
+        this.connector = new SyncConnectorFront("draw-object-tree");
         this.drawObjectTree = new DrawObjectTreeEditorWrapper(
             SyncOrganizerType.SUBSCRIBER,
             this.connector

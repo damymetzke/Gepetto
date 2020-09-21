@@ -1,7 +1,7 @@
 import {BrowserWindow, ipcMain} from "electron";
 import {SyncConnector, SyncMessage} from "./core/core";
 
-export class SyncConnector_Back implements SyncConnector {
+export class SyncConnectorBack implements SyncConnector {
 
     callback: (message: SyncMessage) => void;
 

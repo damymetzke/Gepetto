@@ -3,7 +3,7 @@ import {DrawObject,
     DrawObjectTreeEditorWrapper,
     SyncOrganizerType} from "../core/core";
 
-import {SyncConnector_Back} from "../SyncConnector_Back";
+import {SyncConnectorBack} from "../SyncConnector_Back";
 import {convertSvg} from "../Svg/SvgConverter";
 
 const REGEX_VALIDATE_IMPORT_NAME = /^[a-z][a-z0-9_#]*$/iu;
@@ -90,7 +90,7 @@ export class DrawObjectManager {
 
         this.drawObjectTree = new DrawObjectTreeEditorWrapper(
             SyncOrganizerType.OWNER,
-            new SyncConnector_Back("draw-object-tree", window)
+            new SyncConnectorBack("draw-object-tree", window)
         );
 
         ipcMain.handle(
