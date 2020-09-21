@@ -1,9 +1,9 @@
 import {SyncAction,
     SyncOrganizer,
-    SyncOrganizerType,
-    SyncOrganizer_Owner,
-    SyncOrganizer_Subscriber} from "./SyncOrganizer.js";
+    SyncOrganizerType} from "./SyncOrganizer.js";
 import {SyncConnector} from "./SyncConnector.js";
+import {SyncOrganizerOwner} from "./SyncOrganizerOwner.js";
+import {SyncOrganizerSubscriber} from "./SyncOrganizerSubscriber.js";
 type ActionCallbackFunction<UnderType> =
     ((under: UnderType, argumentList: unknown[]) => void);
 type ActionAllCallbackFunction<UnderType> =
@@ -125,11 +125,11 @@ export class SyncObject<UnderType> {
         switch (organizerType) {
 
         case SyncOrganizerType.OWNER:
-            this.organizer = new SyncOrganizer_Owner(connector);
+            this.organizer = new SyncOrganizerOwner(connector);
             break;
 
         case SyncOrganizerType.SUBSCRIBER:
-            this.organizer = new SyncOrganizer_Subscriber(connector);
+            this.organizer = new SyncOrganizerSubscriber(connector);
             break;
 
         default:

@@ -19,9 +19,9 @@ import {SerializedTransformCommand,
     TransformCommandType} from "./TransformCommand.js";
 import {SyncAction,
     SyncOrganizer,
-    SyncOrganizerType,
-    SyncOrganizer_Owner,
-    SyncOrganizer_Subscriber} from "./sync/SyncOrganizer.js";
+    SyncOrganizerType} from "./sync/SyncOrganizer.js";
+import {SyncOrganizerOwner} from "./sync/SyncOrganizerOwner.js";
+import {SyncOrganizerSubscriber} from "./sync/SyncOrganizerSubscriber.js";
 import {SyncConnector,
     SyncConnector_Direct,
     SyncConnector_Null,
@@ -42,8 +42,8 @@ export
     DrawObjectTreeEditorWrapper,
 
     SyncConnector, SyncConnector_Direct, SyncConnector_Null, SyncMessage,
-    SyncOrganizer, SyncOrganizer_Owner,
-    SyncOrganizer_Subscriber, SyncAction, SyncOrganizerType,
+    SyncOrganizer, SyncOrganizerOwner,
+    SyncOrganizerSubscriber, SyncAction, SyncOrganizerType,
     SyncObject, SyncConverter,
 
     Project, SerializedProject,
