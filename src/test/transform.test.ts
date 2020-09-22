@@ -26,9 +26,9 @@ test(`CLASS_FUNCTION Transform.Lerp @ '${TARGET_FILE}'`, () => {
     const b = new Transform([6584, 1152, 7148, 7626, 5636, 3361]);
 
     // lerped derivatives
-    const min = a.Lerp(b, 0);
-    const max = a.Lerp(b, 1);
-    const random = a.Lerp(b, 0.277);
+    const min = a.lerp(b, 0);
+    const max = a.lerp(b, 1);
+    const random = a.lerp(b, 0.277);
 
     // test
     expect(min).toEqualTransform(a);
@@ -51,7 +51,7 @@ test(`CLASS_FUNCTION Transform.Add @ '${TARGET_FILE}'`, () => {
     const last = new Transform([2669, 3831, 6093, 8222, 8655, 522]);
 
     // added derivative
-    const added = first.Add(last);
+    const added = first.add(last);
 
     // test
     expect(added).toEqualTransform(new Transform([
@@ -71,7 +71,7 @@ test(`CLASS_FUNCTION Transform.ApplyVector @ '${TARGET_FILE}'`, () => {
     const vector: Vector = [8666, 5015];
 
     // applied derivative
-    const appliedVector = transform.ApplyToVector(vector);
+    const appliedVector = transform.applyToVector(vector);
 
     // test
     expect(appliedVector[0]).toBeCloseTo(52152178);
@@ -85,7 +85,7 @@ test(`CLASS_FUNCTION Transform.InnerMatrix @ '${TARGET_FILE}'`, () => {
     const transform = new Transform([8189, 4878, 5721, 6101, 8356, 4162]);
 
     // function
-    const inner = transform.InnerMatrix();
+    const inner = transform.innerMatrix();
 
     // test
     expect(inner).toEqualTransform(new Transform([
@@ -105,7 +105,7 @@ test(`CLASS_FUNCTION Transform.PositionMatrix @ '${TARGET_FILE}'`, () => {
     const transform = new Transform([6926, 2941, 7536, 4507, 9892, 5796]);
 
     // function
-    const position = transform.PositionMatrix();
+    const position = transform.positionMatrix();
 
     // test
     expect(position).toEqualTransform(new Transform([
@@ -125,7 +125,7 @@ test(`CLASS_FUNCTION Transform.Inverse @ '${TARGET_FILE}'`, () => {
     const transform = new Transform([24, 60, 93, 20, 35, 69]);
 
     // function
-    const inverse = transform.Inverse();
+    const inverse = transform.inverse();
 
     // test
     expect(inverse).toEqualTransform(new Transform([

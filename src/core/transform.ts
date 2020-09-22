@@ -207,6 +207,15 @@ export class Transform {
     }
 
     /**
+     * @deprecated use lowercase instead.
+     */
+    InnerMatrix (): Transform {
+
+        return this.innerMatrix();
+
+    }
+
+    /**
      * get this transform without the translation
      * 
      * the resulting matrix will look like this:
@@ -220,7 +229,7 @@ export class Transform {
      * @returns new transform
      * which is this transform with its translation omitted
      */
-    InnerMatrix (): Transform {
+    innerMatrix (): Transform {
 
         return new Transform([
             this.matrix[0],
