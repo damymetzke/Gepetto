@@ -67,14 +67,33 @@ export class DrawObject implements Serializable {
 
     }
 
+    /**
+     * @deprecated use lowercase instead.
+     */
     AddTransformCommand (command: TransformCommand): void {
+
+        this.addTransformCommand(command);
+
+    }
+
+
+    addTransformCommand (command: TransformCommand): void {
 
         this.transformCommands.push(command);
         this._transformDirty = true;
 
     }
 
+    /**
+     * @deprecated use lowercase instead.
+     */
     OnTransformCommandsUpdate (): void {
+
+        this.onTransformCommandsUpdate();
+
+    }
+
+    onTransformCommandsUpdate (): void {
 
         this._transformDirty = true;
 
@@ -89,7 +108,7 @@ export class DrawObject implements Serializable {
         }
 
         this._relativeTransform = this.transformCommands.reduce(
-            (accumelator, command) => accumelator.Add(command.CreateMatrix()),
+            (accumelator, command) => accumelator.add(command.getTransform()),
             new Transform()
         );
 
@@ -97,7 +116,17 @@ export class DrawObject implements Serializable {
 
     }
 
+
+    /**
+     * @deprecated use lowercase instead.
+     */
     WorldTransform (): Transform {
+
+        return this.worldTransform();
+
+    }
+
+    worldTransform (): Transform {
 
         if (this.parent === null) {
 
@@ -112,7 +141,7 @@ export class DrawObject implements Serializable {
 
         }
 
-        return this.relativeTransform.Add(this.parent.WorldTransform());
+        return this.relativeTransform.add(this.parent.WorldTransform());
 
     }
 
@@ -134,7 +163,16 @@ export class DrawObject implements Serializable {
 
     }
 
+    /**
+     * @deprecated use lowercase instead.
+     */
     Clone (recursive = false): DrawObject {
+
+        return this.clone(recursive);
+
+    }
+
+    clone (recursive = false): DrawObject {
 
         let parent: string | DrawObject = null;
 
@@ -146,7 +184,7 @@ export class DrawObject implements Serializable {
 
             parent = this.parent === null
                 ? null
-                : this.parent.Clone(true);
+                : this.parent.clone(true);
 
         } else {
 
