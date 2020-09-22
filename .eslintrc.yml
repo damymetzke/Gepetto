@@ -100,7 +100,7 @@ rules:
   max-statements-per-line: error
   multiline-comment-style: error
   multiline-ternary: error
-  new-cap: warn
+  new-cap: error
   new-parens: error
   newline-after-var: error
   newline-before-return: error

@@ -40,7 +40,16 @@ export class Transform {
 
     }
 
+    /**
+     * @deprecated use lowercase instead.
+     */
     Lerp (target: Transform, progress: number): Transform {
+
+        return this.lerp(target, progress);
+
+    }
+
+    lerp (target: Transform, progress: number): Transform {
 
         return new Transform([
             this.matrix[0] + (progress * (target.matrix[0] - this.matrix[0])),
@@ -53,9 +62,19 @@ export class Transform {
 
     }
 
+    /**
+     * @deprecated use lowercase instead.
+     */
+    Slerp (target: Transform, progress: number): Transform {
+
+        // todo: implement slerp
+        return this.slerp(target, progress);
+
+    }
+
     // eslint-disable-next-line max-len
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
-    Slerp (target: Transform, progress: number): Transform {
+    slerp (target: Transform, progress: number): Transform {
 
         // todo: implement slerp
         return new Transform();
@@ -63,7 +82,7 @@ export class Transform {
     }
 
     /**
-     * @deprecated use Transform.Add instead
+     * @deprecated use Transform.add instead
      * 
      * @param right right hand operator
      */
@@ -94,6 +113,15 @@ export class Transform {
     }
 
     /**
+     * @deprecated use lowercase instead.
+     */
+    Add (next: Transform): Transform {
+
+        return this.add(next);
+
+    }
+
+    /**
      * apply a transform **after** this transform
      * results in a single new transform
      * which is the same as applying this transform first
@@ -111,7 +139,7 @@ export class Transform {
      * @param next transformation that should be applied next
      * @returns new transform
      */
-    Add (next: Transform): Transform {
+    add (next: Transform): Transform {
 
         return new Transform([
             (next.matrix[0] * this.matrix[0])
@@ -144,7 +172,16 @@ export class Transform {
      */
     MultiplyVector (right: Vector): Vector {
 
-        return this.ApplyToVector(right);
+        return this.applyToVector(right);
+
+    }
+
+    /**
+     * @deprecated use lowercase instead.
+     */
+    ApplyToVector (vector: Vector): Vector {
+
+        return this.applyToVector(vector);
 
     }
 
@@ -155,7 +192,7 @@ export class Transform {
      * @returns a new vector which is the result
      * of applying this transform to the input vector
      */
-    ApplyToVector (vector: Vector): Vector {
+    applyToVector (vector: Vector): Vector {
 
         return [
             (this.matrix[0] * vector[0])
@@ -197,6 +234,15 @@ export class Transform {
     }
 
     /**
+     * @deprecated use lowercase instead.
+     */
+    PositionMatrix (): Transform {
+
+        return this.positionMatrix();
+
+    }
+
+    /**
      * get the only the translation part of this matrix
      * 
      * the resulting matrix will look like this:
@@ -210,7 +256,7 @@ export class Transform {
      * @returns new transform
      * which is exlusively the translation part of this transform
      */
-    PositionMatrix (): Transform {
+    positionMatrix (): Transform {
 
         return new Transform([
             1,
@@ -224,6 +270,15 @@ export class Transform {
     }
 
     /**
+     * @deprecated use lowercase instead.
+     */
+    Inverse (): Transform {
+
+        return this.inverse();
+
+    }
+
+    /**
      * get the transform which is the inverse of this transform
      * 
      * any operation done with this transform
@@ -233,7 +288,7 @@ export class Transform {
      * Transform.Add(Transform.Inverse) = Transform.Identity
      * ```
      */
-    Inverse (): Transform {
+    inverse (): Transform {
 
         const determinant = (this.matrix[0] * this.matrix[3])
         - (this.matrix[1] * this.matrix[2]);
