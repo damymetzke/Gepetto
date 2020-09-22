@@ -158,11 +158,20 @@ export class TransformCommand implements Serializable {
      */
     CreateMatrix (): Transform {
 
-        return this.GetTransform();
+        return this.getTransform();
 
     }
 
+    /**
+     * @deprecated use lowercase instead.
+     */
     GetTransform (): Transform {
+
+        return this.getTransform();
+
+    }
+
+    getTransform (): Transform {
 
         const matrixName = TransformCommandType[this.typeIndex];
 
@@ -194,13 +203,31 @@ export class TransformCommand implements Serializable {
 
     }
 
+    /**
+     * @deprecated use lowercase instead.
+     */
     Clone (): TransformCommand {
+
+        return this.clone();
+
+    }
+
+    clone (): TransformCommand {
 
         return new TransformCommand(this.typeIndex, this.fields);
 
     }
 
+    /**
+     * @deprecated use lowercase instead.
+     */
     AddRelative (other: TransformCommand): TransformCommand {
+
+        return this.addRelative(other);
+
+    }
+
+    addRelative (other: TransformCommand): TransformCommand {
 
         if (this.typeIndex !== other.typeIndex) {
 
@@ -253,12 +280,16 @@ export class TransformCommand implements Serializable {
 
     serialize (): SerializeObject {
 
+        // todo: move implementation here
+        // eslint-disable-next-line new-cap
         return this.ToPureObject();
 
     }
 
     deserialize (serialized: SerializedTransformCommand): this {
 
+        // todo: move implementation here
+        // eslint-disable-next-line new-cap
         return this.FromPureObject(serialized);
 
     }
