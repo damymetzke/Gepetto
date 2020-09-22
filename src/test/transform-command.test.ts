@@ -54,10 +54,10 @@ test(`CLASS_FUNCTION TransformCommand.GetTransform @ '${TARGET_FILE}'`, () => {
     const rotateCommand = new TransformCommand("ROTATE", {rotation: 98});
     const shearCommand = new TransformCommand("SHEARX", {x: 4887});
 
-    const translateTransform = translateCommand.GetTransform();
-    const scaleTransform = scaleCommand.GetTransform();
-    const rotateTransform = rotateCommand.GetTransform();
-    const shearTransform = shearCommand.GetTransform();
+    const translateTransform = translateCommand.getTransform();
+    const scaleTransform = scaleCommand.getTransform();
+    const rotateTransform = rotateCommand.getTransform();
+    const shearTransform = shearCommand.getTransform();
 
     expect(translateTransform).toEqualTransform(new Transform([
         1,
@@ -106,8 +106,8 @@ test(`CLASS_FUNCTION TransformCommand.ToPureObject @ '${TARGET_FILE}'`, () => {
         {x: 9464}
     );
 
-    const pureA = commandA.ToPureObject();
-    const pureB = commandB.ToPureObject();
+    const pureA = commandA.serialize();
+    const pureB = commandB.serialize();
 
     expect(pureA).toStrictEqual(<SerializedTransformCommand>{
         type: TransformCommandType.TRANSLATE,
@@ -144,8 +144,8 @@ test(
             }
         };
 
-        const commandA = new TransformCommand().FromPureObject(pureA);
-        const commandB = new TransformCommand().FromPureObject(pureB);
+        const commandA = new TransformCommand().deserialize(pureA);
+        const commandB = new TransformCommand().deserialize(pureB);
 
         expect(commandA.typeIndex).toStrictEqual(TransformCommandType.ROTATE);
         expect(commandB.typeIndex).toStrictEqual(TransformCommandType.SHEARX);
@@ -160,7 +160,7 @@ test(`CLASS_FUNCTION TransformCommand.Clone @ '${TARGET_FILE}'`, () => {
     const command = new TransformCommand(TransformCommandType.SCALE, {x: 541,
         y: 9394});
 
-    const cloned = command.Clone();
+    const cloned = command.clone();
 
     expect(cloned).toStrictEqual(command);
 
@@ -193,10 +193,10 @@ test(`CLASS_FUNCTION TransformCommand.AddRelative @ '${TARGET_FILE}'`, () => {
     const shearA = new TransformCommand(TransformCommandType.SHEARX, {x: 661});
     const shearB = new TransformCommand(TransformCommandType.SHEARX, {x: 7679});
 
-    const translateResult = translateA.AddRelative(translateB);
-    const scaleResult = scaleA.AddRelative(scaleB);
-    const rotateResult = rotateA.AddRelative(rotateB);
-    const shearResult = shearA.AddRelative(shearB);
+    const translateResult = translateA.addRelative(translateB);
+    const scaleResult = scaleA.addRelative(scaleB);
+    const rotateResult = rotateA.addRelative(rotateB);
+    const shearResult = shearA.addRelative(shearB);
 
     expect(translateResult).toStrictEqual(new TransformCommand(
         TransformCommandType.TRANSLATE,
@@ -219,7 +219,7 @@ test(`CLASS_FUNCTION TransformCommand.AddRelative @ '${TARGET_FILE}'`, () => {
 
     expect(() => {
 
-        translateA.AddRelative(scaleB);
+        translateA.addRelative(scaleB);
 
     }).toThrow();
 
