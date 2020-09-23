@@ -18,13 +18,13 @@ test(`CLASS_FUNCTION DrawObjectTree.ToPureObject @ '${TARGET_FILE}'`, () => {
         ])
     ]);
 
-    drawObjectTree.AddObject(new DrawObject(
+    drawObjectTree.addObject(new DrawObject(
         "BA",
         drawObjectTree.rootObjects[1]
     ));
 
-    const drawObjectTreePure: SerializedDrawObjectTree
-    = drawObjectTree.ToPureObject();
+    const drawObjectTreePure
+    = drawObjectTree.serialize();
 
     expect(drawObjectTreePure.rootObjects).toContain("A");
     expect(drawObjectTreePure.rootObjects).toContain("B");
@@ -105,7 +105,7 @@ test(`CLASS_FUNCTION DrawObjectTree.FromPureObject @ '${TARGET_FILE}'`, () => {
     };
 
     const drawObjectTree = new DrawObjectTree()
-        .FromPureObject(drawObjectTreePure);
+        .deserialize(drawObjectTreePure);
 
     expect(drawObjectTree.rootObjects)
         .toBeTrueForAny((input: DrawObject) => input.name === "A");

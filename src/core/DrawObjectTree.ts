@@ -16,7 +16,16 @@ export class DrawObjectTree implements Serializable {
 
     objects: { [ name: string ]: DrawObject; } = {};
 
+    /**
+     * @deprecated use lowercase instead.
+     */
     AddObject (object: DrawObject): void {
+
+        return this.addObject(object);
+
+    }
+
+    addObject (object: DrawObject): void {
 
         this.objects[object.name] = object;
         if (object.parent === null) {
@@ -41,7 +50,16 @@ export class DrawObjectTree implements Serializable {
 
     }
 
+    /**
+     * @deprecated use lowercase instead.
+     */
     HasObject (name: string): boolean {
+
+        return this.hasObject(name);
+
+    }
+
+    hasObject (name: string): boolean {
 
         return (name in this.objects);
 
