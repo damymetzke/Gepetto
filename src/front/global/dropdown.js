@@ -1,11 +1,20 @@
-function OnDropdown (target) {
+function onDropdown (target) {
 
     target.classList.toggle("dropdown--box--display");
 
 }
 
-// setup events
+/**
+ * @deprecated use lowercase instead.
+ */
 export function OnScriptLoad (root) {
+
+    onScriptLoad(root);
+
+}
+
+// setup events
+export function onScriptLoad (root) {
 
     const targets = {};
     const dropdowns = root.getElementsByClassName("dropdown--box");
@@ -27,7 +36,7 @@ export function OnScriptLoad (root) {
         icons[i].addEventListener("click", ()
         => {
 
-            OnDropdown(targets[identifier]);
+            onDropdown(targets[identifier]);
 
         });
 

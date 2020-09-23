@@ -86,7 +86,7 @@ function openObjectEditor () {
 
 }
 
-function Run () {
+function run () {
 
     const root = document.getElementById("body");
 
@@ -140,4 +140,4 @@ function Run () {
 
 }
 
-Run();
+run();

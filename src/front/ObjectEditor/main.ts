@@ -133,7 +133,7 @@ function loadXmlObject (
 
             newGroup.setAttribute(
                 "transform",
-                newObject.WorldTransform().svgString()
+                newObject.worldTransform().svgString()
             );
 
             root.getElementBySid("main--svg--content").appendChild(newGroup);
@@ -269,7 +269,7 @@ export class ObjectEditor implements TabContentImplementation {
                     }
                     this.displayedObjects[targetObject].setAttribute(
                         "transform",
-                        under.objects[targetObject].WorldTransform().svgString()
+                        under.objects[targetObject].worldTransform().svgString()
                     );
 
                 });
