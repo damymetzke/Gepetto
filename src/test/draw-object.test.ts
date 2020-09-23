@@ -61,7 +61,7 @@ test(`CLASS_FUNCTION DrawObject.AddTransformCommand @ '${TARGET_FILE}'`, () => {
 
     const drawObject = new DrawObject();
 
-    drawObject.AddTransformCommand(new TransformCommand(
+    drawObject.addTransformCommand(new TransformCommand(
         TransformCommandType.TRANSLATE,
         {x: 4,
             y: 7}
@@ -93,7 +93,7 @@ test(`CLASS_FUNCTION DrawObject.WorldTransform @ '${TARGET_FILE}'`, () => {
             y: 1})
     ]);
 
-    expect(objectC.WorldTransform())
+    expect(objectC.worldTransform())
         .toEqualTransform(new Transform([
             1.06,
             1.06,
@@ -116,10 +116,10 @@ test(`CLASS_FUNCTION DrawObject.ToPureObject @ '${TARGET_FILE}'`, () => {
         new TransformCommand(TransformCommandType.ROTATE, {rotation: 135})
     ]);
 
-    const parentPure = parent.ToPureObject();
-    const childPure = child.ToPureObject();
-    const namedParentPure = namedParent.ToPureObject();
-    const commandsPure = commands.ToPureObject();
+    const parentPure = parent.serialize();
+    const childPure = child.serialize();
+    const namedParentPure = namedParent.serialize();
+    const commandsPure = commands.serialize();
 
     expect(parentPure).toStrictEqual(<SerializedDrawObject>{
         name: "PARENT_OBJECT",
@@ -173,7 +173,7 @@ test(`CLASS_FUNCTION DrawObject.FromPureObject @ '${TARGET_FILE}'`, () => {
         ]
     };
 
-    const fromPure = new DrawObject().FromPureObject(pure);
+    const fromPure = new DrawObject().deserialize(pure);
 
     expect(fromPure.name).toStrictEqual("PURE_OBJECT");
     expect(fromPure.parent).toStrictEqual("PARENT_OBJECT");
@@ -197,8 +197,8 @@ test(`CLASS_FUNCTION DrawObject.Clone @ '${TARGET_FILE}'`, () => {
     const objectB = new DrawObject("B", objectA);
     const objectC = new DrawObject("C", objectB);
 
-    const recursedClone = objectC.Clone(true);
-    const singleClone = objectC.Clone();
+    const recursedClone = objectC.clone(true);
+    const singleClone = objectC.clone();
 
     expect(recursedClone.name).toStrictEqual("C");
     expect(singleClone.name).toStrictEqual("C");

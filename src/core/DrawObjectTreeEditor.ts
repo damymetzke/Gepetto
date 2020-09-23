@@ -89,17 +89,30 @@ export class DrawObjectTreeEditor
 
     }
 
+
+    /**
+     * @deprecated use lowercase instead.
+     */
     AddObject (object: DrawObject): void {
 
-        super.AddObject(object);
+        this.addObject(object);
+
+    }
+
+    addObject (object: DrawObject): void {
+
+        super.addObject(object);
         this.selectedObject = object.name;
         this.dirty = true;
 
     }
 
+    /**
+     * @deprecated DrawObjectTreeEditor.addObject instead.
+     */
     AddObjectToRoot (object: DrawObject): void {
 
-        super.AddObjectToRoot(object);
+        super.addObject(object);
         this.selectedObject = object.name;
         this.dirty = true;
 
@@ -274,12 +287,14 @@ implements DrawObjectTreeEditorInterface {
 
     HasObject (name: string): boolean {
 
-        return this.under.under.HasObject(name);
+        return this.under.under.hasObject(name);
 
     }
 
     ToPureObject (): SerializedDrawObjectTree {
 
+        // should be removed anyway
+        // eslint-disable-next-line new-cap
         return this.under.under.ToPureObject();
 
     }
@@ -342,10 +357,10 @@ implements DrawObjectTreeEditorInterface {
             organizerType,
             connector,
             drawObjectTree,
-            (under) => under.ToPureObject(),
+            (under) => under.serialize(),
             // todo: fix this mess
             (recieved) => <DrawObjectTreeEditor>(new DrawObjectTreeEditor()
-                .FromPureObject(<SerializedDrawObjectTree>recieved)),
+                .deserialize(<SerializedDrawObjectTree>recieved)),
             {
                 AddObjectToRoot: {
                     ConvertToSend: (argumentList) => [
