@@ -16,7 +16,7 @@ export class StartMenu implements TabContentImplementation {
 
     }
 
-    onInit (root: SubDoc, name: string): void {
+    onInit (root: SubDoc): void {
 
         root.getElementBySid("start--open-project")
             .addEventListener("click", () => {
@@ -56,12 +56,12 @@ export class StartMenu implements TabContentImplementation {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    onDestroy (root: SubDoc, name: string): void {
+    onDestroy (): void {
 
     }
 
     // eslint-disable-next-line class-methods-use-this
-    onSave (root: SubDoc, name: string): void {
+    onSave (): void {
 
     }
 

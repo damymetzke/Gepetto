@@ -49,7 +49,7 @@ export class SyncOrganizerSubscriber implements SyncOrganizer {
 
     // eslint-disable-next-line max-len
     // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this
-    getFullSyncData (_callback: () => unknown) {
+    getFullSyncData () {
     }
 
     onFullSync (callback: (data: unknown) => void) {

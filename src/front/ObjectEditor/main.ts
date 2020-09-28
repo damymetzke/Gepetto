@@ -12,18 +12,20 @@ const {dialog} = require("electron").remote;
 const currentWindow = require("electron").remote.getCurrentWindow();
 const {ipcRenderer} = require("electron");
 
-const REGEX_XML_CONTENT = /^<root>([^]*)<\/root>$/iu;
+// const REGEX_XML_CONTENT = /^<root>([^]*)<\/root>$/iu;
 const REGEX_REPLACE_SPACES = / /gu;
 
-const DIRTY_TAB_BY_ACTION = new Set([
-    "AddObject",
-    "AddObjectToRoot",
-    "FromPureObject",
-    "renameObject",
-    "deserialize",
-    "addTransformCommand",
-    "updateTransformCommandField"
-]);
+/*
+ * const DIRTY_TAB_BY_ACTION = new Set([
+ *     "AddObject",
+ *     "AddObjectToRoot",
+ *     "FromPureObject",
+ *     "renameObject",
+ *     "deserialize",
+ *     "addTransformCommand",
+ *     "updateTransformCommandField"
+ * ]);
+ */
 
 const UPDATE_TEXT_TREE_BY_ACTIONS = new Set([
     "AddObject",
@@ -111,8 +113,7 @@ function onRename (
 function loadXmlObject (
     newObject: DrawObject,
     root: SubDoc,
-    resourceDirectory: string,
-    name: string
+    resourceDirectory: string
 ): Promise<SVGGElement> {
 
     const resourceLoaction = `${resourceDirectory}/${newObject.name}.xml`;
@@ -120,7 +121,7 @@ function loadXmlObject (
 
     objectRequest.open("GET", resourceLoaction);
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
 
         objectRequest.onload = () => {
 
@@ -357,7 +358,7 @@ export class ObjectEditor implements TabContentImplementation {
 
         this.drawObjectTree.under.addActionCallback(
             "selectObject",
-            (under, argumentList) => {
+            (under) => {
 
                 onChangeName(root, under.selectedObject);
 
@@ -475,14 +476,14 @@ export class ObjectEditor implements TabContentImplementation {
 
     }
 
-    onDestroy (root: SubDoc, name: string) {
+    onDestroy () {
 
         ipcRenderer.send("close-object-editor", {});
         this.connector.onDestroy();
 
     }
 
-    onSave (root: SubDoc, name: string) {
+    onSave () {
 
         ipcRenderer.send("save-tab", {
             type: "draw-object-tree"

@@ -40,7 +40,7 @@ export class SyncOrganizerOwner implements SyncOrganizer {
 
     // eslint-disable-next-line max-len
     // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this
-    onFullSync (callback: (data: unknown) => void) {
+    onFullSync () {
     }
 
     // eslint-disable-next-line max-len

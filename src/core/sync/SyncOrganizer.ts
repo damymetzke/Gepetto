@@ -1,5 +1,3 @@
-import {SyncConnector} from "./SyncConnector.js";
-
 export type SyncAction = { action: string, argumentList: unknown[]; };
 
 /**

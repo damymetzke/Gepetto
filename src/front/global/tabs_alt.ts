@@ -228,7 +228,7 @@ export class Tab {
 
         });
 
-        this.tabElement.addEventListener("contextmenu", (event: MouseEvent) => {
+        this.tabElement.addEventListener("contextmenu", () => {
 
             this.contextMenu.popup();
 

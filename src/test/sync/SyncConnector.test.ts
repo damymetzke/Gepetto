@@ -2,7 +2,7 @@ import {SyncConnectorDirect, SyncMessage} from "../core/core";
 
 const TARGET_FILE = "core/sync_alt/SyncConnector.ts";
 
-test("", () => {
+test(`CLASS SyncConnector @ '${TARGET_FILE}'`, () => {
 
     const a = new SyncConnectorDirect();
     const b = new SyncConnectorDirect(a);

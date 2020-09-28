@@ -1,5 +1,3 @@
-const {Transform} = require("./core/core");
-
 let window = null;
 const svgObjects = new Set();
 
