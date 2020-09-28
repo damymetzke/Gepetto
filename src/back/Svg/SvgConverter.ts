@@ -274,6 +274,7 @@ function getSubObject (elements: Element[], index: number[]): Element[] {
  * 
  * @see svgConvertInput
  */
+// eslint-disable-next-line require-await
 async function convertMultipleObjects (
     name: string,
     transformString: string, elements: Element[], subObjects: string[]

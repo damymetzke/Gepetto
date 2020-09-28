@@ -249,7 +249,7 @@ rules:
   quotes: error
   radix: error
   require-atomic-updates: error
-  require-await: warn
+  require-await: error
   require-unicode-regexp: error
   rest-spread-spacing: error
   semi: error
