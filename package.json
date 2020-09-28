@@ -34,7 +34,7 @@
     "eslint": "^7.9.0",
     "jest": "^26.4.2",
     "jsdoc": "^3.6.6",
-    "marked": "^1.1.1",
+    "marked": "^1.2.0",
     "node-build-util": "^0.2.0",
     "npm-sass": "^2.3.0",
     "typedoc": "^0.19.2",
