@@ -100,7 +100,7 @@ rules:
   max-statements-per-line: error
   multiline-comment-style: error
   multiline-ternary: error
-  new-cap: warn
+  new-cap: 0
   new-parens: error
   newline-after-var: error
   newline-before-return: error
@@ -235,7 +235,7 @@ rules:
   prefer-const: error
   prefer-destructuring: 0
   prefer-exponentiation-operator: error
-  prefer-named-capture-group: warn
+  prefer-named-capture-group: 0
   prefer-numeric-literals: error
   prefer-object-spread: error
   prefer-promise-reject-errors: error
