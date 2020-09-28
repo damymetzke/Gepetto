@@ -29,7 +29,7 @@ export class SyncObject<UnderType> {
 
     allCallbacks: ActionAllCallbackFunction<UnderType>[];
 
-    runAction (action: SyncAction) {
+    runAction (action: SyncAction): void {
 
         if (action.action in this.conversions) {
 
@@ -45,7 +45,7 @@ export class SyncObject<UnderType> {
 
     }
 
-    onRecieve (action: SyncAction) {
+    onRecieve (action: SyncAction): void {
 
         if (!this.under) {
 

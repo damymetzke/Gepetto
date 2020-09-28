@@ -11,7 +11,7 @@ export class SubDoc {
 
     onReady: (() => void)[];
 
-    destroy (destroyRoot = false) {
+    destroy (destroyRoot = false): void {
 
         this.ready = false;
         this.sidMap = {};

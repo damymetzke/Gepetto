@@ -119,13 +119,13 @@ export class Tab {
 
     }
 
-    setDirty () {
+    setDirty (): void {
 
         this.dirty = true;
 
     }
 
-    save () {
+    save (): void {
 
         this.dirty = false;
 
@@ -415,7 +415,7 @@ export class TabCollection {
 
     }
 
-    destroyTabImplementation (tab: Tab) {
+    destroyTabImplementation (tab: Tab): void {
 
         if (!(tab.name in this.tabs)) {
 
@@ -440,7 +440,7 @@ export class TabCollection {
 
     }
 
-    selectTab (tab: Tab | string) {
+    selectTab (tab: Tab | string): void {
 
         let targetTab = null;
 

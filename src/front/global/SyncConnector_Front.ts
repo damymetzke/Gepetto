@@ -8,19 +8,19 @@ export class SyncConnectorFront implements SyncConnector {
 
     ipcChannel: string;
 
-    send (message: SyncMessage) {
+    send (message: SyncMessage): void {
 
         ipcRenderer.send(this.ipcChannel, message);
 
     }
 
-    onRecieve (callback: (message: SyncMessage) => void) {
+    onRecieve (callback: (message: SyncMessage) => void): void {
 
         this.callback = callback;
 
     }
 
-    onDestroy () {
+    onDestroy (): void {
 
         ipcRenderer.removeAllListeners(this.ipcChannel);
 

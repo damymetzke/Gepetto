@@ -9,13 +9,13 @@ export class SyncConnectorBack implements SyncConnector {
 
     targetWindow: BrowserWindow;
 
-    send (message: SyncMessage) {
+    send (message: SyncMessage): void {
 
         this.targetWindow.webContents.send(this.ipcChannel, message);
 
     }
 
-    onRecieve (callback: (message: SyncMessage) => void) {
+    onRecieve (callback: (message: SyncMessage) => void): void {
 
         this.callback = callback;
 

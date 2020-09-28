@@ -6,7 +6,7 @@ export function updateTextTree (
     root: SubDoc,
     tree: DrawObjectTreeEditorWrapper,
     under: DrawObjectTreeEditor
-) {
+): void {
 
     root.getElementBySid("body").classList.add("hide-property");
 
@@ -47,7 +47,7 @@ export function updateTransformCommands (
     root: SubDoc,
     tree: DrawObjectTreeEditorWrapper,
     under: DrawObjectTreeEditor
-) {
+): void {
 
     const transformList = root.getElementBySid("property--transform-list");
 

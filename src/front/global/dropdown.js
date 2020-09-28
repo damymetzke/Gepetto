@@ -7,6 +7,7 @@ function onDropdown (target) {
 /**
  * @deprecated use lowercase instead.
  */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function OnScriptLoad (root) {
 
     onScriptLoad(root);
@@ -14,6 +15,7 @@ export function OnScriptLoad (root) {
 }
 
 // setup events
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function onScriptLoad (root) {
 
     const targets = {};

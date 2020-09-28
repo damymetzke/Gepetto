@@ -132,7 +132,7 @@ export class DrawObjectTreeEditor
 
     }
 
-    selectObject (object: string) {
+    selectObject (object: string): void {
 
         this.selectedObject = object;
 
@@ -237,7 +237,7 @@ export class DrawObjectTreeEditor
 
     }
 
-    notifySave () {
+    notifySave (): void {
 
         this.dirty = false;
 

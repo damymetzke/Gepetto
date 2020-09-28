@@ -13,7 +13,7 @@ export class SyncOrganizerOwner implements SyncOrganizer {
 
     getFullSyncCallback: () => unknown;
 
-    send (action: SyncAction) {
+    send (action: SyncAction): void {
 
         this.connector.send({
             type: "action",
@@ -26,13 +26,13 @@ export class SyncOrganizerOwner implements SyncOrganizer {
 
     }
 
-    onRecieve (callback: (action: SyncAction) => void) {
+    onRecieve (callback: (action: SyncAction) => void): void {
 
         this.callback = callback;
 
     }
 
-    getFullSyncData (callback: () => unknown) {
+    getFullSyncData (callback: () => unknown): void {
 
         this.getFullSyncCallback = callback;
 
@@ -40,12 +40,12 @@ export class SyncOrganizerOwner implements SyncOrganizer {
 
     // eslint-disable-next-line max-len
     // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this
-    onFullSync () {
+    onFullSync (): void {
     }
 
     // eslint-disable-next-line max-len
     // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this
-    requestSync () {
+    requestSync (): void {
 
     }
 

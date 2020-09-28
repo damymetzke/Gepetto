@@ -173,7 +173,7 @@ export class ObjectEditor implements TabContentImplementation {
 
     // todo: shorten function
     // eslint-disable-next-line max-lines-per-function
-    onInit (root: SubDoc, name: string, tab: Tab) {
+    onInit (root: SubDoc, name: string, tab: Tab): void {
 
         this.connector = new SyncConnectorFront("draw-object-tree");
         this.drawObjectTree = new DrawObjectTreeEditorWrapper(
@@ -476,14 +476,14 @@ export class ObjectEditor implements TabContentImplementation {
 
     }
 
-    onDestroy () {
+    onDestroy (): void {
 
         ipcRenderer.send("close-object-editor", {});
         this.connector.onDestroy();
 
     }
 
-    onSave () {
+    onSave (): void {
 
         ipcRenderer.send("save-tab", {
             type: "draw-object-tree"

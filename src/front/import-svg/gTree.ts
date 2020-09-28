@@ -89,7 +89,7 @@ export class GTreeNode {
 
 }
 
-export function getListEntry (text?: string) {
+export function getListEntry (text?: string): string {
 
     return `
         <p>
@@ -192,7 +192,7 @@ export function buildGTreeNode (
     index: string,
     list: HTMLOListElement,
     node?: GTreeNode
-) {
+): GTreeNode {
 
     element.classList.add("g-tree-element");
     element.dataset.index = index;
@@ -244,7 +244,7 @@ export function buildGTree (
 
 }
 
-export function setupLogic (node: GTreeNode) {
+export function setupLogic (node: GTreeNode): void {
 
     const descendants: GTreeNode[] = _.flatten(node.children
         .map((child) => child.getSelfAndDescendants()));

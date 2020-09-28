@@ -20,7 +20,7 @@ export class SyncOrganizerSubscriber implements SyncOrganizer {
 
     fullSyncCallback: (data: unknown) => void;
 
-    send (action: SyncAction) {
+    send (action: SyncAction): void {
 
         // queue action if we are currently syncing
         if (this.waitForSync) {
@@ -41,7 +41,7 @@ export class SyncOrganizerSubscriber implements SyncOrganizer {
 
     }
 
-    onRecieve (callback: (action: SyncAction) => void) {
+    onRecieve (callback: (action: SyncAction) => void): void {
 
         this.callback = callback;
 
@@ -49,16 +49,16 @@ export class SyncOrganizerSubscriber implements SyncOrganizer {
 
     // eslint-disable-next-line max-len
     // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this
-    getFullSyncData () {
+    getFullSyncData (): void {
     }
 
-    onFullSync (callback: (data: unknown) => void) {
+    onFullSync (callback: (data: unknown) => void): void {
 
         this.fullSyncCallback = callback;
 
     }
 
-    requestSync () {
+    requestSync (): void {
 
         this.waitForSync = true;
         this.connector.send({

@@ -14,13 +14,13 @@ export class SyncConnectorDirect implements SyncConnector {
 
     callback: (message: SyncMessage) => void;
 
-    send (message: SyncMessage) {
+    send (message: SyncMessage): void {
 
         this.other.callback(message);
 
     }
 
-    onRecieve (callback: (message: SyncMessage) => void) {
+    onRecieve (callback: (message: SyncMessage) => void): void {
 
         this.callback = callback;
 
