@@ -9,6 +9,8 @@ export class StartMenu implements TabContentImplementation {
 
     enableSave: boolean;
 
+    // default function should be empty
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     constructor (newProjectCallback: () => void = () => { }) {
 
         this.newProjectCallback = newProjectCallback;
@@ -55,12 +57,14 @@ export class StartMenu implements TabContentImplementation {
 
     }
 
-    // eslint-disable-next-line class-methods-use-this
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
     onDestroy (): void {
 
     }
 
-    // eslint-disable-next-line class-methods-use-this
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
     onSave (): void {
 
     }

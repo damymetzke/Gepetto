@@ -185,6 +185,8 @@ export class Tab {
             subdocPath,
             implementation
         }: TabConstructionSettings,
+        // default function should be empty
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         onReady: () => void = () => { }
     ) {
 

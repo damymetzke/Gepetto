@@ -36,6 +36,8 @@ export class SubDoc {
     constructor (
         sourcePath: string,
         root: HTMLElement,
+        // default function should be empty
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         onready: () => void = () => { }
     ) {
 
