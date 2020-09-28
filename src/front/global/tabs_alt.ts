@@ -70,6 +70,15 @@ export interface TabContentImplementation
     enableSave: boolean;
 }
 
+interface TabConstructionSettings
+{
+    owner: TabCollection;
+    tabParent: HTMLUListElement;
+    contentParent: HTMLUListElement;
+    name: string, subdocPath: string;
+    implementation: TabContentImplementation;
+}
+
 export class Tab {
 
     owner: TabCollection;
@@ -168,11 +177,14 @@ export class Tab {
      * @param onReady callback, will be called when the tab is ready
      */
     constructor (
-        owner: TabCollection,
-        tabParent: HTMLUListElement,
-        contentParent: HTMLUListElement,
-        name: string, subdocPath: string,
-        implementation: TabContentImplementation,
+        {
+            owner,
+            tabParent,
+            contentParent,
+            name,
+            subdocPath,
+            implementation
+        }: TabConstructionSettings,
         onReady: () => void = () => { }
     ) {
 
@@ -305,12 +317,12 @@ export class TabCollection {
         }
 
         const tab: Tab = new Tab(
-            this,
-            this.tabParent,
-            this.contentParent,
-            name,
-            subdocPath,
-            implementation,
+            {owner: this,
+                tabParent: this.tabParent,
+                contentParent: this.contentParent,
+                name,
+                subdocPath,
+                implementation},
             () => {
 
                 this.tabs[name] = tab;

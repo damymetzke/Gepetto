@@ -15,6 +15,13 @@ export type SyncConverter =
         ConvertFromSend(recieved): unknown[];
     };
 
+interface SyncObjectConstructionSettings<UnderType>
+{
+    organizerType: SyncOrganizerType;
+    connector: SyncConnector;
+    under: UnderType;
+}
+
 export class SyncObject<UnderType> {
 
     under: UnderType;
@@ -114,9 +121,11 @@ export class SyncObject<UnderType> {
     }
 
     constructor (
-        organizerType: SyncOrganizerType,
-        connector: SyncConnector,
-        under: UnderType,
+        {
+            organizerType,
+            connector,
+            under
+        }: SyncObjectConstructionSettings<UnderType>,
         toFullSync: (fullSyncUnder: UnderType) => unknown,
         fromFullSync: (recieved: unknown) => UnderType,
         conversions: { [ action: string ]: SyncConverter; } = {}

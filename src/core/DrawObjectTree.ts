@@ -229,9 +229,11 @@ export class DrawObjectTreeWrapper implements DrawObjectTreeInterface {
     ) {
 
         this.under = new SyncObject<DrawObjectTree>(
-            organizerType,
-            connector,
-            drawObjectTree,
+            {
+                organizerType,
+                connector,
+                under: drawObjectTree
+            },
             (under) => under.ToPureObject(),
             // todo: fix this mess
             (recieved) => (new DrawObjectTree()

@@ -354,9 +354,11 @@ implements DrawObjectTreeEditorInterface {
     ) {
 
         this.under = new SyncObject<DrawObjectTreeEditor>(
-            organizerType,
-            connector,
-            drawObjectTree,
+            {
+                organizerType,
+                connector,
+                under: drawObjectTree
+            },
             (under) => under.serialize(),
             // todo: fix this mess
             (recieved) => <DrawObjectTreeEditor>(new DrawObjectTreeEditor()

@@ -85,16 +85,20 @@ test(`CLASS SyncObject @ '${TARGET_FILE}'`, () => {
     const subscriberConnector = new SyncConnectorDirect(ownerConnector);
 
     const ownerObject = new SyncObject<Dummy>(
-        SyncOrganizerType.OWNER,
-        ownerConnector,
-        new Dummy(),
+        {
+            organizerType: SyncOrganizerType.OWNER,
+            connector: ownerConnector,
+            under: new Dummy()
+        },
         (under): FullSyncDataDummy => ({number: under.target}),
         (recieved: FullSyncDataDummy) => new Dummy(recieved.number)
     );
     const subscriberObject = new SyncObject<Dummy>(
-        SyncOrganizerType.SUBSCRIBER,
-        subscriberConnector,
-        new Dummy(),
+        {
+            organizerType: SyncOrganizerType.SUBSCRIBER,
+            connector: subscriberConnector,
+            under: new Dummy()
+        },
         (under): FullSyncDataDummy => ({number: under.target}),
         (recieved: FullSyncDataDummy) => new Dummy(recieved.number)
     );

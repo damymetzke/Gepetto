@@ -372,8 +372,7 @@ export class ObjectEditor implements TabContentImplementation {
                 loadXmlObject(
                     argumentList[0],
                     root,
-                    this.resourceDirectory,
-                    name
+                    this.resourceDirectory
                 ).then((result) => {
 
                     this.displayedObjects[argumentList[0].name] = result;
@@ -440,8 +439,7 @@ export class ObjectEditor implements TabContentImplementation {
                     loadXmlObject(
                         under.objects[objectName],
                         root,
-                        self.resourceDirectory,
-                        name
+                        self.resourceDirectory
                     ).then((result) => {
 
                         self.displayedObjects[objectName] = result;

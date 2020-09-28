@@ -92,7 +92,7 @@ rules:
     - max: 200
   max-nested-callbacks: error
   max-params:
-    - warn
+    - error
     - max: 4
   max-statements:
     - error
