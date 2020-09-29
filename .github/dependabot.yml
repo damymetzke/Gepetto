@@ -1,18 +1,21 @@
-version: 2
-updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: daily
-      time: '08:00'
-      timezone: Europe/Amsterdam
-    open-pull-requests-limit: 99
-    ignore:
-      - dependency-name: "node-build-util"
+# uncomment everything in case the project ever continues.
+# this way dependabot will start updating the project again
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: daily
-      time: '08:00'
-      timezone: Europe/Amsterdam
+# version: 2
+# updates:
+#   - package-ecosystem: "npm"
+#     directory: "/"
+#     schedule:
+#       interval: daily
+#       time: '08:00'
+#       timezone: Europe/Amsterdam
+#     open-pull-requests-limit: 99
+#     ignore:
+#       - dependency-name: "node-build-util"
+
+#   - package-ecosystem: "github-actions"
+#     directory: "/"
+#     schedule:
+#       interval: daily
+#       time: '08:00'
+#       timezone: Europe/Amsterdam
